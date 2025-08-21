@@ -87,7 +87,7 @@ class NormalVoyageAssigner:
     MAX_STOWAGE_DAYS = 14          # 적치 허용일 (2주)
     PAGE_SIZE = 18                 # LV1 한 번에 투입할 최대 블록 수
     MAX_PAGES_PER_PASS = 50        # 패스당 최대 페이지 시도 수
-    LV1_TIMEOUT = 60               # 초
+    LV1_TIMEOUT = 10               # 초
     LV1_TIMEOUT_SINGLE_WINDOW = 180  # 유효 창이 1개뿐인 블록용 타임아웃
 
     # 다회전 패스별 용적 비율 (항차 면적 대비)
