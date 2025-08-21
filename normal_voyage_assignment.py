@@ -220,12 +220,24 @@ class NormalVoyageAssigner:
                 return False
         return True
 
+
     def _sorted_candidates(self, voyage_id: str, pool: List[str]) -> List[str]:
-        """적치/납기 오름차순, 면적 내림차순(없으면 0으로 간주해 뒤로)"""
+        """
+        ✨ 개선된 우선순위 적용: 1.긴급성(유효 항차 수) 2.납기일 3.면적
+        """
         def key(bid):
+            # 1. 긴급성: 이 블록을 실을 수 있는 유효 항차의 총 개수
+            urgency = self._count_compatible_voyages(bid)
+            
+            # 2. 납기일
             d = self.deadlines.get(bid, "2099-12-31")
+
+            # 3. 면적
             area = self._area_of(bid)
-            return (d, -(area if area is not None else 0.0))
+
+            # 튜플의 앞 순서일수록 우선순위가 높습니다.
+            return (urgency, d, -(area if area is not None else 0.0))
+
         cands = [b for b in pool if self._eligible_for_voyage(b, voyage_id)]
         cands.sort(key=key)
         return cands
@@ -282,12 +294,15 @@ class NormalVoyageAssigner:
         print(f"[LV1] {voyage_id} → placed {len(placed)}/{len(block_list)}, unplaced {len(unplaced)}")
         return placed, list(unplaced), cfg_path
 
+
+
     def _sweep_voyage(self, voyage_id: str, remaining: Set[str],
-                    page_size: int = PAGE_SIZE) -> int:
+                      page_size: int = PAGE_SIZE) -> int:
         """
         하나의 항차에 대해 최적의 블록 조합을 찾습니다.
         여러 패스(용적률)에 걸쳐 후보군을 만들고 LV1을 실행하여,
         가장 많은 블록을 배치하는 단일 성공 케이스를 최종 결과로 선택합니다.
+        ✨ 조기 탈출 로직이 추가되었습니다.
         """
         vinfo = self.schedule.info(voyage_id)
         vessel_id = int(vinfo["vessel_name"].replace("자항선", ""))
@@ -295,20 +310,16 @@ class NormalVoyageAssigner:
 
         print(f"\n[SWEEP] {voyage_id} 시작 - 후보 {len(remaining)}개(전체 풀 기준)")
 
-        # 이 항차에 적재 가능한 모든 후보군을 미리 정렬
         all_cands_for_voyage = self._sorted_candidates(voyage_id, list(remaining))
         if not all_cands_for_voyage:
             print(f"  [SWEEP] {voyage_id}에 대한 유효 후보 없음.")
             return 0
 
-        # 이 항차에서 찾은 '최고의 배치 결과'를 저장할 변수
         best_placed_for_voyage: List[str] = []
 
-        # 각기 다른 용적률로 여러 번의 '독립적인' 시도를 진행
         for pass_idx, capacity_ratio in enumerate(self.PASS_CAPACITY_RATIOS):
             target_area = vessel_area * capacity_ratio
             
-            # 이번 패스에서 LV1에 넣어볼 후보 리스트 생성
             pass_candidates = []
             cumulative_area = 0.0
             use_area_limit = all(self._area_of(b) is not None for b in all_cands_for_voyage)
@@ -316,11 +327,10 @@ class NormalVoyageAssigner:
             for block_id in all_cands_for_voyage:
                 if use_area_limit:
                     area = self._area_of(block_id)
-                    if cumulative_area + area <= target_area:
+                    if cumulative_area + (area or 0) <= target_area:
                         pass_candidates.append(block_id)
-                        cumulative_area += area
+                        cumulative_area += (area or 0)
                 else:
-                    # 면적 정보가 없으면 페이지 크기만큼만 담아서 시도
                     if len(pass_candidates) < page_size:
                         pass_candidates.append(block_id)
 
@@ -330,51 +340,78 @@ class NormalVoyageAssigner:
             area_msg = f"면적 {cumulative_area:.0f}/{target_area:.0f}" if use_area_limit else f"{len(pass_candidates)}개"
             print(f"  [PASS {pass_idx+1}] LV1 시도 ({capacity_ratio*100:.0f}% 기준): 후보 {area_msg}")
 
-            # 유효 창이 1개뿐인 블록이 있으면 타임아웃 연장
             single_window_blocks = [b for b in pass_candidates if self._count_compatible_voyages(b) == 1]
             timeout = self.LV1_TIMEOUT_SINGLE_WINDOW if single_window_blocks else self.LV1_TIMEOUT
             if single_window_blocks:
                 print(f"    [INFO] 유효창 1개 블록 {len(single_window_blocks)}개 포함 -> 타임아웃 {timeout}초 적용")
-                
-            # LV1 실행
+            
             placed, unplaced, _ = self._run_lv1(pass_candidates, voyage_id, timeout=timeout, enable_visual=False)
 
-            # 이번 시도의 결과가 이전에 찾은 최적의 결과보다 더 좋으면 교체
             if len(placed) > len(best_placed_for_voyage):
                 print(f"  [SWEEP] 🌟 새 최적 배치 발견: {len(placed)}개 블록 (이전 최적: {len(best_placed_for_voyage)}개)")
                 best_placed_for_voyage = placed
 
-        # --- 모든 패스(시도)가 끝난 후, 최종적으로 가장 좋았던 배치 결과 하나만 시스템에 반영 ---
+            # ✨ 조기 탈출 로직: 첫 Pass에서 성공한 블록이 없다면, 추가 시도를 중단합니다.
+            if pass_idx == 0 and not placed:
+                print(f"  [SKIP] 초기 패스에서 배치 성공 블록이 없어 {voyage_id} 탐색을 중단합니다.")
+                break
+        
+        #--- 모든 패스가 끝난 후, 최종 결과를 반영합니다.
         if best_placed_for_voyage:
             print(f"  [SWEEP] ✅ {voyage_id} 최종 확정: {len(best_placed_for_voyage)}개 블록")
+            # `remaining` 집합은 수정하지 않고, 배치된 블록의 개수만 반환합니다.
+            # 실제 `remaining` 업데이트는 이 함수를 호출한 루프에서 처리합니다.
+            
+            # 확정된 블록들을 클래스 변수에 기록
             for b in best_placed_for_voyage:
                 self.block_assignments[b] = voyage_id
                 self._voyage_blocks_set[voyage_id].add(b)
-                remaining.discard(b) # 전체 미배치 풀에서 확정된 블록들만 제거
             return len(best_placed_for_voyage)
         
         print(f"  [SWEEP] ❌ {voyage_id}에는 최종 배치할 블록을 찾지 못함.")
         return 0
 
-    # ----- 배정 루프 -----
     def assign_on_vessel1(self):
         """자항선1 전 항차 스윕"""
         remaining = set(self.normal_blocks)
-        for vid in self.schedule.vessel_voyages.get("자항선1", []):
+        # 항차 순서를 날짜순으로 정렬하여 처리
+        voyage_ids = sorted(self.schedule.vessel_voyages.get("자항선1", []), 
+                            key=lambda vid: self.schedule.info(vid).get("end_date"))
+        
+        for vid in voyage_ids:
             if not remaining:
                 break
-            _ = self._sweep_voyage(vid, remaining)
+            
+            # _sweep_voyage 내에서 self.block_assignments와 self._voyage_blocks_set이 업데이트됨
+            self._sweep_voyage(vid, remaining)
+            
+            # 배치된 블록들을 remaining 세트에서 제거
+            placed_blocks = {b for b, v in self.block_assignments.items() if v == vid}
+            remaining.difference_update(placed_blocks)
+            
         self.unassigned_blocks = sorted(list(remaining))
 
     def assign_on_other_vessels(self, leftover: List[str]):
         """남은 블록을 자항선2~5 항차로 확장 스윕"""
         remaining = set(leftover)
+        
+        # 모든 2-5번 선박의 항차를 모아 날짜순으로 정렬
+        other_voyages = []
         for vessel_id in [2, 3, 4, 5]:
             vname = f"자항선{vessel_id}"
-            for vid in self.schedule.vessel_voyages.get(vname, []):
-                if not remaining:
-                    break
-                _ = self._sweep_voyage(vid, remaining)
+            other_voyages.extend(self.schedule.vessel_voyages.get(vname, []))
+        
+        voyage_ids = sorted(other_voyages, key=lambda vid: self.schedule.info(vid).get("end_date"))
+
+        for vid in voyage_ids:
+            if not remaining:
+                break
+            
+            self._sweep_voyage(vid, remaining)
+            
+            placed_blocks = {b for b, v in self.block_assignments.items() if v == vid}
+            remaining.difference_update(placed_blocks)
+            
         self.unassigned_blocks = sorted(list(remaining))
 
     # ----- 시각화 내보내기 (항차별 확정본) -----
