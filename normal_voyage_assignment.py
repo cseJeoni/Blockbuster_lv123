@@ -68,6 +68,8 @@ def load_deadlines(file_path: str) -> Dict[str, str]:
         reader = csv.DictReader(f)
         for row in reader:
             d = row["deadline"]
+
+
             if len(d) == 6:
                 out[row["block_id"]] = f"20{d[:2]}-{d[2:4]}-{d[4:]}"
             else:
@@ -91,7 +93,7 @@ class NormalVoyageAssigner:
     LV1_TIMEOUT_SINGLE_WINDOW = 180  # 유효 창이 1개뿐인 블록용 타임아웃
 
     # 다회전 패스별 용적 비율 (항차 면적 대비)
-    PASS_CAPACITY_RATIOS = [1.05, 0.65, 0.45, 0.30]  # 105%, 65%, 45%, 30%
+    PASS_CAPACITY_RATIOS = [1.05]  # 105%, 65%, 45%, 30%
 
     def __init__(self,
                  schedule_csv: str = "data/vessel_schedule_7.csv",
@@ -140,6 +142,12 @@ class NormalVoyageAssigner:
         # 진단 출력
         self._print_input_diagnostics(vip_assigned)
 
+
+        # 1. 유효 항차 개수를 저장할 딕셔너리(캐시) 생성
+        self.block_voyage_counts: Dict[str, int] = {}
+        # 2. 모든 블록에 대해 미리 계산 수행
+        self._precompute_voyage_counts()
+
     # ----- 입력 진단 -----
     def _print_input_diagnostics(self, vip_assigned: Set[str]):
         vip_list = set(self.labeling.get("classification", {}).get("vip_blocks", []))
@@ -149,6 +157,8 @@ class NormalVoyageAssigner:
         print(f"  - classification.vip_blocks: {len(vip_list)}")
         print(f"  - vip_file.block_assignments(참고): {len(vip_assigned)}")
         print(f"  - normal_blocks: {len(self.normal_blocks)}\n")
+
+
 
     # ----- 블록 수집 (엄격 모드) -----
     def _collect_normal_blocks_strict(self, vip_assigned: Set[str]) -> List[str]:
@@ -230,13 +240,27 @@ class NormalVoyageAssigner:
         cands.sort(key=key)
         return cands
 
+    def _precompute_voyage_counts(self):
+        """
+        모든 Normal 블록에 대해 유효 항차 개수를 미리 계산하여 캐시에 저장합니다.
+        이 함수는 초기화 시 단 한 번만 실행됩니다.
+        """
+        print("[INFO] 모든 블록의 유효 항차 개수를 미리 계산 중... (시간이 소요될 수 있습니다)")
+        total_blocks = len(self.normal_blocks)
+        for i, block_id in enumerate(self.normal_blocks):
+            if (i + 1) % 100 == 0:
+                print(f"  - 진행률: {i+1}/{total_blocks}")
+            
+            count = 0
+            for vid in self.schedule.voyages.keys():
+                if self._eligible_for_voyage(block_id, vid):
+                    count += 1
+            self.block_voyage_counts[block_id] = count
+        print("[INFO] 유효 항차 개수 사전 계산 완료.")
+
     def _count_compatible_voyages(self, block_id: str) -> int:
-        """블록이 적치/납기/선박조건을 만족하는 항차(창) 개수"""
-        cnt = 0
-        for vid in self.schedule.voyages.keys():
-            if self._eligible_for_voyage(block_id, vid):
-                cnt += 1
-        return cnt
+        """[최적화] 미리 계산된 유효 항차 개수를 캐시에서 즉시 반환"""
+        return self.block_voyage_counts.get(block_id, 0)
 
     # ----- LV1 실행 래퍼 -----
     def _run_lv1(self, block_list: List[str], voyage_id: str,
