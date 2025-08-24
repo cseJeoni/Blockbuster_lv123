@@ -61,9 +61,9 @@ class BatchVoxelizer:
         
         try:
             # 복셀화 수행 (시각화 비활성화로 속도 향상)
-            result = convert_mesh_to_25d_optimized(
+            result, selected_orientation = convert_mesh_to_25d_optimized(
                 file_path=str(obj_path),
-                custom_resolution=1.0,  # 1m 해상도로 변경!
+                custom_resolution=0.5,  # 0.5m 해상도로 변경!
                 methods=['footprint'],
                 output_dir=None,  # 시각화 비활성화!
                 enable_orientation_optimization=True
@@ -87,6 +87,15 @@ class BatchVoxelizer:
             # VoxelBlock 생성하여 메타데이터 추출
             voxel_block = VoxelBlock(block_name, voxel_data_25d)
             
+            # 긴쪽이 Y가 되도록 자동 조정 (배치 성능 향상)
+            if voxel_block.width > voxel_block.height:
+                old_width, old_height = voxel_block.width, voxel_block.height
+                print(f"    [AUTO] Rotating block {block_name}: {old_width}x{old_height}", end="")
+                voxel_block.rotate(90)
+                print(f" -> {voxel_block.width}x{voxel_block.height}")
+                # 회전된 복셀 데이터로 업데이트
+                voxel_data_25d = voxel_block.voxel_data
+            
             # 블록 타입 추정
             block_type = self.determine_block_type(block_name)
             
@@ -97,8 +106,9 @@ class BatchVoxelizer:
                 "source_file": str(obj_path),
                 "voxel_data": {
                     "method": method_name,
-                    "resolution": 1.0,  # 1m 해상도로 변경!
+                    "resolution": 0.5,  # 0.5m 해상도로 변경!
                     "orientation_optimized": True,
+                    "selected_orientation": selected_orientation,
                     "dimensions": {
                         "width": int(voxel_block.width),
                         "height": int(voxel_block.height),

@@ -18,7 +18,7 @@ available_blocks = get_available_blocks()
 config_path = generate_config("MyShip", 80, 40, ["2534_202_000", "2534_212_000"])
 
 # 3단계: 배치 시뮬레이션
-result = run_placement(config_path, max_time=60)
+result = run_placement(config_path, max_time=10)
 
 # 4단계: 배치 못한 블록 활용
 unplaced_blocks = result['unplaced_blocks']
@@ -69,12 +69,12 @@ config_path = generate_config(
 )
 ```
 
-### `run_placement(config_path, max_time=60, enable_visualization=False)`
+### `run_placement(config_path, max_time=5, enable_visualization=False)`
 블록 배치 시뮬레이션 실행
 
 **Parameters:**
 - `config_path` (str): Config 파일 경로
-- `max_time` (int, optional): 최대 실행 시간 초 (기본값: 60)
+- `max_time` (int, optional): 최대 실행 시간 초 (기본값: 5)
 - `enable_visualization` (bool, optional): 시각화 활성화 (기본값: False)
 
 **Returns:**
@@ -85,7 +85,7 @@ config_path = generate_config(
 result = run_placement(config_path)
 
 # 시각화 포함 실행  
-result = run_placement(config_path, max_time=120, enable_visualization=True)
+result = run_placement(config_path, max_time=30, enable_visualization=True)
 
 # 결과 구조
 {
@@ -99,12 +99,12 @@ result = run_placement(config_path, max_time=120, enable_visualization=True)
 }
 ```
 
-### `get_unplaced_blocks(config_path, max_time=60)`
+### `get_unplaced_blocks(config_path, max_time=5)`
 배치 못한 블록 리스트만 간단히 반환
 
 **Parameters:**
 - `config_path` (str): Config 파일 경로  
-- `max_time` (int, optional): 최대 실행 시간 초 (기본값: 60)
+- `max_time` (int, optional): 최대 실행 시간 초 (기본값: 5)
 
 **Returns:**
 - `list`: 배치 못한 블록 이름 리스트
@@ -124,7 +124,7 @@ from placement_api import *
 # 1차 배치 시도
 blocks = ["2534_202_000", "2534_212_000", "4374_172_000", "2534_292_000"]
 config1 = generate_config("Ship1", 80, 40, blocks)
-result1 = run_placement(config1, max_time=60)
+result1 = run_placement(config1, max_time=10)
 
 print(f"1차 결과: {result1['success_rate']:.1f}% 성공")
 print(f"배치 못한 블록: {result1['unplaced_blocks']}")
@@ -137,7 +137,7 @@ if result1['unplaced_blocks']:
         bow_margin=1, 
         stern_margin=1
     )
-    result2 = run_placement(config2, max_time=90)
+    result2 = run_placement(config2, max_time=15)
     print(f"2차 결과: {result2['success_rate']:.1f}% 성공")
 ```
 
@@ -170,7 +170,7 @@ def optimize_placement(blocks, max_attempts=3):
             condition['stern_margin']
         )
         
-        result = run_placement(config, max_time=60)
+        result = run_placement(config, max_time=15)
         all_results.append(result)
         
         print(f"성공률: {result['success_rate']:.1f}%")

@@ -59,23 +59,23 @@ class ConfigGenerator:
             print("  [WARNING] 잘못된 입력, 기본값 사용")
             width, height = 80.0, 40.0
         
-        # 3. 여백 설정 (격자 단위)
-        print(f"\n[INFO] 3. 여백 설정 (격자 단위, 1격자 = 1m)")
-        print(f"  전체 격자 크기: {int(width)} x {int(height)}")
+        # 3. 여백 설정 (미터 단위)
+        print(f"\n[INFO] 3. 여백 설정 (미터 단위)")
+        print(f"  전체 자항선 크기: {width}m x {height}m")
         try:
-            margin_bow = int(input("  선수 여백 (기본값: 2): ").strip() or "2")
-            margin_stern = int(input("  선미 여백 (기본값: 2): ").strip() or "2") 
+            margin_bow = float(input("  선수 여백 (기본값: 2.5m): ").strip() or "2.5")
+            margin_stern = float(input("  선미 여백 (기본값: 0.0m): ").strip() or "0.0") 
         except ValueError:
             print("  [WARNING] 잘못된 입력, 기본값 사용")
-            margin_bow, margin_stern = 2, 2
+            margin_bow, margin_stern = 2.5, 0.0
         
         # 4. 블록 간 이격 거리
         print(f"\n[INFO] 4. 블록 간 이격 거리")
         try:
-            min_clearance = int(input("  최소 이격 거리 (격자 단위, 기본값: 1): ").strip() or "1")
+            min_clearance = float(input("  최소 이격 거리 (미터 단위, 기본값: 1.0m): ").strip() or "1.0")
         except ValueError:
             print("  [WARNING] 잘못된 입력, 기본값 사용")
-            min_clearance = 1
+            min_clearance = 1.0
         
         # 5. 배치할 블록들 선택
         print(f"\n[INFO] 5. 배치할 블록 선택")
@@ -228,25 +228,31 @@ class ConfigGenerator:
         now = datetime.now()
         timestamp = now.strftime("%Y%m%d_%H%M%S")
         
+        # 미터 단위를 격자 단위로 변환
+        grid_unit = 0.5  # 0.5m per grid
+        margin_bow_grids = int(user_inputs['margin_bow'] / grid_unit)
+        margin_stern_grids = int(user_inputs['margin_stern'] / grid_unit) 
+        block_clearance_grids = int(user_inputs['min_clearance'] / grid_unit)
+        
         config = {
             "ship_configuration": {
                 "name": f"{user_inputs['ship_name']}_{timestamp}",
                 "grid_size": {
                     "width": user_inputs['width'],
                     "height": user_inputs['height'],
-                    "grid_unit": 1.0
+                    "grid_unit": grid_unit
                 },
                 "constraints": {
                     "margin": {
-                        "bow": user_inputs['margin_bow'],
-                        "stern": user_inputs['margin_stern']
+                        "bow": margin_bow_grids,
+                        "stern": margin_stern_grids
                     },
-                    "block_clearance": user_inputs['min_clearance']
+                    "block_clearance": block_clearance_grids
                 }
             },
             
             "voxelization_settings": {
-                "resolution": 1.0,
+                "resolution": 0.5,
                 "conversion_method": "footprint"
             },
             
@@ -357,7 +363,7 @@ class ConfigGenerator:
         print(f"\n[SUCCESS] === Config 생성 완료 ===")
         print(f"[INFO] 파일명: {config_filename}")
         print(f"[INFO] 자항선: {user_inputs['ship_name']} ({user_inputs['width']}m x {user_inputs['height']}m)")
-        print(f"[INFO] 여백: 선수{user_inputs['margin_bow']} 선미{user_inputs['margin_stern']}")
+        print(f"[INFO] 여백: 선수{user_inputs['margin_bow']}m 선미{user_inputs['margin_stern']}m (격자: {int(user_inputs['margin_bow']/0.5)}, {int(user_inputs['margin_stern']/0.5)})")
         print(f"[INFO] 블록 수: {len(user_inputs['selected_blocks'])}개")
         print(f"[SUCCESS] 이제 ship_placer에서 이 config 파일을 사용할 수 있습니다!")
 

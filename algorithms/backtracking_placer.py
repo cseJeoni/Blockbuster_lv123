@@ -60,7 +60,7 @@ class PracticalBacktracking:
         if depth >= len(blocks):
             return True
         block = blocks[depth]
-        max_cands = min(40, len(current_area.placed_blocks) * 8 + 25)
+        max_cands = min(25, len(current_area.placed_blocks) * 6 + 15)
         candidates = self._get_simple_candidates(current_area, block, max_candidates=max_cands)
         found_any_solution = False
         
@@ -70,22 +70,20 @@ class PracticalBacktracking:
         
         if not candidates:
             return False
-        for i, (pos_x, pos_y, should_rotate) in enumerate(candidates):
+        for i, (pos_x, pos_y) in enumerate(candidates):
             if time.time() - self.start_time > self.max_time:
                 return found_any_solution
-            original_rotation = block.rotation
-            if should_rotate and block.rotation == 0:
-                block.rotate()
+            
+            # 변경사항 2: 회전 고려 대신 무조건 긴쪽이 Y가 되도록 이미 처리됨
             if current_area.can_place_block(block, pos_x, pos_y):
                 current_area.place_block(block, pos_x, pos_y)
                 if self._backtrack(current_area, blocks, depth + 1):
                     found_any_solution = True
                     if depth + 1 >= len(blocks):
                         current_area.remove_block(block.id)
-                        block.rotation = original_rotation
                         return True
                 current_area.remove_block(block.id)
-            block.rotation = original_rotation
+                
         # 현재 블록을 건너뛰고 다음 블록으로 진행 (부분 배치 허용)
         if self._backtrack(current_area, blocks, depth + 1):
             found_any_solution = True
@@ -95,20 +93,14 @@ class PracticalBacktracking:
         candidates = []
         placed_count = len(area.placed_blocks)
         density_factor = min(2.0, 1.0 + placed_count * 0.1)
-        step_x = max(1, int(area.width // (15 * density_factor)))
-        step_y = max(1, int(area.height // (10 * density_factor)))
+        step_x = max(1, int(area.width // (12 * density_factor)))
+        step_y = max(1, int(area.height // (8 * density_factor)))
         
         base_positions = []
-        # 원본 방향으로 들어갈 수 있는 위치들
+        # 변경사항 2: 원본 방향만 (긴쪽이 Y가 되도록 이미 처리됨)
         for x in range(area.width - block.width, -1, -step_x):
             for y in range(0, area.height - block.height + 1, step_y):
                 base_positions.append((x, y))
-        
-        # 회전 방향으로 들어갈 수 있는 위치들 (블록이 정사각형이 아닌 경우)
-        if block.width != block.height:
-            for x in range(area.width - block.height, -1, -step_x):
-                for y in range(0, area.height - block.width + 1, step_y):
-                    base_positions.append((x, y))
         
         base_positions.sort(key=lambda pos: (-pos[0], pos[1]))
         strategic_positions = []
@@ -119,31 +111,19 @@ class PracticalBacktracking:
         stern_clearance = getattr(area, 'stern_clearance', 0)
         
         if is_first_block:
-            # 원본 방향 시도
+            # 원본 방향만 시도
             first_x = area.width - bow_clearance - block.width
             first_y = 0
             if first_x >= 0 and first_y >= 0 and first_y + block.height <= area.height:
                 strategic_positions.append((first_x, first_y))
-            
-            # 회전 방향 시도 (블록이 정사각형이 아닌 경우)
-            if block.width != block.height:
-                first_x_rot = area.width - bow_clearance - block.height
-                first_y_rot = 0
-                if first_x_rot >= 0 and first_y_rot >= 0 and first_y_rot + block.width <= area.height:
-                    strategic_positions.append((first_x_rot, first_y_rot))
         
         # 간단한 테스트 위치들도 추가
         simple_positions = []
         for test_x in [0, 5, 10, 20, 30]:
             for test_y in [0, 5, 10]:
-                # 원본 방향
+                # 원본 방향만
                 if (test_x + block.width <= area.width and 
                     test_y + block.height <= area.height):
-                    simple_positions.append((test_x, test_y))
-                # 회전 방향 (블록이 정사각형이 아닌 경우)
-                elif (block.width != block.height and
-                      test_x + block.height <= area.width and 
-                      test_y + block.width <= area.height):
                     simple_positions.append((test_x, test_y))
         
         all_positions = strategic_positions + base_positions + simple_positions
@@ -156,21 +136,13 @@ class PracticalBacktracking:
         
         candidates = []
         for i, (x, y) in enumerate(unique_positions):
-            # 원본 방향 시도
+            # 원본 방향만 시도 (회전 제거)
             if area.can_place_block(block, x, y):
                 score = self._calculate_quick_score(area, block, x, y)
                 candidates.append((x, y, False, score))
             
-            # 회전 방향 시도 (블록이 정사각형이 아닌 경우)
-            if block.width != block.height:
-                original_rotation = block.rotation
-                block.rotate()
-                if area.can_place_block(block, x, y):
-                    score = self._calculate_quick_score(area, block, x, y)
-                    candidates.append((x, y, True, score))
-                block.rotation = original_rotation
         candidates.sort(key=lambda c: (c[3], c[0], -c[1]), reverse=True)
-        final_candidates = [(x, y, rotate) for x, y, rotate, score in candidates[:max_candidates]]
+        final_candidates = [(x, y) for x, y, _, score in candidates[:max_candidates]]
         return final_candidates
     
     def _calculate_quick_score(self, area, block, x, y):

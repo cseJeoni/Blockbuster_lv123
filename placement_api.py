@@ -59,13 +59,13 @@ def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_ma
     return config_filename
 
 
-def run_placement(config_path, max_time=60, enable_visualization=False):
+def run_placement(config_path, max_time=5, enable_visualization=False):
     """
     블록 배치 실행 (ShipPlacer 활용)
     
     Args:
         config_path (str): Config 파일 경로
-        max_time (int): 최대 실행 시간 (초, 기본값 60)
+        max_time (int): 최대 실행 시간 (초, 기본값 5)
         enable_visualization (bool): 시각화 활성화 여부 (기본값 False)
     
     Returns:
@@ -80,7 +80,7 @@ def run_placement(config_path, max_time=60, enable_visualization=False):
         }
     
     Example:
-        result = run_placement("config_20250814_161004.json", max_time=30)
+        result = run_placement("config_20250814_161004.json", max_time=10)
         print(f"배치 못한 블록: {result['unplaced_blocks']}")
     """
     try:
@@ -128,13 +128,13 @@ def run_placement(config_path, max_time=60, enable_visualization=False):
         }
 
 
-def get_unplaced_blocks(config_path, max_time=60):
+def get_unplaced_blocks(config_path, max_time=5):
     """
     배치 못한 블록 리스트만 반환
     
     Args:
         config_path (str): Config 파일 경로
-        max_time (int): 최대 실행 시간 (초, 기본값 60)
+        max_time (int): 최대 실행 시간 (초, 기본값 5)
     
     Returns:
         list: 배치 못한 블록 이름 리스트
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     
     # 3. 배치 실행
     print(f"\n배치 실행 중...")
-    result = run_placement(config_path, max_time=30)
+    result = run_placement(config_path, max_time=5)
     
     # 4. 결과 출력
     print(f"\n=== 배치 결과 ===")

@@ -32,9 +32,9 @@ except ImportError as e:
     sys.exit(1)
 
 # SHIP 선박 블록 배치 최적화 설정
-SHIP_BLOCK_OPTIMAL_RESOLUTION = 1.0  # 1m - 선박 블록에 최적화된 해상도
-GRID_UNIT = 1.0  # 자항선 격자 단위 (1m)
-RESOLUTION_FACTOR = GRID_UNIT / SHIP_BLOCK_OPTIMAL_RESOLUTION  # 1개 셀 = 1m
+SHIP_BLOCK_OPTIMAL_RESOLUTION = 0.5  # 0.5m - 선박 블록에 최적화된 해상도
+GRID_UNIT = 0.5  # 자항선 격자 단위 (0.5m) - 해상도와 동일
+RESOLUTION_FACTOR = GRID_UNIT / SHIP_BLOCK_OPTIMAL_RESOLUTION  # 1개 셀 = 0.5m
 
 class OptimizedVoxelizer:
     """선박 블록 배치에 최적화된 3D 복셀화 클래스 (자동 방향 최적화 기능 포함)"""
@@ -42,7 +42,7 @@ class OptimizedVoxelizer:
     def __init__(self, fixed_resolution=SHIP_BLOCK_OPTIMAL_RESOLUTION, target_voxels=1000, enable_orientation_optimization=True):
         """
         Args:
-            fixed_resolution (float): 고정 해상도 (기본: 1.0m - 선박 블록 최적화)
+            fixed_resolution (float): 고정 해상도 (기본: 0.5m - 선박 블록 최적화)
             target_voxels (int): 목표 복셀 수 (해상도 고정시에는 참고용)
             enable_orientation_optimization (bool): 자동 방향 최적화 활성화
         """
@@ -236,7 +236,7 @@ class OptimizedVoxelizer:
                 # [AUTO] 자동 방향 최적화 적용
                 voxels_optimized, bbox_optimized, orientation = self.optimize_block_orientation(voxels_method1, bbox)
                 
-                return voxels_optimized, bbox_optimized, resolution
+                return voxels_optimized, bbox_optimized, resolution, orientation
                 
         except Exception as e:
             print(f"    - Built-in voxelization failed: {e}")
@@ -253,7 +253,7 @@ class OptimizedVoxelizer:
             # [AUTO] 자동 방향 최적화 적용
             voxels_optimized, bbox_optimized, orientation = self.optimize_block_orientation(voxels_method2, bbox)
             
-            return voxels_optimized, bbox_optimized, resolution
+            return voxels_optimized, bbox_optimized, resolution, orientation
         
         # 방법 3: 기존 Z-ray casting (최후 수단)
         print("    Method 3: Fallback Z-ray casting")
@@ -264,7 +264,7 @@ class OptimizedVoxelizer:
         # [AUTO] 자동 방향 최적화 적용
         voxels_optimized, bbox_optimized, orientation = self.optimize_block_orientation(voxels_method3, bbox)
         
-        return voxels_optimized, bbox_optimized, resolution
+        return voxels_optimized, bbox_optimized, resolution, orientation
     
     def _multi_directional_voxelize(self, mesh, resolution):
         """다방향 레이캐스팅 복셀화"""
@@ -1047,7 +1047,7 @@ def convert_mesh_to_25d_optimized(file_path, custom_resolution=None,
         mesh = voxelizer.process_mesh_file(file_path)
         
         final_resolution = voxelizer.get_resolution(mesh)
-        voxels_3d, bbox, final_resolution = voxelizer.voxelize_improved(mesh, final_resolution)
+        voxels_3d, bbox, final_resolution, selected_orientation = voxelizer.voxelize_improved(mesh, final_resolution)
         
         if np.sum(voxels_3d) == 0:
             print("[WARNING] No 3D voxels generated!")
@@ -1129,7 +1129,7 @@ def convert_mesh_to_25d_optimized(file_path, custom_resolution=None,
         else:
             print(f"\n[INFO] Skipping visualization (output_dir=None)")
         
-        return voxel_data_25d_list
+        return voxel_data_25d_list, selected_orientation
         
     except Exception as e:
         print(f"[ERROR] Orientation-optimized conversion failed: {e}")
@@ -1153,9 +1153,9 @@ def main():
         print("  python Voxelizer_Improve.py <file.obj> <resolution> <output_dir>  # 저장 디렉토리 지정")
         print("")
         print("예시:")
-        print("  python Voxelizer_Improve.py 4386_183_000.obj                 # 0.2m 해상도 + 자동 최적화")
-        print("  python Voxelizer_Improve.py 4386_183_000.obj 0.1             # 0.1m 해상도 + 자동 최적화")
-        print("  python Voxelizer_Improve.py 4386_183_000.obj 0.25 results    # 0.25m 해상도 + 결과 폴더 지정")
+        print("  python Voxelizer_Improve.py 4386_183_000.obj                 # 0.5m 해상도 + 자동 최적화")
+        print("  python Voxelizer_Improve.py 4386_183_000.obj 0.25            # 0.25m 해상도 + 자동 최적화")
+        print("  python Voxelizer_Improve.py 4386_183_000.obj 1.0 results     # 1.0m 해상도 + 결과 폴더 지정")
         print("")
         print("[AUTO] 자동 방향 최적화 특징:")
         print("  [AUTO] 3가지 방향 (XY, XZ, YZ 평면) 중 바닥 면적 최대인 방향 자동 선택")
@@ -1170,10 +1170,10 @@ def main():
         print("  [DIR] 'voxel_results_improved' 폴더에 타임스탬프 포함 파일명으로 저장")
         print("")
         print("[TIP] 권장 해상도:")
-        print("  - 0.1m: 고정밀 (2m ÷ 20개 셀)")
-        print("  - 0.2m: 최적화 (2m ÷ 10개 셀) [DEFAULT] 기본값")
-        print("  - 0.25m: 고속 (2m ÷ 8개 셀)")
-        print("  - 0.5m: 초고속 (2m ÷ 4개 셀)")
+        print("  - 0.25m: 고정밀 (0.5m ÷ 2개 셀)")
+        print("  - 0.5m: 최적화 (0.5m ÷ 1개 셀) [DEFAULT] 기본값")
+        print("  - 1.0m: 고속 (0.5m × 2배 크기)")
+        print("  - 2.0m: 초고속 (0.5m × 4배 크기)")
         return
     
     file_path = sys.argv[1]

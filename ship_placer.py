@@ -469,7 +469,7 @@ def main():
         return
     
     config_path = sys.argv[1]
-    max_time = 30
+    max_time = 5
     enable_visualization = False
     
     # 인자 파싱
