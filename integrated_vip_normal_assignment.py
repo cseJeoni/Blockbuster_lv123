@@ -84,8 +84,8 @@ def load_labeling(file_path: str) -> Dict:
 class IntegratedVoyageAssigner:
     MAX_STOWAGE_DAYS = 14           # 조기 적치 허용일(2주)
     PAGE_SIZE = 18                  # 면적 정보가 없을 때 한 번에 넣을 최대 블록 수
-    LV1_TIMEOUT = 10                # 초
-    LV1_TIMEOUT_SINGLE_WINDOW = 180 # 유효 창이 1개뿐인 블록 포함 시
+    LV1_TIMEOUT = 5                # 초
+    LV1_TIMEOUT_SINGLE_WINDOW = 90 # 유효 창이 1개뿐인 블록 포함 시
     CAPACITY_RATIO = 1.05           # 105% 고정
 
     def __init__(self,
