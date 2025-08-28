@@ -1,44 +1,43 @@
 {
   "analysis_info": {
-    "timestamp": "2025-08-15T19:50:26+09:00",
-    "total_blocks_analyzed": 360,
+    "timestamp": "2025-08-28T00:41:13",
+    "safety_margin": 2.0,
     "vessel_specs": [
       {
         "id": 1,
-        "width": 62,
-        "height": 170,
-        "name": "자항선1"
+        "name": "자항선1",
+        "width": 62.0,
+        "height": 170.0
       },
       {
         "id": 2,
-        "width": 36,
-        "height": 84,
-        "name": "자항선2"
+        "name": "자항선2",
+        "width": 36.0,
+        "height": 84.0
       },
       {
         "id": 3,
-        "width": 32,
-        "height": 120,
-        "name": "자항선3"
+        "name": "자항선3",
+        "width": 32.0,
+        "height": 120.0
       },
       {
         "id": 4,
-        "width": 40,
-        "height": 130,
-        "name": "자항선4"
+        "name": "자항선4",
+        "width": 40.0,
+        "height": 130.0
       },
       {
         "id": 5,
-        "width": 32,
-        "height": 116,
-        "name": "자항선5"
+        "name": "자항선5",
+        "width": 32.0,
+        "height": 116.0
       }
-    ]
+    ],
+    "voxel_cache_dir": "voxel_cache"
   },
   "classification": {
     "vip_blocks": [
-      "4385_20H",
-      "4387_20H",
       "4388_20Y",
       "4389_20Y",
       "4390_20Y",
@@ -140,7 +139,6 @@
       "4375_20K",
       "4375_20L",
       "4375_20N",
-      "4375_20Y",
       "4375_245_000",
       "4375_255_000",
       "4375_285_000",
@@ -249,6 +247,7 @@
       "4385_171_000",
       "4385_20F",
       "4385_20G",
+      "4385_20H",
       "4385_629_000",
       "4385_639_000",
       "4386_628_000",
@@ -259,6 +258,7 @@
       "4387_20E",
       "4387_20F",
       "4387_20G",
+      "4387_20H",
       "4387_242_000",
       "4387_252_000",
       "4387_283_000",
@@ -400,21 +400,24 @@
       "4393_683_000",
       "4393_693_000"
     ],
-    "problematic_blocks": [],
+    "problematic_blocks": [
+      "4375_20Y"
+    ],
     "summary": {
       "total": 360,
-      "vip_count": 8,
-      "normal_count": 352,
-      "problematic_count": 0,
-      "vip_ratio": 2.2222222222222223
+      "vip_count": 6,
+      "normal_count": 353,
+      "problematic_count": 1,
+      "vip_ratio": 1.67
     }
   },
   "detailed_results": {
     "2534_202_000": {
       "block_info": {
-        "width": 21,
-        "height": 13,
-        "area": 273
+        "width": 12.0,
+        "height": 21.0,
+        "area": 252.0,
+        "source": "2534_202_000.json"
       },
       "compatible_vessels": [
         1,
@@ -423,15 +426,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_212_000": {
       "block_info": {
-        "width": 20,
-        "height": 19,
-        "area": 380
+        "width": 18.5,
+        "height": 19.0,
+        "area": 351.5,
+        "source": "2534_212_000.json"
       },
       "compatible_vessels": [
         1,
@@ -440,15 +447,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_221_000": {
       "block_info": {
-        "width": 17,
-        "height": 27,
-        "area": 459
+        "width": 16.5,
+        "height": 26.0,
+        "area": 429.0,
+        "source": "2534_221_000.json"
       },
       "compatible_vessels": [
         1,
@@ -457,15 +468,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_222_000": {
       "block_info": {
-        "width": 22,
-        "height": 18,
-        "area": 396
+        "width": 18.5,
+        "height": 21.0,
+        "area": 388.5,
+        "source": "2534_222_000.json"
       },
       "compatible_vessels": [
         1,
@@ -474,15 +489,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_224_000": {
       "block_info": {
-        "width": 20,
-        "height": 27,
-        "area": 540
+        "width": 19.0,
+        "height": 26.0,
+        "area": 494.0,
+        "source": "2534_224_000.json"
       },
       "compatible_vessels": [
         1,
@@ -491,15 +510,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_226_000": {
       "block_info": {
-        "width": 16,
-        "height": 27,
-        "area": 432
+        "width": 16.0,
+        "height": 26.5,
+        "area": 424.0,
+        "source": "2534_226_000.json"
       },
       "compatible_vessels": [
         1,
@@ -508,15 +531,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_227_000": {
       "block_info": {
-        "width": 19,
-        "height": 27,
-        "area": 513
+        "width": 19.0,
+        "height": 26.0,
+        "area": 494.0,
+        "source": "2534_227_000.json"
       },
       "compatible_vessels": [
         1,
@@ -525,15 +552,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_229_000": {
       "block_info": {
-        "width": 16,
-        "height": 27,
-        "area": 432
+        "width": 15.5,
+        "height": 26.0,
+        "area": 403.0,
+        "source": "2534_229_000.json"
       },
       "compatible_vessels": [
         1,
@@ -542,15 +573,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_231_000": {
       "block_info": {
-        "width": 17,
-        "height": 22,
-        "area": 374
+        "width": 16.0,
+        "height": 21.0,
+        "area": 336.0,
+        "source": "2534_231_000.json"
       },
       "compatible_vessels": [
         1,
@@ -559,15 +594,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_232_000": {
       "block_info": {
-        "width": 22,
-        "height": 18,
-        "area": 396
+        "width": 18.5,
+        "height": 21.0,
+        "area": 388.5,
+        "source": "2534_232_000.json"
       },
       "compatible_vessels": [
         1,
@@ -576,15 +615,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_234_000": {
       "block_info": {
-        "width": 20,
-        "height": 22,
-        "area": 440
+        "width": 19.0,
+        "height": 21.0,
+        "area": 399.0,
+        "source": "2534_234_000.json"
       },
       "compatible_vessels": [
         1,
@@ -593,15 +636,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_236_000": {
       "block_info": {
-        "width": 16,
-        "height": 22,
-        "area": 352
+        "width": 16.0,
+        "height": 21.0,
+        "area": 336.0,
+        "source": "2534_236_000.json"
       },
       "compatible_vessels": [
         1,
@@ -610,15 +657,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_239_000": {
       "block_info": {
-        "width": 16,
-        "height": 21,
-        "area": 336
+        "width": 15.5,
+        "height": 21.5,
+        "area": 333.25,
+        "source": "2534_239_000.json"
       },
       "compatible_vessels": [
         1,
@@ -627,15 +678,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_241_000": {
       "block_info": {
-        "width": 22,
-        "height": 19,
-        "area": 418
+        "width": 18.0,
+        "height": 21.0,
+        "area": 378.0,
+        "source": "2534_241_000.json"
       },
       "compatible_vessels": [
         1,
@@ -644,15 +699,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_251_000": {
       "block_info": {
-        "width": 21,
-        "height": 13,
-        "area": 273
+        "width": 12.5,
+        "height": 21.0,
+        "area": 262.5,
+        "source": "2534_251_000.json"
       },
       "compatible_vessels": [
         1,
@@ -661,15 +720,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_281_000": {
       "block_info": {
-        "width": 21,
-        "height": 15,
-        "area": 315
+        "width": 14.0,
+        "height": 21.5,
+        "area": 301.0,
+        "source": "2534_281_000.json"
       },
       "compatible_vessels": [
         1,
@@ -678,15 +741,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_282_000": {
       "block_info": {
-        "width": 19,
-        "height": 10,
-        "area": 190
+        "width": 15.5,
+        "height": 18.5,
+        "area": 286.75,
+        "source": "2534_282_000.json"
       },
       "compatible_vessels": [
         1,
@@ -695,15 +762,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_291_000": {
       "block_info": {
-        "width": 21,
-        "height": 15,
-        "area": 315
+        "width": 13.5,
+        "height": 21.0,
+        "area": 283.5,
+        "source": "2534_291_000.json"
       },
       "compatible_vessels": [
         1,
@@ -712,15 +783,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_292_000": {
       "block_info": {
-        "width": 19,
-        "height": 10,
-        "area": 190
+        "width": 15.5,
+        "height": 19.0,
+        "area": 294.5,
+        "source": "2534_292_000.json"
       },
       "compatible_vessels": [
         1,
@@ -729,60 +804,82 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_40B": {
       "block_info": {
-        "width": 31,
-        "height": 41,
-        "area": 1271
+        "width": 30.0,
+        "height": 41.5,
+        "area": 1245.0,
+        "source": "2534_40B.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_40C": {
       "block_info": {
-        "width": 31,
-        "height": 42,
-        "area": 1302
+        "width": 30.0,
+        "height": 41.5,
+        "area": 1245.0,
+        "source": "2534_40C.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_40D": {
       "block_info": {
-        "width": 31,
-        "height": 42,
-        "area": 1302
+        "width": 30.0,
+        "height": 41.5,
+        "area": 1245.0,
+        "source": "2534_40D.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_66B": {
       "block_info": {
-        "width": 53,
-        "height": 13,
-        "area": 689
+        "width": 13.0,
+        "height": 52.5,
+        "area": 682.5,
+        "source": "2534_66B.json"
       },
       "compatible_vessels": [
         1,
@@ -791,15 +888,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2534_67B": {
       "block_info": {
-        "width": 54,
-        "height": 13,
-        "area": 702
+        "width": 13.0,
+        "height": 52.5,
+        "area": 682.5,
+        "source": "2534_67B.json"
       },
       "compatible_vessels": [
         1,
@@ -808,15 +909,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2535_21D": {
       "block_info": {
-        "width": 22,
-        "height": 46,
-        "area": 1012
+        "width": 21.0,
+        "height": 45.5,
+        "area": 955.5,
+        "source": "2535_21D.json"
       },
       "compatible_vessels": [
         1,
@@ -825,15 +930,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2535_22D": {
       "block_info": {
-        "width": 19,
-        "height": 37,
-        "area": 703
+        "width": 19.0,
+        "height": 37.0,
+        "area": 703.0,
+        "source": "2535_22D.json"
       },
       "compatible_vessels": [
         1,
@@ -842,30 +951,40 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2535_40D": {
       "block_info": {
-        "width": 31,
-        "height": 42,
-        "area": 1302
+        "width": 30.0,
+        "height": 41.5,
+        "area": 1245.0,
+        "source": "2535_40D.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2543_21D": {
       "block_info": {
-        "width": 21,
-        "height": 51,
-        "area": 1071
+        "width": 20.0,
+        "height": 51.5,
+        "area": 1030.0,
+        "source": "2543_21D.json"
       },
       "compatible_vessels": [
         1,
@@ -874,15 +993,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2543_22D": {
       "block_info": {
-        "width": 20,
-        "height": 46,
-        "area": 920
+        "width": 19.0,
+        "height": 45.5,
+        "area": 864.5,
+        "source": "2543_22D.json"
       },
       "compatible_vessels": [
         1,
@@ -891,15 +1014,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2550_223_000": {
       "block_info": {
-        "width": 20,
-        "height": 27,
-        "area": 540
+        "width": 20.0,
+        "height": 26.5,
+        "area": 530.0,
+        "source": "2550_223_000.json"
       },
       "compatible_vessels": [
         1,
@@ -908,15 +1035,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2550_224_000": {
       "block_info": {
-        "width": 20,
-        "height": 26,
-        "area": 520
+        "width": 19.0,
+        "height": 26.5,
+        "area": 503.5,
+        "source": "2550_224_000.json"
       },
       "compatible_vessels": [
         1,
@@ -925,15 +1056,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2550_225_000": {
       "block_info": {
-        "width": 19,
-        "height": 26,
-        "area": 494
+        "width": 19.0,
+        "height": 26.5,
+        "area": 503.5,
+        "source": "2550_225_000.json"
       },
       "compatible_vessels": [
         1,
@@ -942,15 +1077,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2550_233_000": {
       "block_info": {
-        "width": 20,
-        "height": 22,
-        "area": 440
+        "width": 20.0,
+        "height": 21.5,
+        "area": 430.0,
+        "source": "2550_233_000.json"
       },
       "compatible_vessels": [
         1,
@@ -959,15 +1098,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2550_234_000": {
       "block_info": {
-        "width": 20,
-        "height": 22,
-        "area": 440
+        "width": 19.0,
+        "height": 21.0,
+        "area": 399.0,
+        "source": "2550_234_000.json"
       },
       "compatible_vessels": [
         1,
@@ -976,15 +1119,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2550_235_000": {
       "block_info": {
-        "width": 19,
-        "height": 22,
-        "area": 418
+        "width": 19.0,
+        "height": 21.0,
+        "area": 399.0,
+        "source": "2550_235_000.json"
       },
       "compatible_vessels": [
         1,
@@ -993,15 +1140,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2550_66B": {
       "block_info": {
-        "width": 53,
-        "height": 14,
-        "area": 742
+        "width": 13.0,
+        "height": 52.5,
+        "area": 682.5,
+        "source": "2550_66B.json"
       },
       "compatible_vessels": [
         1,
@@ -1010,15 +1161,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2550_67B": {
       "block_info": {
-        "width": 53,
-        "height": 13,
-        "area": 689
+        "width": 13.0,
+        "height": 52.5,
+        "area": 682.5,
+        "source": "2550_67B.json"
       },
       "compatible_vessels": [
         1,
@@ -1027,15 +1182,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_21D": {
       "block_info": {
-        "width": 22,
-        "height": 46,
-        "area": 1012
+        "width": 21.0,
+        "height": 45.5,
+        "area": 955.5,
+        "source": "2563_21D.json"
       },
       "compatible_vessels": [
         1,
@@ -1044,15 +1203,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_221_000": {
       "block_info": {
-        "width": 17,
-        "height": 27,
-        "area": 459
+        "width": 16.5,
+        "height": 26.5,
+        "area": 437.25,
+        "source": "2563_221_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1061,15 +1224,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_222_000": {
       "block_info": {
-        "width": 21,
-        "height": 19,
-        "area": 399
+        "width": 19.0,
+        "height": 21.0,
+        "area": 399.0,
+        "source": "2563_222_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1078,15 +1245,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_223_000": {
       "block_info": {
-        "width": 20,
-        "height": 27,
-        "area": 540
+        "width": 20.0,
+        "height": 26.5,
+        "area": 530.0,
+        "source": "2563_223_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1095,15 +1266,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_225_000": {
       "block_info": {
-        "width": 19,
-        "height": 27,
-        "area": 513
+        "width": 19.0,
+        "height": 26.5,
+        "area": 503.5,
+        "source": "2563_225_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1112,15 +1287,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_229_000": {
       "block_info": {
-        "width": 16,
-        "height": 27,
-        "area": 432
+        "width": 16.0,
+        "height": 26.5,
+        "area": 424.0,
+        "source": "2563_229_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1129,15 +1308,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_22D": {
       "block_info": {
-        "width": 20,
-        "height": 37,
-        "area": 740
+        "width": 19.0,
+        "height": 37.0,
+        "area": 703.0,
+        "source": "2563_22D.json"
       },
       "compatible_vessels": [
         1,
@@ -1146,15 +1329,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_231_000": {
       "block_info": {
-        "width": 17,
-        "height": 21,
-        "area": 357
+        "width": 16.0,
+        "height": 21.0,
+        "area": 336.0,
+        "source": "2563_231_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1163,15 +1350,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_232_000": {
       "block_info": {
-        "width": 22,
-        "height": 19,
-        "area": 418
+        "width": 19.0,
+        "height": 21.0,
+        "area": 399.0,
+        "source": "2563_232_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1180,15 +1371,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_233_000": {
       "block_info": {
-        "width": 20,
-        "height": 22,
-        "area": 440
+        "width": 20.0,
+        "height": 21.0,
+        "area": 420.0,
+        "source": "2563_233_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1197,15 +1392,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_235_000": {
       "block_info": {
-        "width": 19,
-        "height": 22,
-        "area": 418
+        "width": 19.0,
+        "height": 21.5,
+        "area": 408.5,
+        "source": "2563_235_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1214,15 +1413,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2563_239_000": {
       "block_info": {
-        "width": 16,
-        "height": 21,
-        "area": 336
+        "width": 16.0,
+        "height": 21.5,
+        "area": 344.0,
+        "source": "2563_239_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1231,15 +1434,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_21D": {
       "block_info": {
-        "width": 22,
-        "height": 46,
-        "area": 1012
+        "width": 21.0,
+        "height": 45.5,
+        "area": 955.5,
+        "source": "2567_21D.json"
       },
       "compatible_vessels": [
         1,
@@ -1248,15 +1455,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_223_000": {
       "block_info": {
-        "width": 20,
-        "height": 27,
-        "area": 540
+        "width": 20.0,
+        "height": 26.5,
+        "area": 530.0,
+        "source": "2567_223_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1265,15 +1476,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_224_000": {
       "block_info": {
-        "width": 20,
-        "height": 27,
-        "area": 540
+        "width": 19.0,
+        "height": 26.5,
+        "area": 503.5,
+        "source": "2567_224_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1282,15 +1497,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_225_000": {
       "block_info": {
-        "width": 19,
-        "height": 27,
-        "area": 513
+        "width": 19.0,
+        "height": 26.5,
+        "area": 503.5,
+        "source": "2567_225_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1299,15 +1518,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_228_000": {
       "block_info": {
-        "width": 19,
-        "height": 27,
-        "area": 513
+        "width": 19.0,
+        "height": 26.0,
+        "area": 494.0,
+        "source": "2567_228_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1316,15 +1539,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_22D": {
       "block_info": {
-        "width": 19,
-        "height": 37,
-        "area": 703
+        "width": 19.0,
+        "height": 37.0,
+        "area": 703.0,
+        "source": "2567_22D.json"
       },
       "compatible_vessels": [
         1,
@@ -1333,15 +1560,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_233_000": {
       "block_info": {
-        "width": 20,
-        "height": 22,
-        "area": 440
+        "width": 20.0,
+        "height": 21.5,
+        "area": 430.0,
+        "source": "2567_233_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1350,15 +1581,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_234_000": {
       "block_info": {
-        "width": 19,
-        "height": 22,
-        "area": 418
+        "width": 19.0,
+        "height": 21.0,
+        "area": 399.0,
+        "source": "2567_234_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1367,15 +1602,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_235_000": {
       "block_info": {
-        "width": 19,
-        "height": 21,
-        "area": 399
+        "width": 19.0,
+        "height": 21.5,
+        "area": 408.5,
+        "source": "2567_235_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1384,15 +1623,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "2567_238_000": {
       "block_info": {
-        "width": 19,
-        "height": 22,
-        "area": 418
+        "width": 19.0,
+        "height": 21.5,
+        "area": 408.5,
+        "source": "2567_238_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1401,15 +1644,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_11B": {
       "block_info": {
-        "width": 26,
-        "height": 21,
-        "area": 546
+        "width": 21.0,
+        "height": 25.5,
+        "area": 535.5,
+        "source": "3307_11B.json"
       },
       "compatible_vessels": [
         1,
@@ -1418,15 +1665,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_12B": {
       "block_info": {
-        "width": 26,
-        "height": 18,
-        "area": 468
+        "width": 18.5,
+        "height": 25.5,
+        "area": 471.75,
+        "source": "3307_12B.json"
       },
       "compatible_vessels": [
         1,
@@ -1435,15 +1686,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_13B": {
       "block_info": {
-        "width": 26,
-        "height": 18,
-        "area": 468
+        "width": 18.5,
+        "height": 25.5,
+        "area": 471.75,
+        "source": "3307_13B.json"
       },
       "compatible_vessels": [
         1,
@@ -1452,15 +1707,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_20A": {
       "block_info": {
-        "width": 22,
-        "height": 21,
-        "area": 462
+        "width": 21.5,
+        "height": 21.5,
+        "area": 462.25,
+        "source": "3307_20A.json"
       },
       "compatible_vessels": [
         1,
@@ -1469,15 +1728,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_24A": {
       "block_info": {
-        "width": 34,
-        "height": 13,
-        "area": 442
+        "width": 12.5,
+        "height": 33.5,
+        "area": 418.75,
+        "source": "3307_24A.json"
       },
       "compatible_vessels": [
         1,
@@ -1486,15 +1749,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_25A": {
       "block_info": {
-        "width": 54,
-        "height": 11,
-        "area": 594
+        "width": 10.5,
+        "height": 53.5,
+        "area": 561.75,
+        "source": "3307_25A.json"
       },
       "compatible_vessels": [
         1,
@@ -1503,15 +1770,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_81D": {
       "block_info": {
-        "width": 31,
-        "height": 20,
-        "area": 620
+        "width": 19.0,
+        "height": 30.5,
+        "area": 579.5,
+        "source": "3307_81D.json"
       },
       "compatible_vessels": [
         1,
@@ -1520,15 +1791,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_82D": {
       "block_info": {
-        "width": 30,
-        "height": 20,
-        "area": 600
+        "width": 20.5,
+        "height": 30.0,
+        "area": 615.0,
+        "source": "3307_82D.json"
       },
       "compatible_vessels": [
         1,
@@ -1537,15 +1812,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "3307_83D": {
       "block_info": {
-        "width": 31,
-        "height": 20,
-        "area": 620
+        "width": 20.5,
+        "height": 30.5,
+        "area": 625.25,
+        "source": "3307_83D.json"
       },
       "compatible_vessels": [
         1,
@@ -1554,15 +1833,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_148_000": {
       "block_info": {
-        "width": 17,
-        "height": 18,
-        "area": 306
+        "width": 15.5,
+        "height": 17.5,
+        "area": 271.25,
+        "source": "4374_148_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1571,15 +1854,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_158_000": {
       "block_info": {
-        "width": 17,
-        "height": 18,
-        "area": 306
+        "width": 15.5,
+        "height": 17.5,
+        "area": 271.25,
+        "source": "4374_158_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1588,15 +1875,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_162_000": {
       "block_info": {
-        "width": 23,
-        "height": 9,
-        "area": 207
+        "width": 8.5,
+        "height": 22.5,
+        "area": 191.25,
+        "source": "4374_162_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1605,15 +1896,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_172_000": {
       "block_info": {
-        "width": 23,
-        "height": 9,
-        "area": 207
+        "width": 8.5,
+        "height": 22.5,
+        "area": 191.25,
+        "source": "4374_172_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1622,100 +1917,150 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_20G": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4374_20G.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_20H": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4374_20H.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_20J": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4374_20J.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_20K": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4374_20K.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_20L": {
       "block_info": {
-        "width": 32,
-        "height": 62,
-        "area": 1984
+        "width": 31.5,
+        "height": 61.5,
+        "area": 1937.25,
+        "source": "4374_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_20N": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 20.0,
+        "height": 61.5,
+        "area": 1230.0,
+        "source": "4374_20N.json"
       },
       "compatible_vessels": [
         1,
-        4
+        2,
+        3,
+        4,
+        5
       ],
-      "vessel_count": 2,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4374_643_000": {
       "block_info": {
-        "width": 17,
-        "height": 15,
-        "area": 255
+        "width": 15.0,
+        "height": 17.5,
+        "area": 262.5,
+        "source": "4374_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1724,15 +2069,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_148_000": {
       "block_info": {
-        "width": 17,
-        "height": 18,
-        "area": 306
+        "width": 15.5,
+        "height": 17.5,
+        "area": 271.25,
+        "source": "4375_148_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1741,15 +2090,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_158_000": {
       "block_info": {
-        "width": 17,
-        "height": 18,
-        "area": 306
+        "width": 15.5,
+        "height": 17.5,
+        "area": 271.25,
+        "source": "4375_158_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1758,15 +2111,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_161_000": {
       "block_info": {
-        "width": 23,
-        "height": 20,
-        "area": 460
+        "width": 19.5,
+        "height": 22.5,
+        "area": 438.75,
+        "source": "4375_161_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1775,15 +2132,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_162_000": {
       "block_info": {
-        "width": 23,
-        "height": 9,
-        "area": 207
+        "width": 8.5,
+        "height": 22.5,
+        "area": 191.25,
+        "source": "4375_162_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1792,15 +2153,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_166_000": {
       "block_info": {
-        "width": 16,
-        "height": 18,
-        "area": 288
+        "width": 15.5,
+        "height": 18.0,
+        "area": 279.0,
+        "source": "4375_166_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1809,15 +2174,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_171_000": {
       "block_info": {
-        "width": 23,
-        "height": 20,
-        "area": 460
+        "width": 19.5,
+        "height": 22.5,
+        "area": 438.75,
+        "source": "4375_171_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1826,15 +2195,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_172_000": {
       "block_info": {
-        "width": 23,
-        "height": 9,
-        "area": 207
+        "width": 8.5,
+        "height": 22.5,
+        "area": 191.25,
+        "source": "4375_172_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1843,15 +2216,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_176_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 16.0,
+        "area": 248.0,
+        "source": "4375_176_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1860,29 +2237,41 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_20G": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4375_20G.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_20H": {
       "block_info": {
-        "width": 19,
-        "height": 62,
-        "area": 1178
+        "width": 17.5,
+        "height": 61.5,
+        "area": 1076.25,
+        "source": "4375_20H.json"
       },
       "compatible_vessels": [
         1,
@@ -1891,29 +2280,41 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_20J": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4375_20J.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_20K": {
       "block_info": {
-        "width": 18,
-        "height": 63,
-        "area": 1134
+        "width": 17.5,
+        "height": 61.5,
+        "area": 1076.25,
+        "source": "4375_20K.json"
       },
       "compatible_vessels": [
         1,
@@ -1922,58 +2323,84 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_20L": {
       "block_info": {
-        "width": 33,
-        "height": 62,
-        "area": 2046
+        "width": 31.5,
+        "height": 61.5,
+        "area": 1937.25,
+        "source": "4375_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_20N": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4375_20N.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_20Y": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 61.5,
+        "height": 62.5,
+        "area": 3843.75,
+        "source": "4375_20Y.json"
       },
-      "compatible_vessels": [
-        1,
-        4
-      ],
-      "vessel_count": 2,
-      "label": "일반",
-      "is_vip": false
+      "compatible_vessels": [],
+      "incompatible_reasons": {
+        "1": "폭 초과",
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "4": "폭 초과",
+        "5": "폭 초과"
+      },
+      "vessel_count": 0,
+      "label": "문제",
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_245_000": {
       "block_info": {
-        "width": 22,
-        "height": 22,
-        "area": 484
+        "width": 20.5,
+        "height": 21.5,
+        "area": 440.75,
+        "source": "4375_245_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1982,15 +2409,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_255_000": {
       "block_info": {
-        "width": 22,
-        "height": 21,
-        "area": 462
+        "width": 20.5,
+        "height": 21.0,
+        "area": 430.5,
+        "source": "4375_255_000.json"
       },
       "compatible_vessels": [
         1,
@@ -1999,15 +2430,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_285_000": {
       "block_info": {
-        "width": 22,
-        "height": 10,
-        "area": 220
+        "width": 6.0,
+        "height": 21.5,
+        "area": 129.0,
+        "source": "4375_285_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2016,15 +2451,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_287_000": {
       "block_info": {
-        "width": 22,
-        "height": 21,
-        "area": 462
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4375_287_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2033,15 +2472,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_295_000": {
       "block_info": {
-        "width": 22,
-        "height": 10,
-        "area": 220
+        "width": 6.0,
+        "height": 21.5,
+        "area": 129.0,
+        "source": "4375_295_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2050,15 +2493,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_297_000": {
       "block_info": {
-        "width": 23,
-        "height": 23,
-        "area": 529
+        "width": 22.5,
+        "height": 22.5,
+        "area": 506.25,
+        "source": "4375_297_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2067,15 +2514,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_642_000": {
       "block_info": {
-        "width": 16,
-        "height": 15,
-        "area": 240
+        "width": 15.0,
+        "height": 15.5,
+        "area": 232.5,
+        "source": "4375_642_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2084,15 +2535,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_643_000": {
       "block_info": {
-        "width": 17,
-        "height": 15,
-        "area": 255
+        "width": 15.0,
+        "height": 17.5,
+        "area": 262.5,
+        "source": "4375_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2101,15 +2556,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_646_000": {
       "block_info": {
-        "width": 22,
-        "height": 10,
-        "area": 220
+        "width": 9.5,
+        "height": 22.5,
+        "area": 213.75,
+        "source": "4375_646_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2118,15 +2577,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_647_000": {
       "block_info": {
-        "width": 22,
-        "height": 15,
-        "area": 330
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4375_647_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2135,15 +2598,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_652_000": {
       "block_info": {
-        "width": 16,
-        "height": 15,
-        "area": 240
+        "width": 15.0,
+        "height": 15.5,
+        "area": 232.5,
+        "source": "4375_652_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2152,15 +2619,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_653_000": {
       "block_info": {
-        "width": 17,
-        "height": 15,
-        "area": 255
+        "width": 15.0,
+        "height": 17.5,
+        "area": 262.5,
+        "source": "4375_653_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2169,15 +2640,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_656_000": {
       "block_info": {
-        "width": 22,
-        "height": 10,
-        "area": 220
+        "width": 9.5,
+        "height": 22.5,
+        "area": 213.75,
+        "source": "4375_656_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2186,15 +2661,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_657_000": {
       "block_info": {
-        "width": 22,
-        "height": 15,
-        "area": 330
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4375_657_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2203,15 +2682,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_665_000": {
       "block_info": {
-        "width": 22,
-        "height": 6,
-        "area": 132
+        "width": 6.0,
+        "height": 21.5,
+        "area": 129.0,
+        "source": "4375_665_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2220,15 +2703,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_667_000": {
       "block_info": {
-        "width": 24,
-        "height": 21,
-        "area": 504
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4375_667_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2237,15 +2724,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_675_000": {
       "block_info": {
-        "width": 22,
-        "height": 6,
-        "area": 132
+        "width": 6.0,
+        "height": 21.0,
+        "area": 126.0,
+        "source": "4375_675_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2254,15 +2745,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_677_000": {
       "block_info": {
-        "width": 23,
-        "height": 21,
-        "area": 483
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4375_677_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2271,15 +2766,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_685_000": {
       "block_info": {
-        "width": 22,
-        "height": 9,
-        "area": 198
+        "width": 6.0,
+        "height": 21.5,
+        "area": 129.0,
+        "source": "4375_685_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2288,15 +2787,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_687_000": {
       "block_info": {
-        "width": 23,
-        "height": 27,
-        "area": 621
+        "width": 22.5,
+        "height": 25.5,
+        "area": 573.75,
+        "source": "4375_687_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2305,15 +2808,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_695_000": {
       "block_info": {
-        "width": 22,
-        "height": 9,
-        "area": 198
+        "width": 6.0,
+        "height": 21.5,
+        "area": 129.0,
+        "source": "4375_695_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2322,15 +2829,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4375_697_000": {
       "block_info": {
-        "width": 23,
-        "height": 28,
-        "area": 644
+        "width": 22.5,
+        "height": 27.5,
+        "area": 618.75,
+        "source": "4375_697_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2339,15 +2850,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_125_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 9.5,
+        "height": 14.0,
+        "area": 133.0,
+        "source": "4376_125_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2356,15 +2871,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_135_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 9.5,
+        "height": 14.0,
+        "area": 133.0,
+        "source": "4376_135_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2373,15 +2892,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_148_000": {
       "block_info": {
-        "width": 17,
-        "height": 18,
-        "area": 306
+        "width": 15.5,
+        "height": 17.5,
+        "area": 271.25,
+        "source": "4376_148_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2390,15 +2913,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_158_000": {
       "block_info": {
-        "width": 17,
-        "height": 18,
-        "area": 306
+        "width": 15.5,
+        "height": 17.5,
+        "area": 271.25,
+        "source": "4376_158_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2407,15 +2934,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_162_000": {
       "block_info": {
-        "width": 23,
-        "height": 9,
-        "area": 207
+        "width": 8.5,
+        "height": 22.5,
+        "area": 191.25,
+        "source": "4376_162_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2424,15 +2955,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_163_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.0,
+        "height": 22.5,
+        "area": 270.0,
+        "source": "4376_163_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2441,15 +2976,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_166_000": {
       "block_info": {
-        "width": 16,
-        "height": 18,
-        "area": 288
+        "width": 15.5,
+        "height": 18.0,
+        "area": 279.0,
+        "source": "4376_166_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2458,15 +2997,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_172_000": {
       "block_info": {
-        "width": 23,
-        "height": 9,
-        "area": 207
+        "width": 8.5,
+        "height": 22.5,
+        "area": 191.25,
+        "source": "4376_172_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2475,15 +3018,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_173_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.0,
+        "height": 22.5,
+        "area": 270.0,
+        "source": "4376_173_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2492,15 +3039,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_176_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 16.0,
+        "area": 248.0,
+        "source": "4376_176_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2509,114 +3060,173 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_20G": {
       "block_info": {
-        "width": 36,
-        "height": 63,
-        "area": 2268
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4376_20G.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_20H": {
       "block_info": {
-        "width": 36,
-        "height": 63,
-        "area": 2268
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4376_20H.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_20J": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4376_20J.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_20K": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4376_20K.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_20L": {
       "block_info": {
-        "width": 32,
-        "height": 63,
-        "area": 2016
+        "width": 31.5,
+        "height": 61.5,
+        "area": 1937.25,
+        "source": "4376_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_20N": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4376_20N.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_20P": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4376_20P.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_20Y": {
       "block_info": {
-        "width": 18,
-        "height": 62,
-        "area": 1116
+        "width": 17.5,
+        "height": 61.5,
+        "area": 1076.25,
+        "source": "4376_20Y.json"
       },
       "compatible_vessels": [
         1,
@@ -2625,15 +3235,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_266_000": {
       "block_info": {
-        "width": 23,
-        "height": 20,
-        "area": 460
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4376_266_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2642,15 +3256,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_276_000": {
       "block_info": {
-        "width": 23,
-        "height": 20,
-        "area": 460
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4376_276_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2659,15 +3277,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_286_000": {
       "block_info": {
-        "width": 23,
-        "height": 20,
-        "area": 460
+        "width": 19.5,
+        "height": 22.5,
+        "area": 438.75,
+        "source": "4376_286_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2676,15 +3298,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_287_000": {
       "block_info": {
-        "width": 22,
-        "height": 21,
-        "area": 462
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4376_287_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2693,15 +3319,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_296_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.5,
+        "height": 22.5,
+        "area": 438.75,
+        "source": "4376_296_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2710,15 +3340,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_297_000": {
       "block_info": {
-        "width": 23,
-        "height": 23,
-        "area": 529
+        "width": 22.5,
+        "height": 22.5,
+        "area": 506.25,
+        "source": "4376_297_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2727,15 +3361,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_642_000": {
       "block_info": {
-        "width": 16,
-        "height": 15,
-        "area": 240
+        "width": 15.0,
+        "height": 15.5,
+        "area": 232.5,
+        "source": "4376_642_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2744,15 +3382,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_643_000": {
       "block_info": {
-        "width": 17,
-        "height": 15,
-        "area": 255
+        "width": 15.0,
+        "height": 17.5,
+        "area": 262.5,
+        "source": "4376_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2761,15 +3403,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_646_000": {
       "block_info": {
-        "width": 22,
-        "height": 10,
-        "area": 220
+        "width": 9.5,
+        "height": 22.5,
+        "area": 213.75,
+        "source": "4376_646_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2778,15 +3424,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_647_000": {
       "block_info": {
-        "width": 22,
-        "height": 15,
-        "area": 330
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4376_647_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2795,15 +3445,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_652_000": {
       "block_info": {
-        "width": 16,
-        "height": 15,
-        "area": 240
+        "width": 15.0,
+        "height": 15.5,
+        "area": 232.5,
+        "source": "4376_652_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2812,15 +3466,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_653_000": {
       "block_info": {
-        "width": 17,
-        "height": 15,
-        "area": 255
+        "width": 15.0,
+        "height": 17.5,
+        "area": 262.5,
+        "source": "4376_653_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2829,15 +3487,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_656_000": {
       "block_info": {
-        "width": 22,
-        "height": 10,
-        "area": 220
+        "width": 9.5,
+        "height": 22.5,
+        "area": 213.75,
+        "source": "4376_656_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2846,15 +3508,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_657_000": {
       "block_info": {
-        "width": 22,
-        "height": 15,
-        "area": 330
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4376_657_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2863,15 +3529,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_666_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4376_666_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2880,15 +3550,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_667_000": {
       "block_info": {
-        "width": 23,
-        "height": 21,
-        "area": 483
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4376_667_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2897,15 +3571,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_676_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4376_676_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2914,15 +3592,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_677_000": {
       "block_info": {
-        "width": 24,
-        "height": 21,
-        "area": 504
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4376_677_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2931,15 +3613,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_686_000": {
       "block_info": {
-        "width": 23,
-        "height": 18,
-        "area": 414
+        "width": 17.0,
+        "height": 22.5,
+        "area": 382.5,
+        "source": "4376_686_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2948,15 +3634,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_687_000": {
       "block_info": {
-        "width": 23,
-        "height": 27,
-        "area": 621
+        "width": 22.5,
+        "height": 25.5,
+        "area": 573.75,
+        "source": "4376_687_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2965,15 +3655,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_696_000": {
       "block_info": {
-        "width": 23,
-        "height": 18,
-        "area": 414
+        "width": 17.0,
+        "height": 22.5,
+        "area": 382.5,
+        "source": "4376_696_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2982,15 +3676,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4376_697_000": {
       "block_info": {
-        "width": 23,
-        "height": 28,
-        "area": 644
+        "width": 22.5,
+        "height": 27.5,
+        "area": 618.75,
+        "source": "4376_697_000.json"
       },
       "compatible_vessels": [
         1,
@@ -2999,15 +3697,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_125_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 9.5,
+        "height": 14.0,
+        "area": 133.0,
+        "source": "4377_125_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3016,15 +3718,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_135_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 9.5,
+        "height": 14.0,
+        "area": 133.0,
+        "source": "4377_135_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3033,15 +3739,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_148_000": {
       "block_info": {
-        "width": 17,
-        "height": 18,
-        "area": 306
+        "width": 15.5,
+        "height": 17.5,
+        "area": 271.25,
+        "source": "4377_148_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3050,15 +3760,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_158_000": {
       "block_info": {
-        "width": 17,
-        "height": 18,
-        "area": 306
+        "width": 15.5,
+        "height": 17.5,
+        "area": 271.25,
+        "source": "4377_158_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3067,15 +3781,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_162_000": {
       "block_info": {
-        "width": 23,
-        "height": 9,
-        "area": 207
+        "width": 8.5,
+        "height": 22.5,
+        "area": 191.25,
+        "source": "4377_162_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3084,15 +3802,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_163_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.0,
+        "height": 22.5,
+        "area": 270.0,
+        "source": "4377_163_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3101,15 +3823,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_166_000": {
       "block_info": {
-        "width": 16,
-        "height": 18,
-        "area": 288
+        "width": 15.5,
+        "height": 18.0,
+        "area": 279.0,
+        "source": "4377_166_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3118,15 +3844,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_172_000": {
       "block_info": {
-        "width": 23,
-        "height": 9,
-        "area": 207
+        "width": 8.5,
+        "height": 22.5,
+        "area": 191.25,
+        "source": "4377_172_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3135,15 +3865,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_173_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.0,
+        "height": 22.5,
+        "area": 270.0,
+        "source": "4377_173_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3152,15 +3886,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_176_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 16.0,
+        "area": 248.0,
+        "source": "4377_176_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3169,114 +3907,172 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_20G": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4377_20G.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_20H": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4377_20H.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_20J": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4377_20J.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_20K": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 17.5,
+        "height": 61.5,
+        "area": 1076.25,
+        "source": "4377_20K.json"
       },
       "compatible_vessels": [
         1,
-        4
+        2,
+        3,
+        4,
+        5
       ],
-      "vessel_count": 2,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_20L": {
       "block_info": {
-        "width": 32,
-        "height": 62,
-        "area": 1984
+        "width": 31.5,
+        "height": 61.5,
+        "area": 1937.25,
+        "source": "4377_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_20N": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4377_20N.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_20P": {
       "block_info": {
-        "width": 36,
-        "height": 62,
-        "area": 2232
+        "width": 35.5,
+        "height": 61.5,
+        "area": 2183.25,
+        "source": "4377_20P.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_20Y": {
       "block_info": {
-        "width": 6,
-        "height": 3,
-        "area": 18
+        "width": 3.5,
+        "height": 5.5,
+        "area": 19.25,
+        "source": "4377_20Y.json"
       },
       "compatible_vessels": [
         1,
@@ -3285,15 +4081,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_246_000": {
       "block_info": {
-        "width": 23,
-        "height": 22,
-        "area": 506
+        "width": 21.0,
+        "height": 22.5,
+        "area": 472.5,
+        "source": "4377_246_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3302,15 +4102,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_256_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.5,
+        "height": 22.5,
+        "area": 438.75,
+        "source": "4377_256_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3319,15 +4123,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_266_000": {
       "block_info": {
-        "width": 23,
-        "height": 20,
-        "area": 460
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4377_266_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3336,15 +4144,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_276_000": {
       "block_info": {
-        "width": 23,
-        "height": 20,
-        "area": 460
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4377_276_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3353,15 +4165,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_286_000": {
       "block_info": {
-        "width": 23,
-        "height": 20,
-        "area": 460
+        "width": 19.5,
+        "height": 22.5,
+        "area": 438.75,
+        "source": "4377_286_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3370,15 +4186,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_287_000": {
       "block_info": {
-        "width": 22,
-        "height": 21,
-        "area": 462
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4377_287_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3387,15 +4207,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_296_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.5,
+        "height": 22.5,
+        "area": 438.75,
+        "source": "4377_296_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3404,15 +4228,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_297_000": {
       "block_info": {
-        "width": 23,
-        "height": 32,
-        "area": 736
+        "width": 22.5,
+        "height": 31.5,
+        "area": 708.75,
+        "source": "4377_297_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3421,15 +4249,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_642_000": {
       "block_info": {
-        "width": 16,
-        "height": 15,
-        "area": 240
+        "width": 15.0,
+        "height": 15.5,
+        "area": 232.5,
+        "source": "4377_642_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3438,15 +4270,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_643_000": {
       "block_info": {
-        "width": 17,
-        "height": 15,
-        "area": 255
+        "width": 15.0,
+        "height": 17.5,
+        "area": 262.5,
+        "source": "4377_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3455,15 +4291,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_646_000": {
       "block_info": {
-        "width": 22,
-        "height": 10,
-        "area": 220
+        "width": 9.5,
+        "height": 22.5,
+        "area": 213.75,
+        "source": "4377_646_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3472,15 +4312,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_647_000": {
       "block_info": {
-        "width": 22,
-        "height": 15,
-        "area": 330
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4377_647_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3489,15 +4333,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_652_000": {
       "block_info": {
-        "width": 16,
-        "height": 15,
-        "area": 240
+        "width": 15.0,
+        "height": 15.5,
+        "area": 232.5,
+        "source": "4377_652_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3506,15 +4354,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_653_000": {
       "block_info": {
-        "width": 17,
-        "height": 15,
-        "area": 255
+        "width": 15.0,
+        "height": 17.5,
+        "area": 262.5,
+        "source": "4377_653_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3523,15 +4375,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_656_000": {
       "block_info": {
-        "width": 22,
-        "height": 10,
-        "area": 220
+        "width": 9.5,
+        "height": 22.5,
+        "area": 213.75,
+        "source": "4377_656_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3540,15 +4396,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_657_000": {
       "block_info": {
-        "width": 22,
-        "height": 15,
-        "area": 330
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4377_657_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3557,15 +4417,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_666_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4377_666_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3574,15 +4438,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_667_000": {
       "block_info": {
-        "width": 23,
-        "height": 21,
-        "area": 483
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4377_667_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3591,15 +4459,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_676_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 14.0,
+        "height": 22.5,
+        "area": 315.0,
+        "source": "4377_676_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3608,15 +4480,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_677_000": {
       "block_info": {
-        "width": 23,
-        "height": 21,
-        "area": 483
+        "width": 20.5,
+        "height": 22.5,
+        "area": 461.25,
+        "source": "4377_677_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3625,15 +4501,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_686_000": {
       "block_info": {
-        "width": 23,
-        "height": 18,
-        "area": 414
+        "width": 17.0,
+        "height": 22.5,
+        "area": 382.5,
+        "source": "4377_686_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3642,15 +4522,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_687_000": {
       "block_info": {
-        "width": 23,
-        "height": 27,
-        "area": 621
+        "width": 22.5,
+        "height": 25.5,
+        "area": 573.75,
+        "source": "4377_687_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3659,15 +4543,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_696_000": {
       "block_info": {
-        "width": 23,
-        "height": 18,
-        "area": 414
+        "width": 17.0,
+        "height": 22.5,
+        "area": 382.5,
+        "source": "4377_696_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3676,15 +4564,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4377_697_000": {
       "block_info": {
-        "width": 23,
-        "height": 42,
-        "area": 966
+        "width": 22.5,
+        "height": 42.0,
+        "area": 945.0,
+        "source": "4377_697_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3693,15 +4585,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4385_161_000": {
       "block_info": {
-        "width": 23,
-        "height": 18,
-        "area": 414
+        "width": 17.0,
+        "height": 22.0,
+        "area": 374.0,
+        "source": "4385_161_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3710,15 +4606,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4385_171_000": {
       "block_info": {
-        "width": 23,
-        "height": 18,
-        "area": 414
+        "width": 17.0,
+        "height": 22.5,
+        "area": 382.5,
+        "source": "4385_171_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3727,58 +4627,84 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4385_20F": {
       "block_info": {
-        "width": 31,
-        "height": 45,
-        "area": 1395
+        "width": 30.0,
+        "height": 44.5,
+        "area": 1335.0,
+        "source": "4385_20F.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4385_20G": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4385_20G.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4385_20H": {
       "block_info": {
-        "width": 39,
-        "height": 52,
-        "area": 2028
+        "width": 37.5,
+        "height": 51.5,
+        "area": 1931.25,
+        "source": "4385_20H.json"
       },
       "compatible_vessels": [
-        1
+        1,
+        4
       ],
-      "vessel_count": 1,
-      "label": "VIP",
-      "is_vip": true
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
+      "vessel_count": 2,
+      "label": "일반",
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4385_629_000": {
       "block_info": {
-        "width": 18,
-        "height": 22,
-        "area": 396
+        "width": 17.5,
+        "height": 21.5,
+        "area": 376.25,
+        "source": "4385_629_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3787,15 +4713,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4385_639_000": {
       "block_info": {
-        "width": 18,
-        "height": 22,
-        "area": 396
+        "width": 17.5,
+        "height": 21.5,
+        "area": 376.25,
+        "source": "4385_639_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3804,15 +4734,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4386_628_000": {
       "block_info": {
-        "width": 22,
-        "height": 25,
-        "area": 550
+        "width": 21.5,
+        "height": 24.5,
+        "area": 526.75,
+        "source": "4386_628_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3821,15 +4755,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4386_629_000": {
       "block_info": {
-        "width": 18,
-        "height": 22,
-        "area": 396
+        "width": 17.5,
+        "height": 21.5,
+        "area": 376.25,
+        "source": "4386_629_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3838,15 +4776,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4386_638_000": {
       "block_info": {
-        "width": 22,
-        "height": 25,
-        "area": 550
+        "width": 21.5,
+        "height": 24.5,
+        "area": 526.75,
+        "source": "4386_638_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3855,15 +4797,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4386_639_000": {
       "block_info": {
-        "width": 18,
-        "height": 22,
-        "area": 396
+        "width": 17.0,
+        "height": 21.5,
+        "area": 365.5,
+        "source": "4386_639_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3872,88 +4818,128 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_20D": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 24.0,
+        "height": 51.5,
+        "area": 1236.0,
+        "source": "4387_20D.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_20E": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4387_20E.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_20F": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4387_20F.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_20G": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4387_20G.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_20H": {
       "block_info": {
-        "width": 39,
-        "height": 52,
-        "area": 2028
+        "width": 38.0,
+        "height": 51.5,
+        "area": 1957.0,
+        "source": "4387_20H.json"
       },
       "compatible_vessels": [
-        1
+        1,
+        4
       ],
-      "vessel_count": 1,
-      "label": "VIP",
-      "is_vip": true
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
+      "vessel_count": 2,
+      "label": "일반",
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_242_000": {
       "block_info": {
-        "width": 22,
-        "height": 22,
-        "area": 484
+        "width": 20.5,
+        "height": 21.5,
+        "area": 440.75,
+        "source": "4387_242_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3962,15 +4948,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_252_000": {
       "block_info": {
-        "width": 21,
-        "height": 16,
-        "area": 336
+        "width": 15.0,
+        "height": 21.5,
+        "area": 322.5,
+        "source": "4387_252_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3979,15 +4969,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_283_000": {
       "block_info": {
-        "width": 22,
-        "height": 15,
-        "area": 330
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4387_283_000.json"
       },
       "compatible_vessels": [
         1,
@@ -3996,15 +4990,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_293_000": {
       "block_info": {
-        "width": 22,
-        "height": 15,
-        "area": 330
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4387_293_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4013,15 +5011,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_628_000": {
       "block_info": {
-        "width": 22,
-        "height": 25,
-        "area": 550
+        "width": 21.5,
+        "height": 24.5,
+        "area": 526.75,
+        "source": "4387_628_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4030,15 +5032,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_629_000": {
       "block_info": {
-        "width": 18,
-        "height": 22,
-        "area": 396
+        "width": 17.0,
+        "height": 21.5,
+        "area": 365.5,
+        "source": "4387_629_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4047,15 +5053,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_638_000": {
       "block_info": {
-        "width": 22,
-        "height": 25,
-        "area": 550
+        "width": 21.5,
+        "height": 24.5,
+        "area": 526.75,
+        "source": "4387_638_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4064,15 +5074,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_639_000": {
       "block_info": {
-        "width": 18,
-        "height": 22,
-        "area": 396
+        "width": 17.5,
+        "height": 21.5,
+        "area": 376.25,
+        "source": "4387_639_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4081,15 +5095,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_644_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 18.5,
+        "height": 22.5,
+        "area": 416.25,
+        "source": "4387_644_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4098,15 +5116,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_654_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 18.5,
+        "height": 22.5,
+        "area": 416.25,
+        "source": "4387_654_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4115,15 +5137,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_664_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4387_664_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4132,15 +5158,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_674_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4387_674_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4149,15 +5179,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_682_000": {
       "block_info": {
-        "width": 22,
-        "height": 11,
-        "area": 242
+        "width": 10.5,
+        "height": 21.0,
+        "area": 220.5,
+        "source": "4387_682_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4166,15 +5200,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_683_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 16.0,
+        "height": 22.5,
+        "area": 360.0,
+        "source": "4387_683_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4183,15 +5221,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_692_000": {
       "block_info": {
-        "width": 22,
-        "height": 11,
-        "area": 242
+        "width": 10.5,
+        "height": 21.0,
+        "area": 220.5,
+        "source": "4387_692_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4200,15 +5242,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4387_693_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 16.0,
+        "height": 22.5,
+        "area": 360.0,
+        "source": "4387_693_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4217,15 +5263,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_126_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4388_126_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4234,15 +5284,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_136_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4388_136_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4251,15 +5305,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_149_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 15.5,
+        "area": 240.25,
+        "source": "4388_149_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4268,15 +5326,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_159_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 15.5,
+        "area": 240.25,
+        "source": "4388_159_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4285,15 +5347,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_162_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.5,
+        "height": 22.5,
+        "area": 281.25,
+        "source": "4388_162_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4302,15 +5368,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_172_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.5,
+        "height": 22.5,
+        "area": 281.25,
+        "source": "4388_172_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4319,102 +5389,149 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_20F": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4388_20F.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_20G": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 21.5,
+        "height": 51.5,
+        "area": 1107.25,
+        "source": "4388_20G.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_20H": {
       "block_info": {
-        "width": 36,
-        "height": 52,
-        "area": 1872
+        "width": 35.5,
+        "height": 51.5,
+        "area": 1828.25,
+        "source": "4388_20H.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_20K": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 20.0,
+        "height": 51.5,
+        "area": 1030.0,
+        "source": "4388_20K.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_20L": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4388_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_20Y": {
       "block_info": {
-        "width": 100,
-        "height": 52,
-        "area": 5200
+        "width": 51.5,
+        "height": 99.0,
+        "area": 5098.5,
+        "source": "4388_20Y.json"
       },
       "compatible_vessels": [
         1
       ],
+      "incompatible_reasons": {
+        "2": "폭/길이 모두 초과",
+        "3": "폭 초과",
+        "4": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 1,
       "label": "VIP",
-      "is_vip": true
+      "is_vip": true,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_283_000": {
       "block_info": {
-        "width": 22,
-        "height": 14,
-        "area": 308
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4388_283_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4423,15 +5540,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_293_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 13.5,
+        "height": 22.0,
+        "area": 297.0,
+        "source": "4388_293_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4440,15 +5561,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_663_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.5,
+        "height": 22.5,
+        "area": 371.25,
+        "source": "4388_663_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4457,15 +5582,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_664_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4388_664_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4474,15 +5603,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_673_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.5,
+        "height": 22.5,
+        "area": 371.25,
+        "source": "4388_673_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4491,15 +5624,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_674_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4388_674_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4508,15 +5645,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_683_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4388_683_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4525,15 +5666,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4388_693_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4388_693_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4542,15 +5687,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_126_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4389_126_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4559,15 +5708,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_136_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4389_136_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4576,15 +5729,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_149_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 15.5,
+        "area": 240.25,
+        "source": "4389_149_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4593,15 +5750,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_159_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 15.5,
+        "area": 240.25,
+        "source": "4389_159_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4610,15 +5771,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_162_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.5,
+        "height": 22.5,
+        "area": 281.25,
+        "source": "4389_162_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4627,15 +5792,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_172_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.5,
+        "height": 22.5,
+        "area": 281.25,
+        "source": "4389_172_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4644,102 +5813,149 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_20F": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4389_20F.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_20G": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 21.0,
+        "height": 51.5,
+        "area": 1081.5,
+        "source": "4389_20G.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_20H": {
       "block_info": {
-        "width": 36,
-        "height": 52,
-        "area": 1872
+        "width": 35.5,
+        "height": 51.5,
+        "area": 1828.25,
+        "source": "4389_20H.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_20K": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 20.0,
+        "height": 51.5,
+        "area": 1030.0,
+        "source": "4389_20K.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_20L": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4389_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_20Y": {
       "block_info": {
-        "width": 99,
-        "height": 52,
-        "area": 5148
+        "width": 51.5,
+        "height": 98.5,
+        "area": 5072.75,
+        "source": "4389_20Y.json"
       },
       "compatible_vessels": [
         1
       ],
+      "incompatible_reasons": {
+        "2": "폭/길이 모두 초과",
+        "3": "폭 초과",
+        "4": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 1,
       "label": "VIP",
-      "is_vip": true
+      "is_vip": true,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_283_000": {
       "block_info": {
-        "width": 22,
-        "height": 14,
-        "area": 308
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4389_283_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4748,15 +5964,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_293_000": {
       "block_info": {
-        "width": 22,
-        "height": 14,
-        "area": 308
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4389_293_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4765,15 +5985,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_643_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.0,
+        "area": 220.0,
+        "source": "4389_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4782,15 +6006,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_653_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.5,
+        "area": 225.0,
+        "source": "4389_653_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4799,15 +6027,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_663_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.5,
+        "height": 22.5,
+        "area": 371.25,
+        "source": "4389_663_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4816,15 +6048,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_664_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4389_664_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4833,15 +6069,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_673_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.0,
+        "height": 22.5,
+        "area": 360.0,
+        "source": "4389_673_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4850,15 +6090,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_674_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4389_674_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4867,15 +6111,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_683_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4389_683_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4884,15 +6132,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4389_693_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4389_693_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4901,15 +6153,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_126_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4390_126_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4918,15 +6174,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_136_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4390_136_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4935,15 +6195,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_149_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 15.5,
+        "area": 240.25,
+        "source": "4390_149_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4952,15 +6216,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_159_000": {
       "block_info": {
-        "width": 16,
-        "height": 16,
-        "area": 256
+        "width": 15.5,
+        "height": 15.5,
+        "area": 240.25,
+        "source": "4390_159_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4969,15 +6237,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_162_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.5,
+        "height": 22.5,
+        "area": 281.25,
+        "source": "4390_162_000.json"
       },
       "compatible_vessels": [
         1,
@@ -4986,15 +6258,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_172_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.5,
+        "height": 22.5,
+        "area": 281.25,
+        "source": "4390_172_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5003,102 +6279,149 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_20F": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4390_20F.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_20G": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 21.5,
+        "height": 51.5,
+        "area": 1107.25,
+        "source": "4390_20G.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_20H": {
       "block_info": {
-        "width": 36,
-        "height": 53,
-        "area": 1908
+        "width": 35.5,
+        "height": 51.5,
+        "area": 1828.25,
+        "source": "4390_20H.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_20K": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 20.0,
+        "height": 51.5,
+        "area": 1030.0,
+        "source": "4390_20K.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_20L": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4390_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_20Y": {
       "block_info": {
-        "width": 99,
-        "height": 52,
-        "area": 5148
+        "width": 51.5,
+        "height": 98.5,
+        "area": 5072.75,
+        "source": "4390_20Y.json"
       },
       "compatible_vessels": [
         1
       ],
+      "incompatible_reasons": {
+        "2": "폭/길이 모두 초과",
+        "3": "폭 초과",
+        "4": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 1,
       "label": "VIP",
-      "is_vip": true
+      "is_vip": true,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_283_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4390_283_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5107,15 +6430,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_293_000": {
       "block_info": {
-        "width": 22,
-        "height": 14,
-        "area": 308
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4390_293_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5124,15 +6451,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_643_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.0,
+        "area": 220.0,
+        "source": "4390_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5141,15 +6472,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_653_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.0,
+        "area": 220.0,
+        "source": "4390_653_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5158,15 +6493,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_663_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.5,
+        "height": 22.5,
+        "area": 371.25,
+        "source": "4390_663_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5175,15 +6514,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_664_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4390_664_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5192,15 +6535,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_673_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.0,
+        "height": 22.5,
+        "area": 360.0,
+        "source": "4390_673_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5209,15 +6556,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_674_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4390_674_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5226,15 +6577,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_683_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4390_683_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5243,15 +6598,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4390_693_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4390_693_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5260,15 +6619,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_126_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4391_126_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5277,15 +6640,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_136_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4391_136_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5294,15 +6661,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_162_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.5,
+        "height": 22.5,
+        "area": 281.25,
+        "source": "4391_162_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5311,15 +6682,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_172_000": {
       "block_info": {
-        "width": 23,
-        "height": 13,
-        "area": 299
+        "width": 12.5,
+        "height": 22.5,
+        "area": 281.25,
+        "source": "4391_172_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5328,102 +6703,149 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_20F": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4391_20F.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_20G": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 21.5,
+        "height": 51.5,
+        "area": 1107.25,
+        "source": "4391_20G.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_20H": {
       "block_info": {
-        "width": 36,
-        "height": 52,
-        "area": 1872
+        "width": 35.5,
+        "height": 51.5,
+        "area": 1828.25,
+        "source": "4391_20H.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_20K": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 20.0,
+        "height": 51.5,
+        "area": 1030.0,
+        "source": "4391_20K.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_20L": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4391_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_20Y": {
       "block_info": {
-        "width": 99,
-        "height": 52,
-        "area": 5148
+        "width": 51.5,
+        "height": 98.5,
+        "area": 5072.75,
+        "source": "4391_20Y.json"
       },
       "compatible_vessels": [
         1
       ],
+      "incompatible_reasons": {
+        "2": "폭/길이 모두 초과",
+        "3": "폭 초과",
+        "4": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 1,
       "label": "VIP",
-      "is_vip": true
+      "is_vip": true,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_283_000": {
       "block_info": {
-        "width": 22,
-        "height": 14,
-        "area": 308
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4391_283_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5432,15 +6854,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_293_000": {
       "block_info": {
-        "width": 22,
-        "height": 14,
-        "area": 308
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4391_293_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5449,15 +6875,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_628_000": {
       "block_info": {
-        "width": 21,
-        "height": 25,
-        "area": 525
+        "width": 20.0,
+        "height": 24.5,
+        "area": 490.0,
+        "source": "4391_628_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5466,15 +6896,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_629_000": {
       "block_info": {
-        "width": 17,
-        "height": 22,
-        "area": 374
+        "width": 16.0,
+        "height": 21.5,
+        "area": 344.0,
+        "source": "4391_629_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5483,15 +6917,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_638_000": {
       "block_info": {
-        "width": 21,
-        "height": 25,
-        "area": 525
+        "width": 20.5,
+        "height": 24.5,
+        "area": 502.25,
+        "source": "4391_638_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5500,15 +6938,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_639_000": {
       "block_info": {
-        "width": 17,
-        "height": 22,
-        "area": 374
+        "width": 16.0,
+        "height": 21.5,
+        "area": 344.0,
+        "source": "4391_639_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5517,15 +6959,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_643_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.0,
+        "area": 220.0,
+        "source": "4391_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5534,15 +6980,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_653_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.0,
+        "area": 220.0,
+        "source": "4391_653_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5551,15 +7001,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_663_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.5,
+        "height": 22.5,
+        "area": 371.25,
+        "source": "4391_663_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5568,15 +7022,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_664_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4391_664_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5585,15 +7043,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_673_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.5,
+        "height": 22.5,
+        "area": 371.25,
+        "source": "4391_673_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5602,15 +7064,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_674_000": {
       "block_info": {
-        "width": 23,
-        "height": 19,
-        "area": 437
+        "width": 19.0,
+        "height": 22.5,
+        "area": 427.5,
+        "source": "4391_674_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5619,15 +7085,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_683_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4391_683_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5636,15 +7106,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4391_693_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4391_693_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5653,15 +7127,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_126_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4392_126_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5670,15 +7148,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_136_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4392_136_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5687,88 +7169,127 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_20F": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4392_20F.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_20G": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 21.5,
+        "height": 51.5,
+        "area": 1107.25,
+        "source": "4392_20G.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_20K": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 20.0,
+        "height": 51.5,
+        "area": 1030.0,
+        "source": "4392_20K.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_20L": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4392_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_20Y": {
       "block_info": {
-        "width": 100,
-        "height": 52,
-        "area": 5200
+        "width": 51.5,
+        "height": 98.5,
+        "area": 5072.75,
+        "source": "4392_20Y.json"
       },
       "compatible_vessels": [
         1
       ],
+      "incompatible_reasons": {
+        "2": "폭/길이 모두 초과",
+        "3": "폭 초과",
+        "4": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 1,
       "label": "VIP",
-      "is_vip": true
+      "is_vip": true,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_283_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4392_283_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5777,15 +7298,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_293_000": {
       "block_info": {
-        "width": 22,
-        "height": 14,
-        "area": 308
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4392_293_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5794,15 +7319,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_628_000": {
       "block_info": {
-        "width": 21,
-        "height": 25,
-        "area": 525
+        "width": 20.0,
+        "height": 24.5,
+        "area": 490.0,
+        "source": "4392_628_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5811,15 +7340,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_629_000": {
       "block_info": {
-        "width": 17,
-        "height": 22,
-        "area": 374
+        "width": 16.0,
+        "height": 21.5,
+        "area": 344.0,
+        "source": "4392_629_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5828,15 +7361,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_638_000": {
       "block_info": {
-        "width": 21,
-        "height": 25,
-        "area": 525
+        "width": 20.0,
+        "height": 24.5,
+        "area": 490.0,
+        "source": "4392_638_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5845,15 +7382,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_639_000": {
       "block_info": {
-        "width": 17,
-        "height": 22,
-        "area": 374
+        "width": 16.0,
+        "height": 21.5,
+        "area": 344.0,
+        "source": "4392_639_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5862,15 +7403,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_643_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.0,
+        "area": 220.0,
+        "source": "4392_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5879,15 +7424,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_644_000": {
       "block_info": {
-        "width": 22,
-        "height": 19,
-        "area": 418
+        "width": 18.5,
+        "height": 22.5,
+        "area": 416.25,
+        "source": "4392_644_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5896,15 +7445,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_653_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.5,
+        "area": 225.0,
+        "source": "4392_653_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5913,15 +7466,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_654_000": {
       "block_info": {
-        "width": 22,
-        "height": 19,
-        "area": 418
+        "width": 18.5,
+        "height": 22.5,
+        "area": 416.25,
+        "source": "4392_654_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5930,15 +7487,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_663_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.5,
+        "height": 22.5,
+        "area": 371.25,
+        "source": "4392_663_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5947,15 +7508,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_673_000": {
       "block_info": {
-        "width": 23,
-        "height": 17,
-        "area": 391
+        "width": 16.5,
+        "height": 22.5,
+        "area": 371.25,
+        "source": "4392_673_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5964,15 +7529,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_683_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4392_683_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5981,15 +7550,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4392_693_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4392_693_000.json"
       },
       "compatible_vessels": [
         1,
@@ -5998,15 +7571,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_126_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4393_126_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6015,15 +7592,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_136_000": {
       "block_info": {
-        "width": 15,
-        "height": 10,
-        "area": 150
+        "width": 10.0,
+        "height": 14.5,
+        "area": 145.0,
+        "source": "4393_136_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6032,102 +7613,149 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_20F": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4393_20F.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_20G": {
       "block_info": {
-        "width": 33,
-        "height": 52,
-        "area": 1716
+        "width": 21.5,
+        "height": 51.5,
+        "area": 1107.25,
+        "source": "4393_20G.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_20H": {
       "block_info": {
-        "width": 36,
-        "height": 52,
-        "area": 1872
+        "width": 35.5,
+        "height": 51.5,
+        "area": 1828.25,
+        "source": "4393_20H.json"
       },
       "compatible_vessels": [
         1,
         4
       ],
+      "incompatible_reasons": {
+        "2": "폭 초과",
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 2,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_20K": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 20.0,
+        "height": 51.5,
+        "area": 1030.0,
+        "source": "4393_20K.json"
       },
       "compatible_vessels": [
         1,
         2,
-        4
+        3,
+        4,
+        5
       ],
-      "vessel_count": 3,
+      "incompatible_reasons": {},
+      "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_20L": {
       "block_info": {
-        "width": 33,
-        "height": 53,
-        "area": 1749
+        "width": 32.5,
+        "height": 51.5,
+        "area": 1673.75,
+        "source": "4393_20L.json"
       },
       "compatible_vessels": [
         1,
         2,
         4
       ],
+      "incompatible_reasons": {
+        "3": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 3,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_20Y": {
       "block_info": {
-        "width": 99,
-        "height": 52,
-        "area": 5148
+        "width": 51.5,
+        "height": 98.5,
+        "area": 5072.75,
+        "source": "4393_20Y.json"
       },
       "compatible_vessels": [
         1
       ],
+      "incompatible_reasons": {
+        "2": "폭/길이 모두 초과",
+        "3": "폭 초과",
+        "4": "폭 초과",
+        "5": "폭 초과"
+      },
       "vessel_count": 1,
       "label": "VIP",
-      "is_vip": true
+      "is_vip": true,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_213_000": {
       "block_info": {
-        "width": 23,
-        "height": 25,
-        "area": 575
+        "width": 22.5,
+        "height": 25.5,
+        "area": 573.75,
+        "source": "4393_213_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6136,15 +7764,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_283_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 13.5,
+        "height": 22.5,
+        "area": 303.75,
+        "source": "4393_283_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6153,15 +7785,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_293_000": {
       "block_info": {
-        "width": 23,
-        "height": 14,
-        "area": 322
+        "width": 13.5,
+        "height": 22.0,
+        "area": 297.0,
+        "source": "4393_293_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6170,15 +7806,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_628_000": {
       "block_info": {
-        "width": 21,
-        "height": 25,
-        "area": 525
+        "width": 20.0,
+        "height": 24.5,
+        "area": 490.0,
+        "source": "4393_628_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6187,15 +7827,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_629_000": {
       "block_info": {
-        "width": 17,
-        "height": 22,
-        "area": 374
+        "width": 16.0,
+        "height": 21.5,
+        "area": 344.0,
+        "source": "4393_629_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6204,15 +7848,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_638_000": {
       "block_info": {
-        "width": 21,
-        "height": 25,
-        "area": 525
+        "width": 20.0,
+        "height": 24.5,
+        "area": 490.0,
+        "source": "4393_638_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6221,15 +7869,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_639_000": {
       "block_info": {
-        "width": 17,
-        "height": 22,
-        "area": 374
+        "width": 16.0,
+        "height": 21.5,
+        "area": 344.0,
+        "source": "4393_639_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6238,15 +7890,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_643_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.0,
+        "area": 220.0,
+        "source": "4393_643_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6255,15 +7911,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_644_000": {
       "block_info": {
-        "width": 22,
-        "height": 19,
-        "area": 418
+        "width": 18.5,
+        "height": 22.5,
+        "area": 416.25,
+        "source": "4393_644_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6272,15 +7932,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_653_000": {
       "block_info": {
-        "width": 23,
-        "height": 10,
-        "area": 230
+        "width": 10.0,
+        "height": 22.5,
+        "area": 225.0,
+        "source": "4393_653_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6289,15 +7953,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_654_000": {
       "block_info": {
-        "width": 22,
-        "height": 19,
-        "area": 418
+        "width": 18.5,
+        "height": 22.5,
+        "area": 416.25,
+        "source": "4393_654_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6306,15 +7974,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_683_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4393_683_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6323,15 +7995,19 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     },
     "4393_693_000": {
       "block_info": {
-        "width": 23,
-        "height": 16,
-        "area": 368
+        "width": 15.5,
+        "height": 22.5,
+        "area": 348.75,
+        "source": "4393_693_000.json"
       },
       "compatible_vessels": [
         1,
@@ -6340,9 +8016,12 @@
         4,
         5
       ],
+      "incompatible_reasons": {},
       "vessel_count": 5,
       "label": "일반",
-      "is_vip": false
+      "is_vip": false,
+      "rotation_checked": true,
+      "safety_margin_used": 2.0
     }
   }
 }
