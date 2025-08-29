@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-LV3 — 날짜 집합 최적화(선박별 14일 간격 독립집합 DP) + 실행 시 Top-off
-- 후보 날짜(윈도우 경계 + 상위 피크 + 격자)를 풍부하게 생성
-- 각 선박별로 날짜별 점수(score)를 계산해, '하역일 간 14일' 제약 하에 점수 합 최대인 날짜 집합 선택
-- 선택된 날짜 집합을 시간순으로 실행: IntegratedVoyageAssigner.run_for_single_voyage() 호출
-  (LV2가 합본→VIP 보장→Top-off 재호출을 수행)
-- 이후 Rescue 패스(다중 날짜 후보)로 잔여 블록 구출
-- 바깥 fixpoint: 2~3 라운드 반복하며 잔여가 줄면 재최적화
+LV3 — 선박별 사이클(이동-선적-이동-하역) 시간 반영
+- 블록 윈도우: [due-14, due-1]  (하역은 납기 하루 전까지)
+- 선박별 사이클 길이 = 이동1+선적+이동2+하역
+    자항선1: 3-3-3-3 => 12일
+    자항선2: 3-1-3-1 =>  8일
+    자항선3/4/5: 3-3-3-2 => 11일
+- 날짜 집합 최적화(DP)의 간격, Rescue, 쿨다운 감사 모두 '선박별 사이클 길이' 사용
+- 항차 실행 시 start_date = end_date - (cycle_len-1) 로 계산(LV2에 전달)
+- LV1/배치 엔진은 변경 없음
 """
 
 import json
@@ -18,11 +20,24 @@ from typing import Dict, Tuple, Set, Optional, List
 from integrated_vip_normal_assignment import IntegratedVoyageAssigner
 
 # ---- 정책 상수 ----
-MAX_STOWAGE_DAYS = 14          # 조기 적치 허용
-COOLDOWN_END_GAP_DAYS = 14     # 하역일 간 최소 간격
+MAX_STOWAGE_DAYS = 14          # 조기 적치 허용(윈도우 앞쪽 범위)
 TOP_K_PEAKS = 30               # 히스토그램 상위 피크 수
 GRID_STEP_DAYS = 3             # 격자 샘플링 간격
 MAX_ROUNDS = 3                 # 집합 최적화 + 실행 라운드 수
+
+# ---- 선박별 단계시간 ----
+# (move_to_load, load, move_to_unload, unload)
+VESSEL_PHASE_DUR = {
+    1: (3, 3, 3, 3),   # 12
+    2: (3, 1, 3, 1),   # 8
+    3: (3, 3, 3, 2),   # 11
+    4: (3, 3, 3, 2),   # 11
+    5: (3, 3, 3, 2),   # 11
+}
+
+def cycle_len(vessel_id: int) -> int:
+    a, b, c, d = VESSEL_PHASE_DUR[vessel_id]
+    return a + b + c + d
 
 # ---- 날짜 유틸 ----
 def _to_date(s: str) -> datetime:
@@ -33,13 +48,18 @@ def _to_str(d: datetime) -> str:
 
 # ---- 윈도우 ----
 def build_windows(deadlines: Dict[str, str], blocks: Set[str]) -> Dict[str, Tuple[datetime, datetime]]:
+    """
+    블록 도착일(하역 종료일) 허용 윈도우: [due-14, due-1]
+    """
     win: Dict[str, Tuple[datetime, datetime]] = {}
     for b in blocks:
         due = deadlines.get(b)
         if not due:
             continue
         d_due = _to_date(due)
-        win[b] = (d_due - timedelta(days=MAX_STOWAGE_DAYS), d_due)
+        start = d_due - timedelta(days=MAX_STOWAGE_DAYS)
+        end   = d_due - timedelta(days=1)  # 하역은 납기 전날까지 완료
+        win[b] = (start, end)
     return win
 
 # ---- eligible ----
@@ -71,7 +91,7 @@ def histogram_over_dates(wins: Dict[str, Tuple[datetime, datetime]],
             d += timedelta(days=1)
     return dict(counter)
 
-# ---- 후보 날짜 생성 ----
+# ---- 후보 날짜 생성(도착일 후보) ----
 def build_candidate_dates_for_vessel(assigner: IntegratedVoyageAssigner,
                                      vessel_id: int,
                                      wins: Dict[str, Tuple[datetime, datetime]],
@@ -106,18 +126,19 @@ def build_candidate_dates_for_vessel(assigner: IntegratedVoyageAssigner,
     out = sorted(edges)
     return out
 
-# ---- 점수(스코어) ----
+# ---- 날짜별 점수(가치 근사) ----
 def score_date(assigner: IntegratedVoyageAssigner,
                vessel_id: int, date_str: str,
                wins: Dict[str, Tuple[datetime, datetime]],
                remaining: Set[str]) -> float:
-    """그 날짜에 적재 가능한 후보의 '가치 합' 근사치. 희소 블록/대형/ VIP 가중치."""
+    """
+    그 날짜(도착일)에서 적재 가능한 후보의 '가치 합' 근사치.
+    희소 블록/대형/ VIP 가중치.
+    """
     d = _to_date(date_str)
-    # 선박 용적(면적) 근사 타깃
     spec = assigner.vessel_specs[vessel_id]
     target_area = (spec["width"] * spec["height"]) * assigner.CAPACITY_RATIO
 
-    # 후보 블록 수집
     cands: List[Tuple[str, float, float]] = []  # (bid, area, value_weight)
     for b in remaining:
         if b not in wins:
@@ -128,7 +149,6 @@ def score_date(assigner: IntegratedVoyageAssigner,
         if not (s <= d <= e):
             continue
         area = assigner._area_of(b) or 1.0
-        # 희소도: 호환 선박 수(적을수록 가중↑)
         comp = assigner._compatible_vessels(b)
         ships = 1 if (b in assigner.vip_blocks) else (len(comp) if comp else 5)
         scarcity = 1.0 / ships
@@ -151,16 +171,14 @@ def score_date(assigner: IntegratedVoyageAssigner,
             break
     return s_val
 
-# ---- 날짜 집합 선택: '14일 간격' 제약을 둔 가중 독립집합 DP ----
-def select_dates_with_gap(dates: List[str], scores: List[float], gap_days: int = 14) -> List[str]:
+# ---- 날짜 집합 선택: '선박별 사이클 길이' 간격을 둔 가중 독립집합 DP ----
+def select_dates_with_gap(dates: List[str], scores: List[float], gap_days: int) -> List[str]:
     if not dates:
         return []
-    # 정렬 보장
     items = sorted(zip(dates, scores), key=lambda x: x[0])
     dates = [x[0] for x in items]
     scores = [x[1] for x in items]
 
-    # p[i]: i번째 이전 중에서 gap 충족하는 마지막 인덱스
     D = [_to_date(d) for d in dates]
     p = []
     for i in range(len(dates)):
@@ -169,12 +187,10 @@ def select_dates_with_gap(dates: List[str], scores: List[float], gap_days: int =
             j -= 1
         p.append(j)
 
-    # DP
     n = len(dates)
     dp = [0.0] * (n + 1)
     take = [False] * n
     for i in range(1, n + 1):
-        # take i-1
         take_val = scores[i - 1] + (dp[p[i - 1] + 1] if p[i - 1] >= 0 else 0.0)
         skip_val = dp[i - 1]
         if take_val > skip_val:
@@ -184,7 +200,6 @@ def select_dates_with_gap(dates: List[str], scores: List[float], gap_days: int =
             dp[i] = skip_val
             take[i - 1] = False
 
-    # 역추적
     sel = []
     i = n - 1
     while i >= 0:
@@ -196,7 +211,7 @@ def select_dates_with_gap(dates: List[str], scores: List[float], gap_days: int =
     sel.reverse()
     return sel
 
-# ---- Rescue: 희소 블록 개별 구출(다중 날짜 후보) ----
+# ---- Rescue: 희소 블록 개별 구출(다중 날짜 후보, 선박별 사이클 반영) ----
 def rescue_pass(assigner: IntegratedVoyageAssigner,
                 wins: Dict[str, Tuple[datetime, datetime]],
                 avail_vip: Set[str], avail_norm: Set[str],
@@ -233,12 +248,13 @@ def rescue_pass(assigner: IntegratedVoyageAssigner,
             if not eligible_for_vessel(assigner, vid, b):
                 continue
 
+            gap = cycle_len(vid)
             min_end = ws
             if last_end[vname]:
-                min_end = max(min_end, _to_date(last_end[vname]) + timedelta(days=COOLDOWN_END_GAP_DAYS))
+                min_end = max(min_end, _to_date(last_end[vname]) + timedelta(days=gap))
 
             # 다중 날짜 후보(+0,+2,+4,+7,+10,..., we)
-            deltas = [0, 2, 4, 7, 10, 14, 21]
+            deltas = [0, 2, 4, 7, 10, gap, gap + 3]
             candidates: List[datetime] = []
             for dt in deltas:
                 cand = min_end + timedelta(days=dt)
@@ -246,19 +262,20 @@ def rescue_pass(assigner: IntegratedVoyageAssigner,
                     candidates.append(cand)
             if we >= min_end:
                 candidates.append(we)
-            # 정제
+
             seen = set()
             cands = [c for c in sorted(candidates) if (c not in seen and not seen.add(c))]
 
             for end_dt in cands[:max(1, k_dates)]:
+                start_dt = end_dt - timedelta(days=gap - 1)  # 처음 이동 시작일
                 result = assigner.run_for_single_voyage(
                     vessel_name=vname,
                     end_date=_to_str(end_dt),
                     avail_vip=avail_vip,
                     avail_norm=avail_norm,
-                    start_date=_to_str(end_dt - timedelta(days=MAX_STOWAGE_DAYS)),
+                    start_date=_to_str(start_dt),
                     cooldown_last_end=last_end[vname],
-                    cooldown_gap_days=COOLDOWN_END_GAP_DAYS,
+                    cooldown_gap_days=gap,  # 선박별 사이클 길이
                 )
                 if result["placed_blocks"]:
                     last_end[vname] = _to_str(end_dt)
@@ -307,9 +324,10 @@ def summarize_unassigned(assigner: IntegratedVoyageAssigner,
             if comp is not None and vid not in comp:
                 continue
             vname = f"자항선{vid}"
+            gap = cycle_len(vid)
             min_end = ws
             if last_end[vname]:
-                min_end = max(min_end, _to_date(last_end[vname]) + timedelta(days=COOLDOWN_END_GAP_DAYS))
+                min_end = max(min_end, _to_date(last_end[vname]) + timedelta(days=gap))
             if min_end <= we:
                 blocked_all = False
                 break
@@ -348,6 +366,7 @@ def lv3_schedule(
     avail_vip = set(assigner.vip_blocks)
     avail_norm = set(assigner.normal_blocks)
 
+    # 선박별 직전 '하역 종료일'
     last_end: Dict[str, Optional[str]] = {f"자항선{i}": None for i in range(1, 6)}
 
     progress_any = True
@@ -365,34 +384,34 @@ def lv3_schedule(
         # --- 날짜 집합 최적화(선박별) ---
         for vessel_id in [1, 2, 3, 4, 5]:
             vname = f"자항선{vessel_id}"
-            # 후보 날짜 생성
             cand_dates = build_candidate_dates_for_vessel(assigner, vessel_id, wins, remaining)
             if not cand_dates:
                 continue
 
-            # 점수 계산
             scores = [score_date(assigner, vessel_id, d, wins, remaining) for d in cand_dates]
-            # 날짜 집합 선택(14일 간격)
-            selected = select_dates_with_gap(cand_dates, scores, gap_days=COOLDOWN_END_GAP_DAYS)
+            gap = cycle_len(vessel_id)  # 선박별 간격
+            selected = select_dates_with_gap(cand_dates, scores, gap_days=gap)
             if not selected:
                 continue
 
-            # --- 실행(시간순), 쿨다운 하드가드 ---
+            # --- 실행(시간순), end_date 기준 쿨다운 하드가드 ---
             for end_date in selected:
-                # 쿨다운 하한
                 if last_end[vname]:
-                    dmin = _to_date(last_end[vname]) + timedelta(days=COOLDOWN_END_GAP_DAYS)
+                    dmin = _to_date(last_end[vname]) + timedelta(days=gap)
                     if _to_date(end_date) < dmin:
                         continue
+
+                # start_move = end_date - (cycle_len - 1)
+                start_move = _to_date(end_date) - timedelta(days=gap - 1)
 
                 result = assigner.run_for_single_voyage(
                     vessel_name=vname,
                     end_date=end_date,
                     avail_vip=avail_vip,
                     avail_norm=avail_norm,
-                    start_date=_to_str(_to_date(end_date) - timedelta(days=MAX_STOWAGE_DAYS)),
+                    start_date=_to_str(start_move),
                     cooldown_last_end=last_end[vname],
-                    cooldown_gap_days=COOLDOWN_END_GAP_DAYS,
+                    cooldown_gap_days=gap,
                 )
                 if result["placed_blocks"]:
                     last_end[vname] = end_date
@@ -416,8 +435,8 @@ def lv3_schedule(
     wins = build_windows(assigner.deadlines, remaining)
     assigner.save()
 
-    # 간격 감사
-    _audit_cooldown(assigner, COOLDOWN_END_GAP_DAYS)
+    # 간격 감사(선박별 사이클 길이)
+    _audit_cooldown(assigner)
 
     assigner.export_visualizations(out_dir=vis_out_dir, max_time_per_voyage=15)
 
@@ -434,7 +453,11 @@ def lv3_schedule(
 
     return assigner
 
-def _audit_cooldown(assigner: IntegratedVoyageAssigner, gap_days: int):
+def _audit_cooldown(assigner: IntegratedVoyageAssigner):
+    """
+    같은 선박의 하역 종료일(end_date) 사이의 간격이
+    해당 선박의 사이클 길이보다 짧으면 경고.
+    """
     bad = []
     for v in [f"자항선{i}" for i in range(1, 6)]:
         ends = sorted(
@@ -442,10 +465,13 @@ def _audit_cooldown(assigner: IntegratedVoyageAssigner, gap_days: int):
              for vid, blks in assigner.voyage_blocks.items()
              if blks and assigner.schedule.info(vid)["vessel_name"] == v]
         )
+        # 선박 ID 추출
+        vid_num = int(v.replace("자항선", ""))
+        need_gap = cycle_len(vid_num)
         for a, b in zip(ends, ends[1:]):
             da = _to_date(a); db = _to_date(b)
-            if (db - da).days < gap_days:
-                bad.append((v, a, b))
+            if (db - da).days < need_gap:
+                bad.append((v, a, b, need_gap))
     if bad:
         print("[AUDIT] Cooldown violations:", bad)
     else:

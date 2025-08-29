@@ -5,12 +5,15 @@ LV2 통합 배정 (합본 우선 → VIP-only 백업 → Top-off 재호출)
 - VIP+Normal 합본 1회 시도 → VIP 일부 누락 시 VIP-only 백업 1회
 - 이후 Top-off: 같은 항차에 대해 Normal 보강 합본을 2~3회 재호출해 적재율 상승(항차당)
 - 용적률 패스 105% 고정
-- 실행 단계에서도 '쿨다운(하역일 간 14일)' 하드가드 적용 + 빈 항차 롤백
+- 실행 단계에서도 '쿨다운' 하드가드는 상위(LV3)에서 선박별 사이클 길이로 처리
 - JSON에 실행 시간/사용 항차 요약 포함
-- 시각화 결과: placement_results/ "자항선N 시작일-종료일.png"
+- 시각화 결과: placement_results/ "자항선N 시작이동일_하역종료일.png"
 - LV1 파일(placement_api, ship_placer)은 수정하지 않음. (config는 lv1_configs/로 보관)
-"""
 
+추가 변경(2025-08-30):
+- 블록 적재 윈도우를 [due-14, due-1] 로 조정(하역은 납기 하루 전까지 완료).
+- start_date는 LV3에서 실제 "처음 이동 시작" 날짜를 계산해 전달(없을 때만 보정).
+"""
 import os
 import json
 import csv
@@ -23,7 +26,7 @@ from typing import Dict, List, Tuple, Set, Optional
 
 os.environ.setdefault("MPLBACKEND", "Agg")  # 시각화 팝업 방지
 
-# --- LV1 API ---
+# --- LV1 API (수정 금지) ---
 from placement_api import generate_config, run_placement
 
 
@@ -98,8 +101,8 @@ def load_labeling(file_path: str) -> Dict:
 class IntegratedVoyageAssigner:
     MAX_STOWAGE_DAYS = 14             # 조기 적치 허용일(2주)
     PAGE_SIZE = 18                    # (fallback) 기본 페이지 제한
-    LV1_TIMEOUT = 30                  # 일반 합본 호출 타임아웃(초)
-    LV1_TIMEOUT_SINGLE_WINDOW = 180   # VIP-only 등 단일창은 넉넉히
+    LV1_TIMEOUT = 8                  # 일반 합본 호출 타임아웃(초)
+    LV1_TIMEOUT_SINGLE_WINDOW = 120   # VIP-only 등 단일창은 넉넉히
     CAPACITY_RATIO = 1.05             # 105% 고정
     TOPOFF_ROUNDS = 2                 # Top-off 재호출 라운드 수(2~3 권장)
 
@@ -213,13 +216,13 @@ class IntegratedVoyageAssigner:
 
     # ----- 적합성/윈도우 -----
     def _window_ok(self, block_id: str, end_date: str) -> bool:
-        """도착일(end_date)이 [due-14, due] 안이면 OK"""
+        """도착일(end_date)이 [due-14, due-1] 안이면 OK (하역은 납기 하루 전까지)"""
         due = self.deadlines.get(block_id)
         if not due:
             return False
         d_due = datetime.strptime(due, "%Y-%m-%d")
         d_end = datetime.strptime(end_date, "%Y-%m-%d")
-        return (d_due - timedelta(days=self.MAX_STOWAGE_DAYS)) <= d_end <= d_due
+        return (d_due - timedelta(days=self.MAX_STOWAGE_DAYS)) <= d_end <= (d_due - timedelta(days=1))
 
     def _eligible_for_voyage(self, block_id: str, voyage_id: str) -> bool:
         vinfo = self.schedule.info(voyage_id)
@@ -258,9 +261,8 @@ class IntegratedVoyageAssigner:
 
     # ----- 선박별 페이지 제한(후보폭) -----
     def _page_limit_for_vessel(self, vessel_id: int) -> int:
-        # 큰 배일수록 후보폭을 넓혀 LV1 탐색 기회를 늘림
         if vessel_id == 1:
-            return 80   # 자항선1
+            return 80   # 자항선1 넓게
         elif vessel_id in (2, 4):
             return 44
         else:
@@ -350,9 +352,8 @@ class IntegratedVoyageAssigner:
             return set(vip_in_current).issubset(set(placed))
 
         for r in range(rounds):
-            # 남은 Normal 후보 준비
+            # 남은 Normal 후보 준비 (마감 임박/대형 우선)
             norm_pool_all = [b for b in avail_norm if self._eligible_for_voyage(b, voyage_id)]
-            # 마감 임박/대형 우선
             norm_pool_all.sort(key=lambda bid: (
                 self.deadlines.get(bid, "2099-12-31"),
                 -(self._area_of(bid) or 0.0)
@@ -470,10 +471,10 @@ class IntegratedVoyageAssigner:
         """
         지정 선박/도착일로 항차 1건을 인메모리 생성하고, 그 항차에 대해 배정을 수행.
         - avail_vip / avail_norm 은 '잔여 블록' 집합(가변 참조)
-        - cooldown_last_end: 해당 선박의 직전 '하역일'(end_date). 있으면 end_date >= last_end + gap 여야 허용
+        - cooldown_last_end: 동일 선박의 직전 '하역 종료일'(end_date). 있으면 end_date >= last_end + gap 여야 허용
         - 반환: {"voyage_id", "placed_blocks", "vip_placed", "normal_placed", "path"}
         """
-        # (A) 쿨다운 하드가드
+        # (A) 쿨다운 하드가드: end_date 기준 간격(상위에서 선박별 사이클 길이로 전달)
         if cooldown_last_end:
             d_end = datetime.strptime(end_date, "%Y-%m-%d")
             d_min = datetime.strptime(cooldown_last_end, "%Y-%m-%d") + timedelta(days=cooldown_gap_days)
@@ -486,7 +487,7 @@ class IntegratedVoyageAssigner:
                     "path": "SKIPPED_COOLDOWN",
                 }
 
-        # start_date 기본값(표기)
+        # start_date 기본값(없을 때만): 보수적으로 due-14 기준
         if not start_date:
             d_end = datetime.strptime(end_date, "%Y-%m-%d")
             start_date = (d_end - timedelta(days=self.MAX_STOWAGE_DAYS)).strftime("%Y-%m-%d")
@@ -637,7 +638,7 @@ class IntegratedVoyageAssigner:
     def export_visualizations(self, out_dir: str = None, max_time_per_voyage: int = 15):
         """
         ship_placer가 생성하는 원본(config_placement_*.png)을
-        - 루트 placement_results/로 복사해 "자항선N 시작-종료.png"로 저장
+        - 루트 placement_results/로 복사해 "자항선N 시작이동일_하역종료일.png"로 저장
         - 원본 config_placement_*.png는 삭제
         (원본은 루트 placement_results 또는 lv1_configs/placement_results 중 어디에든 있을 수 있음)
         """
@@ -655,14 +656,12 @@ class IntegratedVoyageAssigner:
             vessel_id = int(vinfo["vessel_name"].replace("자항선", ""))
             spec = self.vessel_specs[vessel_id]
 
-            # BEFORE 스냅샷(두 폴더 모두)
             before = self._glob_pngs(out_dir) | self._glob_pngs(alt_dir)
 
             vis_name = f"{vid}_VIS_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
             cfg_src = generate_config(
                 ship_name=vis_name, width=spec["width"], height=spec["height"], block_list=blocks
             )
-            # config는 보관 폴더로 이동
             cfg_moved = self._move_config_to_lv1_configs(cfg_src)
 
             try:
@@ -674,12 +673,11 @@ class IntegratedVoyageAssigner:
                     newest = max(new_files, key=os.path.getmtime)
                     start = vinfo["start_date"]
                     end = vinfo["end_date"]
-                    dst_name = f"{vinfo['vessel_name']} {start}-{end}.png"
+                    dst_name = f"{vinfo['vessel_name']} {start}_{end}.png"
                     dst = os.path.join(out_dir, dst_name)
                     if os.path.exists(dst):
                         os.remove(dst)
                     shutil.copy2(newest, dst)
-                    # 원본이 config_placement_*면 삭제
                     try:
                         base = os.path.basename(newest)
                         if base.startswith("config_placement_"):
