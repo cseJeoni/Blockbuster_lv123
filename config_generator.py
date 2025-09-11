@@ -233,6 +233,7 @@ class ConfigGenerator:
         margin_bow_grids = int(user_inputs['margin_bow'] / grid_unit)
         margin_stern_grids = int(user_inputs['margin_stern'] / grid_unit) 
         block_clearance_grids = int(user_inputs['min_clearance'] / grid_unit)
+        ring_bow_clearance_grids = int(user_inputs.get('ring_bow_clearance', 7) / grid_unit)
         
         config = {
             "ship_configuration": {
@@ -247,7 +248,8 @@ class ConfigGenerator:
                         "bow": margin_bow_grids,
                         "stern": margin_stern_grids
                     },
-                    "block_clearance": block_clearance_grids
+                    "block_clearance": block_clearance_grids,
+                    "ring_bow_clearance": ring_bow_clearance_grids
                 }
             },
             
@@ -291,7 +293,7 @@ class ConfigGenerator:
         return config
     
     def generate_config_from_blocks(self, ship_name, width, height, block_list, 
-                                   bow_margin=2, stern_margin=2, block_clearance=1):
+                                   bow_margin=2, stern_margin=2, block_clearance=1, ring_bow_clearance=7):
         """
         블록 이름 리스트로 직접 Config 생성 (API용)
         
@@ -314,6 +316,7 @@ class ConfigGenerator:
             'margin_bow': bow_margin,
             'margin_stern': stern_margin,
             'min_clearance': block_clearance,
+            'ring_bow_clearance': ring_bow_clearance,
             'selected_blocks': [(block_name, f"voxel_cache/{block_name}.json") for block_name in block_list]
         }
         
