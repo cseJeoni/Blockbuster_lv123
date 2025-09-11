@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>항차 배정 간트차트</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        #container {
+            position: relative;
+            overflow: auto;
+            background: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        canvas {
+            display: block;
+            cursor: move;
+        }
+        #tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+        #loading {
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">데이터 로딩 중...</div>
+    <div id="container" style="display: none;">
+        <canvas id="ganttChart"></canvas>
+        <div id="tooltip"></div>
+    </div>
+
+    <script>
+        let jsonData = null;
+        let deadlineData = {};
+        let canvas, ctx;
+        let cellWidth = 30;
+        let cellHeight = 20;
+        let headerWidth = 100;
+        let headerHeight = 60;
+        let voyageBoxes = [];
+        let isDragging = false;
+        let dragStartX = 0;
+        let scrollX = 0;
+        
+        // 색상 팔레트
+        const vesselColors = {
+            'ìží•­ì„ 1': '#4A90E2',
+            'ìží•­ì„ 2': '#7B68EE',
+            'ìží•­ì„ 3': '#FF6B6B',
+            'ìží•­ì„ 4': '#4ECDC4',
+            'ìží•­ì„ 5': '#95E77E'
+        };
+
+        async function loadData() {
+            try {
+                // JSON 파일 읽기
+                const jsonContent = await window.fs.readFile('lv3_integrated_voyage_assignments.json', { encoding: 'utf8' });
+                jsonData = JSON.parse(jsonContent);
+                
+                // CSV 파일 읽기
+                const csvContent = await window.fs.readFile('block_deadline_7.csv', { encoding: 'utf8' });
+                
+                // CSV 파싱
+                const lines = csvContent.trim().split('\n');
+                for (let i = 1; i < lines.length; i++) {
+                    const [blockId, deadline] = lines[i].split(',');
+                    if (blockId && deadline) {
+                        deadlineData[blockId.trim()] = deadline.trim();
+                    }
+                }
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('container').style.display = 'block';
+                
+                initChart();
+            } catch (error) {
+                document.getElementById('loading').innerHTML = `
+                    <p>데이터를 로드할 수 없습니다.</p>
+                    <p style="color: red;">${error.message}</p>
+                    <p>파일이 업로드되었는지 확인해주세요.</p>
+                `;
+            }
+        }
+
+        function initChart() {
+            canvas = document.getElementById('ganttChart');
+            ctx = canvas.getContext('2d');
+            
+            // 날짜 범위 계산
+            const startDate = new Date('2024-05-21');
+            const endDate = new Date('2025-05-10');
+            const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+            
+            // Canvas 크기 설정
+            const vessels = ['ìží•­ì„ 1', 'ìží•­ì„ 2', 'ìží•­ì„ 3', 'ìží•­ì„ 4', 'ìží•­ì„ 5'];
+            canvas.width = headerWidth + totalDays * cellWidth;
+            canvas.height = headerHeight + vessels.length * cellHeight;
+            
+            // 컨테이너 크기 설정
+            const container = document.getElementById('container');
+            container.style.width = Math.min(window.innerWidth - 40, canvas.width) + 'px';
+            container.style.height = Math.min(window.innerHeight - 40, canvas.height) + 'px';
+            
+            drawChart(startDate, endDate, vessels);
+            
+            // 이벤트 리스너
+            canvas.addEventListener('mousedown', handleMouseDown);
+            canvas.addEventListener('mousemove', handleMouseMove);
+            canvas.addEventListener('mouseup', handleMouseUp);
+            canvas.addEventListener('mouseleave', handleMouseUp);
+            canvas.addEventListener('click', handleClick);
+        }
+
+        function drawChart(startDate, endDate, vessels) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            voyageBoxes = [];
+            
+            // 배경
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // 헤더 그리기
+            drawHeaders(startDate, endDate);
+            
+            // 선박별 행 그리기
+            vessels.forEach((vessel, index) => {
+                const y = headerHeight + index * cellHeight;
+                
+                // 선박명
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.fillText(vessel, 10, y + cellHeight/2 + 4);
+                
+                // 가로선
+                ctx.strokeStyle = '#ddd';
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+                
+                // 항차 그리기
+                drawVoyages(vessel, y, startDate);
+            });
+            
+            // 마지막 가로선
+            ctx.strokeStyle = '#ddd';
+            ctx.beginPath();
+            ctx.moveTo(0, headerHeight + vessels.length * cellHeight);
+            ctx.lineTo(canvas.width, headerHeight + vessels.length * cellHeight);
+            ctx.stroke();
+        }
+
+        function drawHeaders(startDate, endDate) {
+            let currentDate = new Date(startDate);
+            let x = headerWidth;
+            let lastMonth = -1;
+            let lastYear = -1;
+            
+            // 년/월 헤더
+            while (currentDate <= endDate) {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth() + 1;
+                const day = currentDate.getDate();
+                
+                // 년도 표시
+                if (year !== lastYear) {
+                    ctx.fillStyle = '#333';
+                    ctx.font = 'bold 14px Arial';
+                    ctx.fillText(year + '년', x + 5, 20);
+                    lastYear = year;
+                }
+                
+                // 월 표시
+                if (month !== lastMonth) {
+                    ctx.fillStyle = '#666';
+                    ctx.font = '12px Arial';
+                    ctx.fillText(month + '월', x + 5, 40);
+                    lastMonth = month;
+                }
+                
+                // 일 표시 (세로)
+                ctx.fillStyle = '#999';
+                ctx.font = '10px Arial';
+                const dayStr = day.toString().padStart(2, '0');
+                ctx.fillText(dayStr[0], x + cellWidth/2 - 3, 50);
+                ctx.fillText(dayStr[1], x + cellWidth/2 - 3, 59);
+                
+                // 세로선
+                ctx.strokeStyle = '#eee';
+                ctx.beginPath();
+                ctx.moveTo(x, headerHeight);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+                
+                x += cellWidth;
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // 헤더 구분선
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, headerHeight);
+            ctx.lineTo(canvas.width, headerHeight);
+            ctx.stroke();
+            ctx.lineWidth = 1;
+        }
+
+        function drawVoyages(vessel, y, chartStartDate) {
+            const voyages = jsonData.usage_summary.per_vessel[vessel]?.voyages || [];
+            
+            voyages.forEach(voyageId => {
+                const [_, endDateStr] = voyageId.split('_');
+                const endDate = parseDate(endDateStr);
+                
+                // 시작일 계산 (종료일에서 역산)
+                let startDate = null;
+                for (const [key, value] of Object.entries(jsonData.voyage_assignments)) {
+                    if (key === voyageId) {
+                        // 로그에서 날짜 범위 찾기
+                        const logEntry = jsonData.assignment_info.logs.find(log => 
+                            log.includes(voyageId.replace('_', ' '))
+                        );
+                        if (logEntry) {
+                            const match = logEntry.match(/(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})/);
+                            if (match) {
+                                startDate = new Date(match[1]);
+                            }
+                        }
+                        break;
+                    }
+                }
+                
+                if (!startDate) {
+                    // 기본값: 종료일 12일 전
+                    startDate = new Date(endDate);
+                    startDate.setDate(startDate.getDate() - 11);
+                }
+                
+                // 위치 계산
+                const daysSinceStart = Math.floor((startDate - chartStartDate) / (1000 * 60 * 60 * 24));
+                const duration = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+                const x = headerWidth + daysSinceStart * cellWidth;
+                const width = duration * cellWidth;
+                
+                // 박스 그리기
+                ctx.fillStyle = vesselColors[vessel] || '#999';
+                ctx.fillRect(x, y + 2, width - 2, cellHeight - 4);
+                
+                // 테두리
+                ctx.strokeStyle = '#333';
+                ctx.strokeRect(x, y + 2, width - 2, cellHeight - 4);
+                
+                // 텍스트
+                ctx.fillStyle = 'white';
+                ctx.font = '10px Arial';
+                const blocks = jsonData.voyage_assignments[voyageId] || [];
+                const text = `${blocks.length}개`;
+                const textWidth = ctx.measureText(text).width;
+                if (textWidth < width - 4) {
+                    ctx.fillText(text, x + (width - textWidth) / 2, y + cellHeight/2 + 3);
+                }
+                
+                // 클릭 영역 저장
+                voyageBoxes.push({
+                    x: x,
+                    y: y + 2,
+                    width: width - 2,
+                    height: cellHeight - 4,
+                    voyageId: voyageId,
+                    vessel: vessel,
+                    startDate: startDate,
+                    endDate: endDate,
+                    blocks: blocks
+                });
+            });
+        }
+
+        function parseDate(dateStr) {
+            // "2024-06-01" 형식 또는 "240601" 형식 처리
+            if (dateStr.length === 10) {
+                return new Date(dateStr);
+            } else if (dateStr.length === 6) {
+                const year = 2000 + parseInt(dateStr.substr(0, 2));
+                const month = parseInt(dateStr.substr(2, 2)) - 1;
+                const day = parseInt(dateStr.substr(4, 2));
+                return new Date(year, month, day);
+            }
+            return new Date(dateStr);
+        }
+
+        function handleMouseDown(e) {
+            isDragging = true;
+            dragStartX = e.clientX + scrollX;
+            canvas.style.cursor = 'grabbing';
+        }
+
+        function handleMouseMove(e) {
+            if (isDragging) {
+                scrollX = dragStartX - e.clientX;
+                const container = document.getElementById('container');
+                container.scrollLeft = scrollX;
+            } else {
+                // 호버 효과
+                const rect = canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left + document.getElementById('container').scrollLeft;
+                const y = e.clientY - rect.top + document.getElementById('container').scrollTop;
+                
+                const hoveredBox = voyageBoxes.find(box => 
+                    x >= box.x && x <= box.x + box.width &&
+                    y >= box.y && y <= box.y + box.height
+                );
+                
+                canvas.style.cursor = hoveredBox ? 'pointer' : 'move';
+            }
+        }
+
+        function handleMouseUp(e) {
+            isDragging = false;
+            canvas.style.cursor = 'move';
+        }
+
+        function handleClick(e) {
+            if (isDragging) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left + document.getElementById('container').scrollLeft;
+            const y = e.clientY - rect.top + document.getElementById('container').scrollTop;
+            
+            const clickedBox = voyageBoxes.find(box => 
+                x >= box.x && x <= box.x + box.width &&
+                y >= box.y && y <= box.y + box.height
+            );
+            
+            if (clickedBox) {
+                showTooltip(e, clickedBox);
+            }
+        }
+
+        function showTooltip(e, box) {
+            const tooltip = document.getElementById('tooltip');
+            
+            // 날짜 포맷
+            const startStr = box.startDate.toISOString().split('T')[0];
+            const endStr = box.endDate.toISOString().split('T')[0];
+            
+            // 블록 정보 생성
+            let blockInfo = box.blocks.map(blockId => {
+                const deadline = deadlineData[blockId] || 'N/A';
+                return `${blockId} (${deadline})`;
+            }).join('<br>');
+            
+            if (!blockInfo) {
+                blockInfo = '배정된 블록 없음';
+            }
+            
+            tooltip.innerHTML = `
+                <strong>${box.vessel}</strong><br>
+                <strong>기간:</strong> ${startStr} ~ ${endStr}<br>
+                <strong>블록 수:</strong> ${box.blocks.length}개<br>
+                <strong>블록 목록:</strong><br>
+                <div style="max-height: 200px; overflow-y: auto; margin-top: 5px;">
+                    ${blockInfo}
+                </div>
+            `;
+            
+            tooltip.style.display = 'block';
+            tooltip.style.left = e.pageX + 10 + 'px';
+            tooltip.style.top = e.pageY + 10 + 'px';
+            
+            // 3초 후 자동 숨김
+            setTimeout(() => {
+                tooltip.style.display = 'none';
+            }, 5000);
+        }
+
+        // 페이지 로드 시 실행
+        window.addEventListener('load', loadData);
+        
+        // 툴팁 숨기기
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#ganttChart')) {
+                document.getElementById('tooltip').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

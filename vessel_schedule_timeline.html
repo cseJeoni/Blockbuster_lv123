@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자항선 운항 스케줄 타임라인</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #495057;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .timeline-container {
+            position: relative;
+            overflow-x: auto;
+            padding: 20px;
+        }
+        
+        .date-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+            border-bottom: 2px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .year-row {
+            height: 40px;
+            border-bottom: 2px solid #343a40;
+            position: relative;
+            background: #f8f9fa;
+        }
+        
+        .month-row {
+            height: 30px;
+            border-bottom: 1px solid #6c757d;
+            position: relative;
+            background: #e9ecef;
+        }
+        
+        .day-row {
+            height: 25px;
+            position: relative;
+            background: white;
+        }
+        
+        .year-label, .month-label {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        
+        .year-label {
+            background: #343a40;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .month-label {
+            background: #6c757d;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .day-label {
+            position: absolute;
+            top: 2px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #495057;
+            text-align: center;
+            width: 30px;
+        }
+        
+        .day-tens {
+            top: 2px;
+        }
+        
+        .day-ones {
+            top: 12px;
+        }
+        
+        .timeline-content {
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .vessel-row {
+            height: 60px;
+            border-bottom: 1px solid #e9ecef;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .vessel-label {
+            width: 100px;
+            padding: 0 15px;
+            font-weight: bold;
+            color: #495057;
+            background: #f8f9fa;
+            border-right: 2px solid #dee2e6;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            position: sticky;
+            left: 0;
+            z-index: 10;
+        }
+        
+        .voyage-track {
+            flex: 1;
+            position: relative;
+            height: 100%;
+        }
+        
+        .voyage-bar {
+            position: absolute;
+            height: 40px;
+            top: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        
+        .voyage-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 20;
+        }
+        
+        .vessel-1 { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .vessel-2 { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .vessel-3 { background: linear-gradient(135deg, #45b7d1, #3498db); }
+        .vessel-4 { background: linear-gradient(135deg, #f9ca24, #f0932b); }
+        .vessel-5 { background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+        
+        .info-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            max-height: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            padding: 20px;
+            transform: translateX(450px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .info-panel.show {
+            transform: translateX(0);
+        }
+        
+        .info-panel h3 {
+            margin: 0 0 15px 0;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+        
+        .block-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .block-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            font-size: 13px;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #6c757d;
+        }
+        
+        .controls {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+        
+        .zoom-control {
+            margin-left: auto;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .zoom-slider {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚢 자항선 운항 스케줄 타임라인</h1>
+            <p>Level 3 통합 항차 배정 결과 시각화</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="total-voyages">-</div>
+                <div class="stat-label">총 항차 수</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="total-blocks">-</div>
+                <div class="stat-label">배정된 블록 수</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="vessel-count">5</div>
+                <div class="stat-label">운용 자항선 수</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="total-days">-</div>
+                <div class="stat-label">총 운항 기간 (일)</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" onclick="scrollToStart()">⏮️ 처음으로</button>
+            <button class="btn btn-primary" onclick="scrollLeft()">⬅️ 이전</button>
+            <button class="btn btn-primary" onclick="scrollRight()">다음 ➡️</button>
+            <button class="btn btn-primary" onclick="scrollToEnd()">마지막으로 ⏭️</button>
+            
+            <div class="zoom-control">
+                <span>줌:</span>
+                <input type="range" class="zoom-slider" min="1" max="5" value="2" step="0.5" onchange="changeZoom(this.value)">
+                <span id="zoom-level">2x</span>
+            </div>
+        </div>
+        
+        <div class="timeline-container" id="timeline-container">
+            <div class="date-header" id="date-header">
+                <!-- 날짜 헤더가 여기에 동적으로 생성됩니다 -->
+            </div>
+            
+            <div class="timeline-content" id="timeline-content">
+                <!-- 타임라인 내용이 여기에 동적으로 생성됩니다 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="info-panel" id="info-panel">
+        <button class="close-btn" onclick="closeInfoPanel()">&times;</button>
+        <h3 id="voyage-title">항차 정보</h3>
+        <div id="voyage-details">
+            <p>항차를 클릭하면 상세 정보가 표시됩니다.</p>
+        </div>
+    </div>
+
+    <script>
+        let blockDeadlines = {};
+        let timelineData = [];
+        let minDate, maxDate;
+        let dayWidth = 30; // 기본 일 너비
+        
+        // 데이터 임베드 (JSON 파일 대신 직접 포함)
+        const voyageData = {
+  "assignment_info": {
+    "timestamp": "2025-09-11T13:45:57",
+    "elapsed_seconds": 1552.831,
+    "elapsed_hms": "00:25:53",
+    "total_cost_krw": "43,600,000,000 KRW",
+    "schedule_source": "in_memory",
+    "total_blocks": 360,
+    "assigned_blocks": 354,
+    "unassigned_blocks": 6,
+    "assignment_rate": 98.33
+  },
+  "usage_summary": {
+    "total_voyages": 80,
+    "used_voyages_count": 80,
+    "per_vessel": {
+      "자항선1": {
+        "voyage_count": 26,
+        "block_count": 206,
+        "voyages": [
+          "자항선1_2024-06-01",
+          "자항선1_2024-06-13",
+          "자항선1_2024-06-26",
+          "자항선1_2024-07-09",
+          "자항선1_2024-07-21",
+          "자항선1_2024-08-10",
+          "자항선1_2024-08-22",
+          "자항선1_2024-09-03",
+          "자항선1_2024-09-15",
+          "자항선1_2024-09-27",
+          "자항선1_2024-10-09",
+          "자항선1_2024-10-23",
+          "자항선1_2024-11-08",
+          "자항선1_2024-11-20",
+          "자항선1_2024-12-10",
+          "자항선1_2024-12-22",
+          "자항선1_2025-01-09",
+          "자항선1_2025-01-21",
+          "자항선1_2025-02-04",
+          "자항선1_2025-02-16",
+          "자항선1_2025-03-04",
+          "자항선1_2025-03-16",
+          "자항선1_2025-03-29",
+          "자항선1_2025-04-10",
+          "자항선1_2025-04-22",
+          "자항선1_2025-05-04"
+        ]
+      },
+      "자항선2": {
+        "voyage_count": 26,
+        "block_count": 83,
+        "voyages": [
+          "자항선2_2024-06-05",
+          "자항선2_2024-06-13",
+          "자항선2_2024-06-21",
+          "자항선2_2024-06-29",
+          "자항선2_2024-07-07",
+          "자항선2_2024-07-15",
+          "자항선2_2024-07-23",
+          "자항선2_2024-08-08",
+          "자항선2_2024-08-16",
+          "자항선2_2024-08-24",
+          "자항선2_2024-09-02",
+          "자항선2_2024-09-10",
+          "자항선2_2024-09-18",
+          "자항선2_2024-09-26",
+          "자항선2_2024-10-05",
+          "자항선2_2024-10-15",
+          "자항선2_2024-11-06",
+          "자항선2_2024-11-18",
+          "자항선2_2024-11-26",
+          "자항선2_2024-12-26",
+          "자항선2_2025-01-04",
+          "자항선2_2025-02-09",
+          "자항선2_2025-02-18",
+          "자항선2_2025-02-26",
+          "자항선2_2025-03-14",
+          "자항선2_2025-03-31"
+        ]
+      },
+      "자항선3": {
+        "voyage_count": 16,
+        "block_count": 43,
+        "voyages": [
+          "자항선3_2024-06-03",
+          "자항선3_2024-06-14",
+          "자항선3_2024-06-25",
+          "자항선3_2024-07-06",
+          "자항선3_2024-07-17",
+          "자항선3_2024-07-28",
+          "자항선3_2024-08-10",
+          "자항선3_2024-08-24",
+          "자항선3_2024-09-04",
+          "자항선3_2024-09-26",
+          "자항선3_2024-10-07",
+          "자항선3_2025-01-20",
+          "자항선3_2025-02-12",
+          "자항선3_2025-03-09",
+          "자항선3_2025-04-10",
+          "자항선3_2025-04-21"
+        ]
+      },
+      "자항선4": {
+        "voyage_count": 10,
+        "block_count": 17,
+        "voyages": [
+          "자항선4_2024-06-28",
+          "자항선4_2024-07-10",
+          "자항선4_2024-07-21",
+          "자항선4_2024-08-23",
+          "자항선4_2024-09-04",
+          "자항선4_2024-09-26",
+          "자항선4_2025-01-15",
+          "자항선4_2025-01-26",
+          "자항선4_2025-04-07",
+          "자항선4_2025-04-20"
+        ]
+      },
+      "자항선5": {
+        "voyage_count": 2,
+        "block_count": 5,
+        "voyages": [
+          "자항선5_2024-07-01",
+          "자항선5_2024-07-16"
+        ]
+      }
+    }
+  },
+  "voyage_assignments": {
+    "자항선1_2024-06-01": ["4374_643_000", "4375_665_000", "4375_675_000", "4375_695_000", "4375_685_000", "4385_20G", "4374_20J"],
+    "자항선1_2024-06-13": ["4374_20G", "4374_20L"],
+    "자항선1_2024-06-26": ["4375_245_000", "4375_255_000", "4375_643_000", "4375_646_000", "4375_656_000", "4385_639_000", "4385_629_000", "4387_242_000", "4387_252_000", "4375_677_000", "4375_667_000", "4374_158_000", "4374_148_000", "4375_166_000"],
+    "자항선1_2024-07-09": ["4375_20J", "4375_20G", "4375_20H", "2534_221_000", "4387_664_000", "2534_231_000", "2534_202_000", "2534_224_000"],
+    "자항선1_2024-07-21": ["4387_20H", "4375_20N", "4387_638_000", "4387_628_000", "4376_266_000"],
+    "자항선1_2024-08-10": ["4376_646_000", "4375_148_000", "4375_158_000", "4376_697_000", "4376_687_000", "4376_176_000", "4376_667_000", "4376_677_000", "4376_647_000", "4377_686_000", "4377_696_000", "4376_653_000", "4376_643_000", "4376_652_000", "4376_287_000", "4376_162_000", "4376_172_000"],
+    "자항선1_2024-08-22": ["4376_135_000", "4376_125_000", "3307_24A", "2534_40B", "2534_40D", "4376_20Y", "4377_246_000", "4376_20J"],
+    "자항선1_2024-09-03": ["4376_20H", "4376_20G", "4377_266_000", "4377_276_000", "2550_224_000", "2550_225_000"],
+    "자항선1_2024-09-15": ["4377_643_000", "4377_653_000", "4377_652_000", "4377_642_000", "4377_697_000", "4377_297_000", "4377_687_000", "4377_287_000", "4376_148_000", "4376_158_000", "4377_677_000", "4377_667_000", "4377_657_000", "4377_647_000"],
+    "자항선1_2024-09-27": ["3307_83D", "3307_81D", "4377_162_000", "4377_135_000", "3307_11B", "3307_12B", "4377_163_000", "4377_173_000", "4377_20Y", "4377_20H", "4377_20G"],
+    "자항선1_2024-10-09": ["4377_20N", "4377_20P", "2567_223_000", "2567_233_000", "2567_224_000"],
+    "자항선1_2024-10-23": ["4377_158_000", "2550_66B", "2550_67B", "4388_663_000", "4388_673_000", "4388_126_000", "4388_136_000", "3307_20A", "3307_25A"],
+    "자항선1_2024-11-08": ["4388_283_000", "4389_283_000", "2567_21D", "2567_22D", "4388_683_000", "2535_21D", "2535_22D", "2563_223_000", "2563_221_000", "2563_233_000", "2563_232_000"],
+    "자항선1_2024-11-20": ["2563_222_000", "2563_231_000", "2535_40D", "2563_225_000", "2563_235_000", "4389_664_000", "4389_674_000", "2563_229_000", "2563_239_000", "4388_674_000", "4388_664_000", "4389_663_000", "4389_653_000", "4389_643_000"],
+    "자항선1_2024-12-10": ["4388_20Y", "4390_663_000", "4390_673_000", "4390_643_000", "4390_653_000", "4390_126_000", "4390_136_000"],
+    "자항선1_2024-12-22": ["4388_20F", "4388_20H", "4388_20G", "4388_20L", "4388_20K"],
+    "자항선1_2025-01-09": ["4390_683_000", "4390_693_000", "4389_172_000", "4389_162_000", "4391_663_000", "4391_673_000", "4391_653_000", "4391_643_000", "4390_674_000", "4390_664_000", "4391_136_000", "4391_126_000", "2543_21D", "2543_22D"],
+    "자항선1_2025-01-21": ["4389_20Y", "4389_20G", "4389_20K"],
+    "자항선1_2025-02-04": ["4390_20Y", "4391_693_000", "4392_693_000", "4392_683_000", "4391_683_000", "4389_149_000", "4389_159_000"],
+    "자항선1_2025-02-16": ["4390_20F", "4390_20H", "4390_20G", "4390_20L", "4392_654_000", "4392_644_000", "4391_664_000", "4391_674_000"],
+    "자항선1_2025-03-04": ["4391_20Y", "4391_638_000", "4391_628_000", "4390_159_000", "4391_639_000", "4391_629_000", "4393_653_000", "4393_643_000", "4393_126_000"],
+    "자항선1_2025-03-16": ["4391_20F", "4391_20H", "4391_20G", "4391_20L", "4391_20K"],
+    "자항선1_2025-03-29": ["4393_693_000", "4393_683_000", "4393_654_000", "4393_644_000"],
+    "자항선1_2025-04-10": ["4392_20Y", "4392_638_000", "4392_628_000", "4392_639_000", "4393_628_000"],
+    "자항선1_2025-04-22": ["4393_20Y", "4393_638_000", "4393_639_000", "4393_20F"],
+    "자항선1_2025-05-04": ["4393_20H", "4393_20G", "4393_20L", "4393_20K"],
+    "자항선2_2024-06-05": ["4385_20F"],
+    "자항선2_2024-06-13": ["4386_628_000", "4386_638_000", "4386_629_000"],
+    "자항선2_2024-06-21": ["4387_20D", "4385_171_000"],
+    "자항선2_2024-06-29": ["4375_297_000", "4375_657_000", "4387_683_000", "4387_283_000", "4375_176_000"],
+    "자항선2_2024-07-07": ["4387_693_000", "4387_293_000", "4387_692_000", "4387_674_000", "2534_232_000"],
+    "자항선2_2024-07-15": ["2534_226_000", "4376_686_000", "4376_676_000", "2534_227_000"],
+    "자항선2_2024-07-23": ["4376_276_000", "2534_241_000", "2534_212_000"],
+    "자항선2_2024-08-08": ["4376_656_000", "4376_166_000", "4376_657_000", "4376_642_000", "4377_676_000", "4377_666_000"],
+    "자항선2_2024-08-16": ["4376_163_000", "4376_173_000", "2534_40C"],
+    "자항선2_2024-08-24": ["4377_256_000", "4377_296_000"],
+    "자항선2_2024-09-02": ["4377_286_000", "2550_235_000", "2550_234_000"],
+    "자항선2_2024-09-10": ["2550_223_000", "2550_233_000", "4377_176_000"],
+    "자항선2_2024-09-18": ["3307_82D", "4377_172_000", "4377_125_000"],
+    "자항선2_2024-09-26": ["4377_20L"],
+    "자항선2_2024-10-05": ["3307_13B", "2567_225_000", "2567_234_000"],
+    "자항선2_2024-10-15": ["2567_235_000", "2567_228_000", "2567_238_000"],
+    "자항선2_2024-11-06": ["4389_293_000", "4388_293_000", "4388_693_000", "4389_693_000", "4389_683_000"],
+    "자항선2_2024-11-18": ["4389_673_000"],
+    "자항선2_2024-11-26": ["4389_126_000", "4389_136_000", "4388_162_000", "4388_172_000"],
+    "자항선2_2024-12-26": ["2563_22D", "4390_293_000", "4388_159_000", "4388_149_000"],
+    "자항선2_2025-01-04": ["2563_21D", "4390_283_000"],
+    "자항선2_2025-02-09": ["4392_283_000", "4391_293_000", "4392_293_000", "4391_283_000"],
+    "자항선2_2025-02-18": ["4390_20K", "4392_663_000", "4392_653_000", "4392_643_000", "4392_136_000"],
+    "자항선2_2025-02-26": ["4392_126_000", "4391_162_000", "4391_172_000", "4390_149_000"],
+    "자항선2_2025-03-14": ["4393_213_000", "4393_283_000", "4393_293_000"],
+    "자항선2_2025-03-31": ["4392_629_000"],
+    "자항선3_2024-06-03": ["4374_20N"],
+    "자항선3_2024-06-14": ["4386_639_000", "4375_697_000", "4385_161_000", "4374_172_000", "4374_162_000", "4375_652_000", "4375_642_000"],
+    "자항선3_2024-06-25": ["4375_687_000", "4375_653_000", "4375_285_000", "4375_295_000", "4375_287_000", "4375_647_000"],
+    "자항선3_2024-07-06": ["4375_20K", "4387_682_000", "2534_234_000", "4376_666_000"],
+    "자항선3_2024-07-17": ["4375_171_000", "4375_161_000", "2534_229_000", "4375_162_000", "4375_172_000", "2534_251_000"],
+    "자항선3_2024-07-28": ["4376_286_000", "4376_296_000", "4387_639_000", "4387_629_000"],
+    "자항선3_2024-08-10": ["4376_297_000"],
+    "자항선3_2024-08-24": ["4377_656_000", "4377_646_000", "2534_67B", "2534_66B"],
+    "자항선3_2024-09-04": ["4377_166_000"],
+    "자항선3_2024-09-26": ["4377_20K"],
+    "자항선3_2024-10-07": ["4377_148_000"],
+    "자항선3_2025-01-20": ["4390_162_000", "4390_172_000"],
+    "자항선3_2025-02-12": ["4392_673_000"],
+    "자항선3_2025-03-09": ["4393_136_000"],
+    "자항선3_2025-04-10": ["4392_20G", "4392_20K"],
+    "자항선3_2025-04-21": ["4393_629_000"],
+    "자항선4_2024-06-28": ["2534_222_000"],
+    "자항선4_2024-07-10": ["4387_654_000", "4376_696_000", "2534_236_000", "2534_239_000", "4387_20E"],
+    "자항선4_2024-07-21": ["4387_20F", "4375_20L"],
+    "자항선4_2024-08-23": ["4376_20K", "4376_20L"],
+    "자항선4_2024-09-04": ["4376_20P"],
+    "자항선4_2024-09-26": ["4377_20J"],
+    "자항선4_2025-01-15": ["4389_20F", "4389_20H"],
+    "자항선4_2025-01-26": ["4389_20L"],
+    "자항선4_2025-04-07": ["4392_20F"],
+    "자항선4_2025-04-20": ["4392_20L"],
+    "자항선5_2024-07-01": ["4387_644_000"],
+    "자항선5_2024-07-16": ["2534_281_000", "2534_292_000", "2534_282_000", "2534_291_000"]
+  }
+};
+
+        // 데이터 로드 함수 (이제 임베드된 데이터 반환)
+        async function loadData() {
+            return voyageData;
+        }
+
+        // 데이터 로드
+        async function load() {
+            try {
+                const data = await loadData();
+                voyageData = data.voyage_assignments || {};
+                
+                // 통계 업데이트
+                const totalVoyages = Object.keys(voyageData).length;
+                const totalBlocks = Object.values(voyageData).reduce((sum, blocks) => sum + blocks.length, 0);
+                
+                document.getElementById('total-voyages').textContent = totalVoyages;
+                document.getElementById('total-blocks').textContent = totalBlocks;
+                
+                // 타임라인 데이터 준비
+                prepareTimelineData();
+                
+                // 날짜 범위 계산
+                calculateDateRange();
+                
+                // 타임라인 렌더링
+                renderTimeline();
+                
+            } catch (error) {
+                console.error('데이터 로드 실패:', error);
+                alert('데이터 파일을 찾을 수 없습니다. lv3_integrated_voyage_assignments.json 파일이 있는지 확인하세요.');
+            }
+        }
+        
+        function prepareTimelineData() {
+            timelineData = [];
+            
+            for (const [voyageId, blocks] of Object.entries(voyageData)) {
+                const parts = voyageId.split('_');
+                const vesselName = parts[0];
+                const endDateStr = parts[1];
+                
+                // 날짜 파싱
+                const endDate = new Date(endDateStr);
+                const vesselNum = parseInt(vesselName.replace('자항선', ''));
+                const cycleDays = getVesselCycleDays(vesselNum);
+                const startDate = new Date(endDate.getTime() - (cycleDays - 1) * 24 * 60 * 60 * 1000);
+                
+                timelineData.push({
+                    voyageId,
+                    vesselName,
+                    vesselNum,
+                    startDate,
+                    endDate,
+                    blocks,
+                    duration: cycleDays
+                });
+            }
+            
+            // 자항선별, 시작일별 정렬
+            timelineData.sort((a, b) => {
+                if (a.vesselNum !== b.vesselNum) return a.vesselNum - b.vesselNum;
+                return a.startDate - b.startDate;
+            });
+        }
+        
+        function getVesselCycleDays(vesselNum) {
+            const cycles = {
+                1: 12, // 3+3+3+3
+                2: 8,  // 3+1+3+1
+                3: 11, // 3+3+3+2
+                4: 11, // 3+3+3+2
+                5: 11  // 3+3+3+2
+            };
+            return cycles[vesselNum] || 12;
+        }
+        
+        function calculateDateRange() {
+            const dates = timelineData.flatMap(item => [item.startDate, item.endDate]);
+            minDate = new Date(Math.min(...dates));
+            maxDate = new Date(Math.max(...dates));
+            
+            // 총 일수 계산
+            const totalDays = Math.ceil((maxDate - minDate) / (24 * 60 * 60 * 1000)) + 1;
+            document.getElementById('total-days').textContent = totalDays;
+        }
+        
+        function renderTimeline() {
+            renderDateHeader();
+            renderTimelineContent();
+        }
+        
+        function renderDateHeader() {
+            const dateHeader = document.getElementById('date-header');
+            const totalDays = Math.ceil((maxDate - minDate) / (24 * 60 * 60 * 1000)) + 1;
+            const totalWidth = totalDays * dayWidth + 100; // 100px for vessel labels
+            
+            dateHeader.innerHTML = '';
+            dateHeader.style.width = totalWidth + 'px';
+            
+            // 년도 행
+            const yearRow = document.createElement('div');
+            yearRow.className = 'year-row';
+            yearRow.style.width = totalWidth + 'px';
+            
+            // 월 행
+            const monthRow = document.createElement('div');
+            monthRow.className = 'month-row';
+            monthRow.style.width = totalWidth + 'px';
+            
+            // 일 행
+            const dayRow = document.createElement('div');
+            dayRow.className = 'day-row';
+            dayRow.style.width = totalWidth + 'px';
+            
+            // 날짜별 처리
+            let currentDate = new Date(minDate);
+            let currentYear = null;
+            let currentMonth = null;
+            let yearStart = 0;
+            let monthStart = 0;
+            
+            for (let i = 0; i <= totalDays; i++) {
+                const dayX = 100 + i * dayWidth; // 100px offset for vessel labels
+                
+                // 년도 변경 감지
+                if (currentYear !== currentDate.getFullYear()) {
+                    if (currentYear !== null) {
+                        // 이전 년도 라벨 추가
+                        const yearLabel = document.createElement('div');
+                        yearLabel.className = 'year-label';
+                        yearLabel.textContent = currentYear;
+                        yearLabel.style.left = (yearStart + (dayX - yearStart) / 2 - 30) + 'px';
+                        yearLabel.style.width = (dayX - yearStart - 10) + 'px';
+                        yearRow.appendChild(yearLabel);
+                    }
+                    currentYear = currentDate.getFullYear();
+                    yearStart = dayX;
+                }
+                
+                // 월 변경 감지
+                if (currentMonth !== currentDate.getMonth()) {
+                    if (currentMonth !== null) {
+                        // 이전 월 라벨 추가
+                        const monthLabel = document.createElement('div');
+                        monthLabel.className = 'month-label';
+                        monthLabel.textContent = (currentMonth + 1) + '월';
+                        monthLabel.style.left = (monthStart + (dayX - monthStart) / 2 - 20) + 'px';
+                        monthLabel.style.width = (dayX - monthStart - 5) + 'px';
+                        monthRow.appendChild(monthLabel);
+                    }
+                    currentMonth = currentDate.getMonth();
+                    monthStart = dayX;
+                }
+                
+                // 일 라벨 추가
+                const day = currentDate.getDate();
+                const dayStr = day.toString();
+                
+                if (dayStr.length === 1) {
+                    // 한 자리 수
+                    const dayLabel = document.createElement('div');
+                    dayLabel.className = 'day-label day-ones';
+                    dayLabel.textContent = dayStr;
+                    dayLabel.style.left = (dayX - 15) + 'px';
+                    dayRow.appendChild(dayLabel);
+                } else {
+                    // 두 자리 수 - 십의 자리가 위, 일의 자리가 아래
+                    const tensLabel = document.createElement('div');
+                    tensLabel.className = 'day-label day-tens';
+                    tensLabel.textContent = dayStr[0];
+                    tensLabel.style.left = (dayX - 15) + 'px';
+                    dayRow.appendChild(tensLabel);
+                    
+                    const onesLabel = document.createElement('div');
+                    onesLabel.className = 'day-label day-ones';
+                    onesLabel.textContent = dayStr[1];
+                    onesLabel.style.left = (dayX - 15) + 'px';
+                    dayRow.appendChild(onesLabel);
+                }
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // 마지막 년도와 월 처리
+            if (currentYear !== null) {
+                const yearLabel = document.createElement('div');
+                yearLabel.className = 'year-label';
+                yearLabel.textContent = currentYear;
+                yearLabel.style.left = (yearStart + (totalWidth - yearStart) / 2 - 30) + 'px';
+                yearLabel.style.width = (totalWidth - yearStart - 10) + 'px';
+                yearRow.appendChild(yearLabel);
+            }
+            
+            if (currentMonth !== null) {
+                const monthLabel = document.createElement('div');
+                monthLabel.className = 'month-label';
+                monthLabel.textContent = (currentMonth + 1) + '월';
+                monthLabel.style.left = (monthStart + (totalWidth - monthStart) / 2 - 20) + 'px';
+                monthLabel.style.width = (totalWidth - monthStart - 5) + 'px';
+                monthRow.appendChild(monthLabel);
+            }
+            
+            dateHeader.appendChild(yearRow);
+            dateHeader.appendChild(monthRow);
+            dateHeader.appendChild(dayRow);
+        }
+        
+        function renderTimelineContent() {
+            const timelineContent = document.getElementById('timeline-content');
+            const totalDays = Math.ceil((maxDate - minDate) / (24 * 60 * 60 * 1000)) + 1;
+            const totalWidth = totalDays * dayWidth + 100;
+            
+            timelineContent.innerHTML = '';
+            timelineContent.style.width = totalWidth + 'px';
+            
+            // 자항선별로 그룹화
+            const vesselGroups = {};
+            timelineData.forEach(item => {
+                if (!vesselGroups[item.vesselName]) {
+                    vesselGroups[item.vesselName] = [];
+                }
+                vesselGroups[item.vesselName].push(item);
+            });
+            
+            // 자항선별 행 생성
+            Object.keys(vesselGroups).sort().forEach(vesselName => {
+                const vesselRow = document.createElement('div');
+                vesselRow.className = 'vessel-row';
+                
+                const vesselLabel = document.createElement('div');
+                vesselLabel.className = 'vessel-label';
+                vesselLabel.textContent = vesselName;
+                
+                const voyageTrack = document.createElement('div');
+                voyageTrack.className = 'voyage-track';
+                voyageTrack.style.width = (totalWidth - 100) + 'px';
+                
+                // 항차 바 생성
+                vesselGroups[vesselName].forEach(voyage => {
+                    const voyageBar = document.createElement('div');
+                    voyageBar.className = `voyage-bar vessel-${voyage.vesselNum}`;
+                    
+                    const startDays = Math.floor((voyage.startDate - minDate) / (24 * 60 * 60 * 1000));
+                    const duration = Math.ceil((voyage.endDate - voyage.startDate) / (24 * 60 * 60 * 1000)) + 1;
+                    
+                    voyageBar.style.left = (startDays * dayWidth) + 'px';
+                    voyageBar.style.width = (duration * dayWidth - 2) + 'px';
+                    voyageBar.textContent = `${voyage.blocks.length}개 블록`;
+                    
+                    voyageBar.onclick = () => showVoyageInfo(voyage);
+                    
+                    voyageTrack.appendChild(voyageBar);
+                });
+                
+                vesselRow.appendChild(vesselLabel);
+                vesselRow.appendChild(voyageTrack);
+                timelineContent.appendChild(vesselRow);
+            });
+        }
+        
+        function showVoyageInfo(voyage) {
+            const infoPanel = document.getElementById('info-panel');
+            const voyageTitle = document.getElementById('voyage-title');
+            const voyageDetails = document.getElementById('voyage-details');
+            
+            const startStr = voyage.startDate.toLocaleDateString('ko-KR');
+            const endStr = voyage.endDate.toLocaleDateString('ko-KR');
+            
+            voyageTitle.textContent = `🚢 ${voyage.voyageId}`;
+            
+            let detailsHtml = `
+                <p><strong>항차 기간:</strong> ${startStr} ~ ${endStr}</p>
+                <p><strong>운항 기간:</strong> ${voyage.duration}일</p>
+                <p><strong>실린 블록 수:</strong> ${voyage.blocks.length}개</p>
+                <div class="block-list">
+                    <strong>실린 블록 목록:</strong>
+            `;
+            
+            voyage.blocks.forEach(blockId => {
+                detailsHtml += `<div class="block-item">${blockId}</div>`;
+            });
+            
+            detailsHtml += '</div>';
+            
+            voyageDetails.innerHTML = detailsHtml;
+            infoPanel.classList.add('show');
+        }
+        
+        function closeInfoPanel() {
+            document.getElementById('info-panel').classList.remove('show');
+        }
+        
+        function changeZoom(value) {
+            dayWidth = parseInt(value) * 15;
+            document.getElementById('zoom-level').textContent = value + 'x';
+            renderTimeline();
+        }
+        
+        function scrollToStart() {
+            document.getElementById('timeline-container').scrollLeft = 0;
+        }
+        
+        function scrollToEnd() {
+            const container = document.getElementById('timeline-container');
+            container.scrollLeft = container.scrollWidth;
+        }
+        
+        function scrollLeft() {
+            const container = document.getElementById('timeline-container');
+            container.scrollLeft -= 500;
+        }
+        
+        function scrollRight() {
+            const container = document.getElementById('timeline-container');
+            container.scrollLeft += 500;
+        }
+        
+        // 페이지 로드 시 데이터 로드
+        window.onload = loadData;
+    </script>
+</body>
+</html>

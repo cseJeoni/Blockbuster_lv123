@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LV3 항차 배정 시각화 (v3 - strict match)</title>
+  <style>
+    :root{ --cell-w: 40px; --cell-h: 28px; --hdr-h: 72px; --left-w: 120px; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; padding:16px; font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, 'Noto Sans KR', Arial, 'Apple SD Gothic Neo', 'Malgun Gothic';
+      background:#fafafa; color:#222; height:100vh; display:flex; gap:16px; }
+    #left{ width:360px; min-width:320px; max-width:420px; display:flex; flex-direction:column; gap:12px; }
+    .card{ background:#fff; border:1px solid #e5e7eb; border-radius:14px; padding:14px; box-shadow:0 2px 6px rgba(0,0,0,.05); }
+    .card h2{ margin:0 0 8px; font-size:16px; }
+    #fileZone{ display:flex; flex-direction:column; gap:8px; }
+    .row{ display:flex; gap:8px; align-items:center; }
+    input[type=file]{ width:100%; }
+    button{ border:1px solid #e5e7eb; background:#111827; color:#fff; border-radius:10px; padding:8px 10px; cursor:pointer; }
+    button.secondary{ background:#fff; color:#111; }
+    .badge{ padding:2px 6px; border-radius:999px; font-size:11px; background:#f3f4f6; border:1px solid #e5e7eb; }
+    .badge.err{ background:#fee2e2; border-color:#fecaca; color:#991b1b; }
+    .muted{ color:#6b7280; }
+    .divider{ height:1px; background:#eee; margin:8px 0; }
+    #blocksList{ max-height:260px; overflow:auto; border:1px solid #eee; border-radius:10px; padding:8px; font-size:12px; background:#fbfbfb; }
+    #right{ flex:1; min-width:400px; display:flex; flex-direction:column; gap:12px; overflow:hidden; }
+    #toolbar{ display:flex; gap:8px; align-items:center; }
+    #container{ position:relative; overflow:auto; background:#fff; border:1px solid #e5e7eb; border-radius:14px; height: calc(100vh - 140px); cursor: grab; }
+    #container.dragging{ cursor:grabbing; }
+    canvas{ display:block; }
+    .leftStrip{ position:absolute; left:0; top:0; width:var(--left-w); height:100%; background:linear-gradient(90deg, #fafafa, #fff); border-right:1px solid #e5e7eb; pointer-events:none; }
+    #legend{ display:flex; flex-wrap:wrap; gap:6px; }
+    #legend .chip{ display:flex; align-items:center; gap:6px; padding:4px 8px; border:1px solid #eee; border-radius:999px; font-size:12px; }
+    #legend .sw{ width:14px; height:10px; border-radius:3px; border:1px solid #ddd; }
+    #hint{ font-size:12px; color:#6b7280; }
+    #count{ margin-left:auto; }
+  </style>
+</head>
+<body>
+  <div id="left">
+    <div class="card">
+      <h2>데이터 불러오기</h2>
+      <div id="fileZone">
+        <div class="row"><span class="badge">1</span><input type="file" id="jsonFile" accept=".json,application/json" /></div>
+        <div class="row"><span class="badge">2</span><input type="file" id="csvFile" accept=".csv,text/csv" /></div>
+        <div class="row" style="justify-content:space-between;">
+          <button id="btnLoad">업로드된 파일로 시각화</button>
+          <button class="secondary" id="btnSample">샘플</button>
+        </div>
+        <div id="hint">한 칸=1일 · 가로 드래그 이동 · 휠 줌 없음</div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>항차 상세</h2>
+      <div id="info" class="muted">차트에서 항차를 클릭하면 표시됩니다.</div>
+      <div class="divider"></div>
+      <div id="blocksList"></div>
+    </div>
+  </div>
+  <div id="right">
+    <div id="toolbar">
+      <div class="badge">한 칸 = 1일</div>
+      <div class="badge">드래그로 좌우 이동</div>
+      <div class="badge">휠 줌 없음</div>
+      <div id="count" class="badge">Rendered: 0</div>
+      <div id="miss" class="badge err" style="display:none;">Unmatched: 0</div>
+    </div>
+    <div id="container">
+      <div class="leftStrip"></div>
+      <canvas id="gantt"></canvas>
+    </div>
+    <div id="legend"></div>
+  </div>
+
+<script>
+let DATA=null, DEADLINES={}, voyageBoxes=[];
+const CELL_W=40, CELL_H=28, HDR_H=72, LEFT_W=120;
+const colors=['#4F46E5','#16A34A','#DC2626','#0891B2','#A855F7','#F59E0B'];
+
+function readFileAsText(file){ return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsText(file,'utf-8'); }); }
+function parseCSV(text){ const lines=text.trim().split(/[\r\n]+/); const map={}; for(let i=1;i<lines.length;i++){ const [id,dl]=lines[i].split(',').map(s=>s&&s.trim()); if(id) map[id]=dl||''; } return map; }
+function parseDate(s){ if(/^\d{4}-\d{2}-\d{2}$/.test(s)) return new Date(s+'T00:00:00'); if(/^\d{6}$/.test(s)){ const y=2000+parseInt(s.slice(0,2),10), m=parseInt(s.slice(2,4),10)-1, d=parseInt(s.slice(4,6),10); return new Date(y,m,d); } return new Date(s); }
+function fmt(d){ return d.toISOString().slice(0,10); }
+function daysDiff(a,b){ return Math.round((b-a)/86400000); }
+
+// Build exact map: { "자항선X_YYYY-MM-DD" : {start:Date, end:Date} }
+function buildExactVoyageMap(data){
+  const map = {};
+  const logs = (data?.assignment_info?.logs)||[];
+  const re=/\[(자항선\d)\s(\d{4}-\d{2}-\d{2})_(\d{4}-\d{2}-\d{2})\]/;
+  for(const line of logs){
+    const m=line.match(re);
+    if(m){
+      const vessel=m[1], s=parseDate(m[2]), e=parseDate(m[3]);
+      const key=`${vessel}_${fmt(e)}`;
+      // prefer last occurrence (PATH lines usually come after SKIP_TOPOFF)
+      map[key]={start:s,end:e};
+    }
+  }
+  return map;
+}
+
+function drawChart(){
+  const canvas=document.getElementById('gantt'); const ctx=canvas.getContext('2d'); const container=document.getElementById('container');
+  const per=DATA?.usage_summary?.per_vessel||{};
+  const exact=buildExactVoyageMap(DATA);
+
+  // get vessel order from JSON keys to avoid mojibake
+  const vessels = Object.keys(per);
+
+  // Collect boxes from strictly matched voyages
+  voyageBoxes=[];
+  const misses=[];
+  const ranges=[];
+  for(const vessel of vessels){
+    const ids = per[vessel]?.voyages || [];
+    for(const vid of ids){
+      const r = exact[vid];
+      if(!r){ misses.push(vid); continue; }
+      ranges.push(r);
+    }
+  }
+  if(ranges.length===0){
+    // nothing to draw
+    const w=LEFT_W+800, h=HDR_H + Math.max(1,vessels.length)*CELL_H + 1;
+    canvas.width=w; canvas.height=h;
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle='#111827'; ctx.font='14px Arial'; ctx.fillText('일치하는 항차 로그가 없습니다. JSON을 확인하세요.', LEFT_W+16, HDR_H+24);
+    document.getElementById('count').textContent='Rendered: 0';
+    const missEl=document.getElementById('miss'); missEl.style.display=misses.length?'inline-flex':'none'; missEl.textContent='Unmatched: '+misses.length;
+    return;
+  }
+
+  const minStart=new Date(Math.min(...ranges.map(r=>r.start.getTime())));
+  const maxEnd=new Date(Math.max(...ranges.map(r=>r.end.getTime())));
+  const chartStart=new Date(minStart); chartStart.setDate(chartStart.getDate()-3);
+  const chartEnd=new Date(maxEnd); chartEnd.setDate(chartEnd.getDate()+3);
+  const totalDays=daysDiff(chartStart,chartEnd)+1;
+
+  canvas.width=LEFT_W + totalDays*CELL_W + 2;
+  canvas.height=HDR_H + vessels.length*CELL_H + 1;
+
+  // background
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // header
+  drawHeader(ctx, canvas, chartStart, totalDays);
+
+  // rows
+  vessels.forEach((vessel, idx)=>{
+    const y = HDR_H + idx*CELL_H;
+    ctx.strokeStyle='#e5e7eb'; ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke();
+    ctx.fillStyle='#111827'; ctx.font='12px Arial'; ctx.textBaseline='middle'; ctx.fillText(vessel, 10, y + CELL_H/2);
+
+    const list = (per[vessel]?.voyages)||[];
+    const yTop = y + 2;
+    for(const vid of list){
+      const r=exact[vid];
+      if(!r) continue;
+      const x = LEFT_W + daysDiff(chartStart, r.start)*CELL_W;
+      const w = (daysDiff(r.start, r.end)+1)*CELL_W;
+      const color = colors[idx % colors.length];
+      ctx.fillStyle = color; ctx.fillRect(x+1, yTop, w-2, CELL_H-4);
+      ctx.strokeStyle='#111827'; ctx.strokeRect(x+0.5, yTop-0.5, w-1, CELL_H-3);
+
+      const blocks=(DATA.voyage_assignments||{})[vid]||[];
+      const label = `${blocks.length}개`;
+      ctx.fillStyle='#fff'; ctx.font='bold 12px Arial';
+      const tw=ctx.measureText(label).width; if(tw < w-8){ ctx.fillText(label, x + (w-tw)/2, yTop + (CELL_H-4)/2 + 1); }
+
+      voyageBoxes.push({ x:x+1, y:yTop, w:w-2, h:CELL_H-4, vessel, vid, start:r.start, end:r.end, blocks });
+    }
+  });
+
+  // counts
+  document.getElementById('count').textContent = 'Rendered: ' + voyageBoxes.length;
+  const missEl=document.getElementById('miss'); missEl.style.display=misses.length?'inline-flex':'none'; missEl.textContent='Unmatched: '+misses.length;
+
+  // initial scroll to left
+  container.scrollLeft=0;
+}
+
+function drawHeader(ctx, canvas, chartStart, totalDays){
+  const c=ctx;
+  c.fillStyle='#fafafa'; c.fillRect(0,0,canvas.width,HDR_H);
+  c.strokeStyle='#e5e7eb'; c.beginPath(); c.moveTo(0,HDR_H); c.lineTo(canvas.width,HDR_H); c.stroke();
+  for(let i=0;i<=totalDays;i++){ const x=LEFT_W + i*CELL_W; c.strokeStyle='#f1f5f9'; c.beginPath(); c.moveTo(x,0); c.lineTo(x,canvas.height); c.stroke(); }
+  c.fillStyle='#fff'; c.fillRect(0,0,LEFT_W,HDR_H); c.strokeStyle='#e5e7eb'; c.beginPath(); c.moveTo(LEFT_W,0); c.lineTo(LEFT_W,HDR_H); c.stroke();
+  let d=new Date(chartStart); let lastY=-1,lastM=-1;
+  for(let i=0;i<totalDays;i++){
+    const x=LEFT_W + i*CELL_W; const y=d.getFullYear(); const m=d.getMonth()+1; const day=d.getDate();
+    if(y!==lastY){ c.fillStyle='#111827'; c.font='bold 14px Arial'; c.fillText(`${y}년`, x+6, 20); lastY=y; lastM=-1; }
+    if(m!==lastM){ c.fillStyle='#374151'; c.font='bold 12px Arial'; c.fillText(`${m}월`, x+6, 40); lastM=m; }
+    const dd=day.toString().padStart(2,'0'); c.fillStyle='#6b7280'; c.font='12px Arial'; const cx=x + CELL_W/2 - 4; c.fillText(dd[0], cx, 56); c.fillText(dd[1], cx, 68);
+    d.setDate(d.getDate()+1);
+  }
+}
+
+function showDetail(box){
+  const info=document.getElementById('info'), list=document.getElementById('blocksList');
+  const start=box.start.toISOString().slice(0,10), end=box.end.toISOString().slice(0,10);
+  info.classList.remove('muted');
+  info.textContent = `• 항차: ${box.vid}\n• 기간: ${start} ~ ${end}\n• 실린 블록 개수: ${box.blocks.length}개`;
+  if(!box.blocks.length){ list.innerHTML='<span class="muted">배정된 블록 없음</span>'; return; }
+  list.innerHTML='';
+  const ul=document.createElement('div');
+  for(const bid of box.blocks){ const dl=DEADLINES[bid]||'N/A'; const row=document.createElement('div'); row.textContent=`${bid} (${dl})`; ul.appendChild(row); }
+  list.appendChild(ul);
+}
+
+(function setup(){
+  const cont=document.getElementById('container'); let down=false,sx=0,sl=0;
+  cont.addEventListener('mousedown',e=>{down=true;sx=e.clientX;sl=cont.scrollLeft;cont.classList.add('dragging');});
+  cont.addEventListener('mouseleave',()=>{down=false;cont.classList.remove('dragging');});
+  cont.addEventListener('mouseup',()=>{down=false;cont.classList.remove('dragging');});
+  cont.addEventListener('mousemove',e=>{ if(!down) return; cont.scrollLeft = sl - (e.clientX - sx); });
+  // wheel zoom off (pinch/ctrl+wheel)
+  cont.addEventListener('wheel',e=>{ if(e.ctrlKey) e.preventDefault(); }, {passive:false});
+  cont.addEventListener('click',e=>{
+    const canvas=document.getElementById('gantt'); const rect=canvas.getBoundingClientRect();
+    const x=e.clientX - rect.left + cont.scrollLeft; const y=e.clientY - rect.top + cont.scrollTop;
+    for(const b of voyageBoxes){ if(x>=b.x && x<=b.x+b.w && y>=b.y && y<=b.y+b.h){ showDetail(b); break; } }
+  });
+
+  document.getElementById('btnLoad').addEventListener('click', async ()=>{
+    const jf=document.getElementById('jsonFile').files[0]; if(!jf){ alert('lv3_integrated_voyage_assignments.json 선택'); return; }
+    try{
+      DATA = JSON.parse(await readFileAsText(jf));
+    }catch(e){
+      alert('JSON 파싱 오류: '+e.message); return;
+    }
+    const cf=document.getElementById('csvFile').files[0]; DEADLINES = cf ? parseCSV(await readFileAsText(cf)) : {};
+    drawChart();
+  });
+  document.getElementById('btnSample').addEventListener('click', ()=>{ alert('샘플 데이터가 없습니다. JSON/CSV를 업로드하세요.'); });
+  window.addEventListener('resize',()=>{ if(DATA) drawChart(); });
+})();
+</script>
+</body>
+</html>
