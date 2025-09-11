@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 LV3 — 선박별 사이클 시간 반영 (개선 적용 버전)
+- last_end 상태 즉시 업데이트 로직 추가하여 쿨다운 오류 수정
 - rescue_pass: 각 라운드 종료 시 실행하여 배치율 우선
 - 후보 날짜 생성 파라미터 원복 (배치율 우선)
 - score_date: lru_cache 유지
@@ -16,8 +17,8 @@ from integrated_vip_normal_assignment import IntegratedVoyageAssigner
 
 # ---- 정책 상수 (배치율 우선을 위해 원복) ----
 MAX_STOWAGE_DAYS = 14
-TOP_K_PEAKS = 30               # 20 -> 30 으로 원복
-GRID_STEP_DAYS = 3             # 4 -> 3 으로 원복
+TOP_K_PEAKS = 30
+GRID_STEP_DAYS = 3
 MAX_ROUNDS = 3
 
 VESSEL_PHASE_DUR = { 1: (3, 3, 3, 3), 2: (3, 1, 3, 1), 3: (3, 3, 3, 2), 4: (3, 3, 3, 2), 5: (3, 3, 3, 2) }
@@ -148,7 +149,7 @@ def rescue_pass(assigner: IntegratedVoyageAssigner, wins: Dict[str, Tuple[dateti
     remaining.sort(key=feasibility_score)
     progressed = False
     for b in remaining:
-        if b not in (avail_vip | avail_norm): continue # 이미 다른 블록 구출 시 배정되었을 수 있음
+        if b not in (avail_vip | avail_norm): continue
         order = [1] if b in assigner.vip_blocks else [1, 2, 3, 4, 5]
         ws, we = wins.get(b, (_to_date("2099-01-01"), _to_date("2099-12-31")))
         for vid in order:
@@ -221,6 +222,7 @@ def lv3_schedule(deadline_csv: str = "data/block_deadline_7.csv", labeling_resul
         wins_tuple = tuple(sorted(wins.items()))
         
         for vessel_id in [1, 2, 3, 4, 5]:
+            vname = f"자항선{vessel_id}"
             remaining_frozen = frozenset(avail_vip | avail_norm)
             cand_dates = build_candidate_dates_for_vessel(assigner, vessel_id, wins, remaining_frozen)
             if not cand_dates: continue
@@ -231,12 +233,23 @@ def lv3_schedule(deadline_csv: str = "data/block_deadline_7.csv", labeling_resul
             
             for end_date in selected:
                 start_move = _to_date(end_date) - timedelta(days=gap - 1)
-                assigner.run_for_single_voyage(vessel_name=f"자항선{vessel_id}", end_date=end_date, avail_vip=avail_vip, avail_norm=avail_norm, start_date=_to_str(start_move), cooldown_last_end=last_end[f"자항선{vessel_id}"], cooldown_gap_days=gap)
-                # last_end는 run_for_single_voyage가 성공하면 내부에서 갱신되지 않으므로, 여기서 직접 갱신
-                # (실제로는 LV2에서 직접 수정하지 않으므로, 이 방식은 한계가 있음. LV3가 last_end 상태를 관리해야 함)
-                # -> 이번 실행에서는 last_end 상태를 직접 관리하는 로직으로 수정
+                
+                # --- [수정] ---
+                # run_for_single_voyage의 결과를 받아 처리
+                result = assigner.run_for_single_voyage(
+                    vessel_name=vname,
+                    end_date=end_date,
+                    avail_vip=avail_vip,
+                    avail_norm=avail_norm,
+                    start_date=_to_str(start_move),
+                    cooldown_last_end=last_end[vname],
+                    cooldown_gap_days=gap
+                )
+
+                # 항차 생성이 성공한 경우(배치된 블록이 있는 경우)에만 last_end를 즉시 업데이트
+                if result and result.get("placed_blocks"):
+                    last_end[vname] = end_date
         
-        # [해결] 각 라운드의 메인 스케줄링 후, rescue_pass로 미배치 블록 구출 시도
         print(f"[LV3] Round {rounds} Main scheduling finished. Attempting rescue pass...")
         rescue_pass(assigner, wins, avail_vip, avail_norm, last_end)
 
