@@ -250,7 +250,9 @@ class IntegratedVoyageAssigner:
             placed_new, _ = self._run_lv1(trial, voyage_id, timeout=self.LV1_TIMEOUT)
             if _vip_ok(placed_new) and len(placed_new) > len(current):
                 current = placed_new
-                self.logs.append(f"[{voyage_id}] PATH=TOPOFF_R{r+1} gain=+{len(current)-len(placed_seed)}")
+                vinfo = self.schedule.info(voyage_id)
+                log_id = f"{vinfo['vessel_name']} {vinfo['start_date']}_{vinfo['end_date']}"
+                self.logs.append(f"[{log_id}] PATH=TOPOFF_R{r+1} gain=+{len(current)-len(placed_seed)}")
             else: break
         return current, ("TOPOFF" if len(current) > len(placed_seed) else "NO_TOPOFF")
 
@@ -291,10 +293,15 @@ class IntegratedVoyageAssigner:
             else: return 0
         else: return 0
         
-        # [해결] 배치율 극대화를 위해 항상 Top-off 실행
-        placed_topped, tag = self._topoff(voyage_id, placed_final, avail_vip, avail_norm, target_area, page_limit, rounds=self.TOPOFF_ROUNDS)
-        if tag == "TOPOFF": path += "_TOPOFF"
-        placed_final = placed_topped
+        current_rate = len(placed_final) / len(union) if union else 0
+        if current_rate < 0.85:  # 배치율 85% 미만일 때만 Top-off
+            placed_topped, tag = self._topoff(voyage_id, placed_final, avail_vip, avail_norm, target_area, page_limit, rounds=self.TOPOFF_ROUNDS)
+            if tag == "TOPOFF": path += "_TOPOFF"
+            placed_final = placed_topped
+        else:
+            vinfo = self.schedule.info(voyage_id)
+            log_id = f"{vinfo['vessel_name']} {vinfo['start_date']}_{vinfo['end_date']}"
+            self.logs.append(f"[{log_id}] SKIP_TOPOFF rate={current_rate:.2f}")
         
         def confirm(blocks: List[str]) -> int:
             count = 0
@@ -307,7 +314,10 @@ class IntegratedVoyageAssigner:
             return count
             
         cnt = confirm(placed_final)
-        self.logs.append(f"[{voyage_id}] PATH={path} placed={cnt}")
+        # [최적화] 로그에 시작일_종료일 형식으로 표시
+        vinfo = self.schedule.info(voyage_id)
+        log_id = f"{vinfo['vessel_name']} {vinfo['start_date']}_{vinfo['end_date']}"
+        self.logs.append(f"[{log_id}] PATH={path} placed={cnt}")
         return cnt
 
     def run_for_single_voyage(self, vessel_name: str, end_date: str, avail_vip: Set[str], avail_norm: Set[str], start_date: Optional[str] = None, cooldown_last_end: Optional[str] = None, cooldown_gap_days: int = 14) -> Dict:

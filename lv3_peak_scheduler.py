@@ -72,7 +72,7 @@ def build_candidate_dates_for_vessel(assigner: IntegratedVoyageAssigner, vessel_
             cur += timedelta(days=GRID_STEP_DAYS)
     return sorted(edges)
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=1000)
 def score_date(assigner: IntegratedVoyageAssigner, vessel_id: int, date_str: str, wins: Tuple[Tuple[str, Tuple[datetime, datetime]], ...], remaining: frozenset[str]) -> float:
     d = _to_date(date_str)
     wins_dict = dict(wins)
@@ -211,12 +211,23 @@ def lv3_schedule(deadline_csv: str = "data/block_deadline_7.csv", labeling_resul
     avail_vip, avail_norm = set(assigner.vip_blocks), set(assigner.normal_blocks)
     last_end: Dict[str, Optional[str]] = {f"자항선{i}": None for i in range(1, 6)}
 
+    # [최적화] 윈도우 캐싱
+    windows_cache: Dict[frozenset, Dict[str, Tuple[datetime, datetime]]] = {}
+
     rounds = 0
     while rounds < MAX_ROUNDS and (avail_vip or avail_norm):
         rounds += 1
         print(f"\n[LV3] Starting Main Scheduling Round {rounds}/{MAX_ROUNDS}...")
         remaining = avail_vip | avail_norm
-        wins = build_windows(assigner.deadlines, remaining)
+        
+        # [최적화] 윈도우 캐싱 사용
+        remaining_key = frozenset(remaining)
+        if remaining_key in windows_cache:
+            wins = windows_cache[remaining_key]
+        else:
+            wins = build_windows(assigner.deadlines, remaining)
+            windows_cache[remaining_key] = wins
+        
         if not wins: break
         
         wins_tuple = tuple(sorted(wins.items()))

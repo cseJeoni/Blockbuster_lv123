@@ -59,6 +59,9 @@ class BlockLabeler:
         self.vessel_specs: List[Dict] = self._load_vessel_specs()
         self.block_data: Dict[str, Dict] = {}             # block_id -> {width,height,area}
         self.labeling_results: Dict[str, Dict] = {}       # 상세 결과
+        
+        # [최적화] 블록 데이터 캐싱
+        self._block_cache: Dict[str, Dict] = {}
 
         print("🚢 사용 자항선 스펙:")
         for v in self.vessel_specs:
