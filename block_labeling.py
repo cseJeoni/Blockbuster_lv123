@@ -121,12 +121,19 @@ class BlockLabeler:
                 bid = data.get("block_id") or fp.stem
 
                 vdata = (data.get("voxel_data") or {})
-                dims  = (vdata.get("dimensions") or {})
                 res   = float(vdata.get("resolution", 1.0))  # ← 기본 1.0m/셀
-
-                # 그리드 개수
-                gw = dims.get("width")
-                gh = dims.get("height")
+                
+                # 복셀 위치에서 그리드 크기 계산
+                voxel_positions = vdata.get("voxel_positions", [])
+                footprint_area = vdata.get("footprint_area")
+                
+                gw = gh = None
+                if voxel_positions:
+                    # voxel_positions에서 최대 x, y 좌표 찾기
+                    max_x = max(pos[0] for pos in voxel_positions) if voxel_positions else 0
+                    max_y = max(pos[1] for pos in voxel_positions) if voxel_positions else 0
+                    gw = max_x + 1  # 0-based이므로 +1
+                    gh = max_y + 1  # 0-based이므로 +1
 
                 if gw is None or gh is None:
                     # 치수 미확인
@@ -140,7 +147,12 @@ class BlockLabeler:
                 # 미터 단위로 환산
                 width_m  = float(gw) * res
                 height_m = float(gh) * res
-                area_m2  = width_m * height_m  # footprint_area가 따로 있으면 그걸 쓰고, 없으면 직사각 근사
+                
+                # footprint_area가 있으면 사용, 없으면 직사각 근사
+                if footprint_area is not None:
+                    area_m2 = float(footprint_area) * (res * res)  # 복셀 개수 * 복셀 면적
+                else:
+                    area_m2 = width_m * height_m
 
                 self.block_data[bid] = {
                     "width": width_m, "height": height_m, "area": area_m2,

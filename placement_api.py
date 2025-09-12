@@ -21,7 +21,7 @@ except ImportError as e:
     print(f"[INFO] Blockbuster_Test 폴더에서 실행해주세요")
 
 
-def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_margin=2, block_clearance=1):
+def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_margin=2, block_clearance=1, ring_bow_clearance=10):
     """
     Config 파일 생성 (ConfigGenerator 활용)
     
@@ -33,6 +33,7 @@ def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_ma
         bow_margin (int): 선수 여백 (기본값 2)
         stern_margin (int): 선미 여백 (기본값 2)
         block_clearance (int): 블록 간격 (기본값 1)
+        ring_bow_clearance (int): 크레인 링 선수 여백 (기본값 10)
     
     Returns:
         str: 생성된 config 파일 경로
@@ -50,7 +51,8 @@ def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_ma
         block_list=block_list,
         bow_margin=bow_margin,
         stern_margin=stern_margin,
-        block_clearance=block_clearance
+        block_clearance=block_clearance,
+        ring_bow_clearance=ring_bow_clearance
     )
     
     # Config 파일 저장
@@ -59,13 +61,13 @@ def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_ma
     return config_filename
 
 
-def run_placement(config_path, max_time=5, enable_visualization=False):
+def run_placement(config_path, max_time=10, enable_visualization=False):
     """
     블록 배치 실행 (ShipPlacer 활용)
     
     Args:
         config_path (str): Config 파일 경로
-        max_time (int): 최대 실행 시간 (초, 기본값 5)
+        max_time (int): 최대 실행 시간 (초, 기본값 10)
         enable_visualization (bool): 시각화 활성화 여부 (기본값 False)
     
     Returns:
@@ -84,14 +86,15 @@ def run_placement(config_path, max_time=5, enable_visualization=False):
         print(f"배치 못한 블록: {result['unplaced_blocks']}")
     """
     try:
-        # ShipPlacerConfig로 배치 실행
-        placer = ShipPlacerConfig(config_path, verbose=False)
-        placement_result = placer.run(max_time=max_time, save_visualization=enable_visualization)
+        # ShipPlacerConfig로 배치 실행 (Unity JSON 생성하지 않음)
+        placer = ShipPlacerConfig(config_path)
+        blocks = placer.create_blocks_from_config()
+        placement_result = placer.place_blocks(blocks, max_time=max_time)
         
         if placement_result:
             placed_count = len(placement_result.placed_blocks)
             total_count = placed_count + len(placement_result.unplaced_blocks)
-            unplaced_names = [block.id for block_id, block in placement_result.unplaced_blocks.items()]
+            unplaced_names = placement_result.unplaced_blocks
             success_rate = (placed_count / total_count * 100) if total_count > 0 else 0
             placement_time = getattr(placement_result, 'placement_time', 0)
             
@@ -128,13 +131,13 @@ def run_placement(config_path, max_time=5, enable_visualization=False):
         }
 
 
-def get_unplaced_blocks(config_path, max_time=5):
+def get_unplaced_blocks(config_path, max_time=10):
     """
     배치 못한 블록 리스트만 반환
     
     Args:
         config_path (str): Config 파일 경로
-        max_time (int): 최대 실행 시간 (초, 기본값 5)
+        max_time (int): 최대 실행 시간 (초, 기본값 10)
     
     Returns:
         list: 배치 못한 블록 이름 리스트

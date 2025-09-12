@@ -143,9 +143,48 @@ class OptimizedVoxelizer:
         
         return resolution
     
+    def _calculate_surface_flatness(self, voxels_3d, transform):
+        """표면 평탄도 계산"""
+        # 변환에 따라 복셀 데이터 회전/반전
+        if transform == 'flip_z':
+            surface_voxels = voxels_3d[:, :, ::-1]  # Z축 뒤집기
+        elif transform == 'rotate_y':
+            surface_voxels = np.transpose(voxels_3d, (2, 1, 0))  # X<->Z 교환
+        elif transform == 'rotate_y_flip':
+            surface_voxels = np.transpose(voxels_3d, (2, 1, 0))[::-1, :, :]  # X<->Z 교환 + X 뒤집기
+        elif transform == 'rotate_x':
+            surface_voxels = np.transpose(voxels_3d, (0, 2, 1))  # Y<->Z 교환
+        elif transform == 'rotate_x_flip':
+            surface_voxels = np.transpose(voxels_3d, (0, 2, 1))[:, ::-1, :]  # Y<->Z 교환 + Y 뒤집기
+        else:  # None (원본)
+            surface_voxels = voxels_3d
+        
+        # 바닥 영역 Z 좌표 추출 (하위 20% 높이)
+        z_coords = []
+        x_size, y_size, z_size = surface_voxels.shape
+        z_threshold = z_size * 0.2  # 하위 20%
+        
+        for x in range(x_size):
+            for y in range(y_size):
+                for z in range(int(z_threshold)):
+                    if surface_voxels[x, y, z]:
+                        z_coords.append(z)
+        
+        if len(z_coords) < 3:
+            return 0.0  # 바닥 면이 충분하지 않음
+        
+        # Z 좌표 분산으로 평탄도 계산 (분산이 작을수록 평탄함)
+        z_variance = np.var(z_coords)
+        max_z_range = z_size
+        
+        # 평탄도 점수: 0(매우 울퉁불퉁) ~ 1(완전 평탄)
+        flatness_score = 1.0 / (1.0 + z_variance / max_z_range * 10)
+        
+        return flatness_score
+    
     def optimize_block_orientation(self, voxels_3d, bbox):
         """
-        [AUTO] 블록을 바닥 접촉 면적이 최대가 되도록 자동 회전
+        [SMART] 6방향 + 평탄도를 고려한 스마트 방향 최적화
         
         Args:
             voxels_3d (numpy.ndarray): 3D 복셀 배열
@@ -157,62 +196,131 @@ class OptimizedVoxelizer:
         if not self.enable_orientation_optimization:
             return voxels_3d, bbox, "original"
         
-        print(f"[INFO] AUTO 자동 방향 최적화 시작...")
+        print(f"[INFO] SMART 6방향 + 평탄도 기반 방향 최적화 시작...")
         
         x_size, y_size, z_size = voxels_3d.shape
         
-        # 3가지 방향의 바닥 면적 계산
-        orientations = {
-            'xy_plane': np.sum(np.any(voxels_3d, axis=2)),  # Z축 기본 (XY 평면이 바닥)
-            'xz_plane': np.sum(np.any(voxels_3d, axis=1)),  # Y축 회전 (XZ 평면이 바닥)
-            'yz_plane': np.sum(np.any(voxels_3d, axis=0))   # X축 회전 (YZ 평면이 바닥)
-        }
+        # 6가지 방향의 면적 + 평탄도 계산
+        orientations = [
+            ('XY_up', np.any(voxels_3d, axis=2), None),               # Z축 위쪽 (기본)
+            ('XY_down', np.any(voxels_3d, axis=2), 'flip_z'),         # Z축 아래쪽 (뒤집기)
+            ('XZ_front', np.any(voxels_3d, axis=1), 'rotate_y'),      # Y축 회전 앞면
+            ('XZ_back', np.any(voxels_3d, axis=1), 'rotate_y_flip'),  # Y축 회전 뒷면
+            ('YZ_left', np.any(voxels_3d, axis=0), 'rotate_x'),       # X축 회전 왼면
+            ('YZ_right', np.any(voxels_3d, axis=0), 'rotate_x_flip')  # X축 회전 오른면
+        ]
         
-        print(f"  - 방향별 바닥 면적:")
-        print(f"    XY 평면 (기본): {orientations['xy_plane']} cells")
-        print(f"    XZ 평면 (Y회전): {orientations['xz_plane']} cells") 
-        print(f"    YZ 평면 (X회전): {orientations['yz_plane']} cells")
+        print(f"  - 방향별 면적 + 평탄도 분석:")
         
-        # 가장 큰 바닥 면적을 가지는 방향 선택
-        best_orientation = max(orientations, key=orientations.get)
-        best_area = orientations[best_orientation]
+        best_score = -1
+        best_orientation = None
+        best_transform = None
+        best_area = 0
+        best_flatness = 0
         
-        # 원본과의 개선 정도 계산
-        improvement_xz = (orientations['xz_plane'] - orientations['xy_plane']) / orientations['xy_plane'] * 100
-        improvement_yz = (orientations['yz_plane'] - orientations['xy_plane']) / orientations['xy_plane'] * 100
+        for name, footprint, transform in orientations:
+            # 면적 계산
+            area = np.sum(footprint)
+            
+            # 평탄도 계산
+            flatness = self._calculate_surface_flatness(voxels_3d, transform)
+            
+            # 평탄도에 따른 점수 계산 (보수적 기준)
+            if flatness >= 0.8:      
+                flatness_factor = 1.15    # 작은 보너스 (15%)
+            elif flatness >= 0.6:    
+                flatness_factor = 1.0     # 기준값
+            elif flatness >= 0.4:    
+                flatness_factor = 0.75    # 적당한 페널티 (25%)
+            else:                    
+                flatness_factor = 0.5     # 상당한 페널티 (50%)
+            
+            # 최종 점수 = 면적 × 평탄도 팩터
+            final_score = area * flatness_factor
+            
+            print(f"    {name}: 면적={area:4d}, 평탄도={flatness:.2f}, 점수={final_score:.0f}")
+            
+            if final_score > best_score:
+                best_score = final_score
+                best_orientation = name
+                best_transform = transform
+                best_area = area
+                best_flatness = flatness
         
-        print(f"  - 개선 정도: XZ방향 {improvement_xz:+.1f}%, YZ방향 {improvement_yz:+.1f}%")
+        # 선택된 방향 정보 출력
+        print(f"  [선택] {best_orientation}: 면적={best_area}, 평탄도={best_flatness:.2f}, 점수={best_score:.0f}")
+        
+        # 품질 경고
+        if best_flatness < 0.4:
+            print(f"  [주의] 선택된 면의 평탄도가 낮습니다 ({best_flatness:.2f})")
+        
+        # 개선 정도 계산 (기본 XY_up과 비교)
+        original_area = np.sum(np.any(voxels_3d, axis=2))
+        if original_area > 0:
+            improvement = (best_area - original_area) / original_area * 100
+            print(f"  - 면적 개선: {improvement:+.1f}%")
         
         # 새로운 바운딩 박스 계산을 위한 크기 정보
         bbox_size = bbox[1] - bbox[0]
         bbox_center = (bbox[0] + bbox[1]) / 2
         
-        if best_orientation == 'xz_plane':  # Y축 90도 회전 (얇은 판이 눕도록)
-            voxels_optimized = np.transpose(voxels_3d, (0, 2, 1))
+        # 선택된 변환 적용
+        if best_transform == 'flip_z':  # XY_down
+            voxels_optimized = voxels_3d[:, :, ::-1]  # Z축 뒤집기
+            # 바운딩 박스는 동일 (Z축 뒤집기만)
+            print(f"  [OK] 블록 변환 적용: Z축 뒤집기 (바닥면적 {best_area} cells)")
+            return voxels_optimized, bbox, "Z_flipped"
+            
+        elif best_transform == 'rotate_y':  # XZ_front
+            voxels_optimized = np.transpose(voxels_3d, (2, 1, 0))  # X<->Z 교환
+            # 바운딩 박스 업데이트: X와 Z 축 교환
+            new_size = [bbox_size[2], bbox_size[1], bbox_size[0]]
+            new_bbox = [
+                [bbox_center[0] - new_size[0]/2, bbox_center[1] - new_size[1]/2, bbox_center[2] - new_size[2]/2],
+                [bbox_center[0] + new_size[0]/2, bbox_center[1] + new_size[1]/2, bbox_center[2] + new_size[2]/2]
+            ]
+            print(f"  [OK] 블록 변환 적용: X<->Z 축 교환 (바닥면적 {best_area} cells)")
+            print(f"     크기 변화: {bbox_size[0]:.1f}×{bbox_size[1]:.1f}×{bbox_size[2]:.1f} → {new_size[0]:.1f}×{new_size[1]:.1f}×{new_size[2]:.1f}")
+            return voxels_optimized, new_bbox, "XZ_rotated"
+            
+        elif best_transform == 'rotate_y_flip':  # XZ_back
+            voxels_optimized = np.transpose(voxels_3d, (2, 1, 0))[::-1, :, :]  # X<->Z 교환 + X 뒤집기
+            # 바운딩 박스 업데이트: X와 Z 축 교환
+            new_size = [bbox_size[2], bbox_size[1], bbox_size[0]]
+            new_bbox = [
+                [bbox_center[0] - new_size[0]/2, bbox_center[1] - new_size[1]/2, bbox_center[2] - new_size[2]/2],
+                [bbox_center[0] + new_size[0]/2, bbox_center[1] + new_size[1]/2, bbox_center[2] + new_size[2]/2]
+            ]
+            print(f"  [OK] 블록 변환 적용: X<->Z 교환 + X 뒤집기 (바닥면적 {best_area} cells)")
+            print(f"     크기 변화: {bbox_size[0]:.1f}×{bbox_size[1]:.1f}×{bbox_size[2]:.1f} → {new_size[0]:.1f}×{new_size[1]:.1f}×{new_size[2]:.1f}")
+            return voxels_optimized, new_bbox, "XZ_rotated_flipped"
+            
+        elif best_transform == 'rotate_x':  # YZ_left
+            voxels_optimized = np.transpose(voxels_3d, (0, 2, 1))  # Y<->Z 교환
             # 바운딩 박스 업데이트: Y와 Z 축 교환
             new_size = [bbox_size[0], bbox_size[2], bbox_size[1]]
             new_bbox = [
                 [bbox_center[0] - new_size[0]/2, bbox_center[1] - new_size[1]/2, bbox_center[2] - new_size[2]/2],
                 [bbox_center[0] + new_size[0]/2, bbox_center[1] + new_size[1]/2, bbox_center[2] + new_size[2]/2]
             ]
-            print(f"  [OK] 블록 회전 적용: Y→Z 축 교환 (바닥면적 {best_area} cells)")
+            print(f"  [OK] 블록 변환 적용: Y<->Z 축 교환 (바닥면적 {best_area} cells)")
             print(f"     크기 변화: {bbox_size[0]:.1f}×{bbox_size[1]:.1f}×{bbox_size[2]:.1f} → {new_size[0]:.1f}×{new_size[1]:.1f}×{new_size[2]:.1f}")
-            return voxels_optimized, new_bbox, "Y_rotated"
+            return voxels_optimized, new_bbox, "YZ_rotated"
             
-        elif best_orientation == 'yz_plane':  # X축 90도 회전
-            voxels_optimized = np.transpose(voxels_3d, (2, 1, 0))
-            # 바운딩 박스 업데이트: X와 Z 축 교환  
-            new_size = [bbox_size[2], bbox_size[1], bbox_size[0]]
+        elif best_transform == 'rotate_x_flip':  # YZ_right
+            voxels_optimized = np.transpose(voxels_3d, (0, 2, 1))[:, ::-1, :]  # Y<->Z 교환 + Y 뒤집기
+            # 바운딩 박스 업데이트: Y와 Z 축 교환
+            new_size = [bbox_size[0], bbox_size[2], bbox_size[1]]
             new_bbox = [
                 [bbox_center[0] - new_size[0]/2, bbox_center[1] - new_size[1]/2, bbox_center[2] - new_size[2]/2],
                 [bbox_center[0] + new_size[0]/2, bbox_center[1] + new_size[1]/2, bbox_center[2] + new_size[2]/2]
             ]
-            print(f"  [OK] 블록 회전 적용: X→Z 축 교환 (바닥면적 {best_area} cells)")
+            print(f"  [OK] 블록 변환 적용: Y<->Z 축 교환 + Y 뒤집기 (바닥면적 {best_area} cells)")
             print(f"     크기 변화: {bbox_size[0]:.1f}×{bbox_size[1]:.1f}×{bbox_size[2]:.1f} → {new_size[0]:.1f}×{new_size[1]:.1f}×{new_size[2]:.1f}")
-            return voxels_optimized, new_bbox, "X_rotated"
+            return voxels_optimized, new_bbox, "YZ_rotated_flipped"
             
-        else:
-            print(f"  [OK] 원본 방향이 최적 (바닥면적 {best_area} cells)")
+        else:  # None (XY_up, 원본)
+            print(f"  [OK] 원본 방향이 최적 (바닥면적 {best_area} cells, 평탄도 {best_flatness:.2f})")
             return voxels_3d, bbox, "original"
     
     def voxelize_improved(self, mesh, resolution):
@@ -507,12 +615,11 @@ class VoxelConverter25D:
                         z_min = z_indices[0]
                         z_max = z_indices[-1]
                         
-                        # 2.5D 형식: [empty_below, filled, empty_above]
+                        # 2.5D 형식: [empty_below, filled] (개선된 형식)
                         empty_below = z_min
                         filled = z_max - z_min + 1
-                        empty_above = z_size - z_max - 1
                         
-                        voxel_data_25d.append((x, y, [empty_below, filled, empty_above]))
+                        voxel_data_25d.append((x, y, [empty_below, filled]))
         
         print(f"  - 2.5D conversion complete: {len(voxel_data_25d)} voxel positions")
         return voxel_data_25d
@@ -530,7 +637,7 @@ class VoxelConverter25D:
                 
                 if len(z_indices) > 0:
                     max_height = np.max(z_indices) + 1
-                    voxel_data_25d.append((x, y, [0, max_height, z_size - max_height]))
+                    voxel_data_25d.append((x, y, [0, max_height]))
         
         print(f"  - 2.5D conversion complete: {len(voxel_data_25d)} voxel positions")
         return voxel_data_25d
@@ -571,9 +678,8 @@ class VoxelConverter25D:
                             
                             empty_below = z_min
                             filled = z_max - z_min + 1
-                            empty_above = z_size - z_max - 1
                             
-                            voxel_data_25d.append((x, y, [empty_below, filled, empty_above]))
+                            voxel_data_25d.append((x, y, [empty_below, filled]))
         
         print(f"  - 2.5D conversion complete: {len(voxel_data_25d)} boundary positions")
         return voxel_data_25d
@@ -810,7 +916,7 @@ class ImprovedVisualizer:
         
         # 복셀 기둥들을 더 부드럽게 렌더링
         for x, y, height_info in voxel_data_25d:
-            empty_below, filled, empty_above = height_info
+            empty_below, filled = height_info
             
             # 실제 좌표로 변환
             x_real = bbox[0][0] + x * resolution

@@ -11,7 +11,7 @@ class VoxelBlock:
 
     Attributes:
         id (str): 블록 식별자
-        voxel_data (list): 복셀 데이터 [(x, y, [empty_below, filled, empty_above]), ...]
+        voxel_data (list): 복셀 데이터 [(x, y, [empty_below, filled]), ...] (개선된 형식)
         rotation (int): 블록 회전 각도 (0 또는 180)
         position (tuple): 배치된 위치 (x, y), 배치되지 않은 경우 None
     """
@@ -22,10 +22,10 @@ class VoxelBlock:
 
         Args:
             id (str): 블록 식별자
-            voxel_data (list): 복셀 데이터 [(x, y, [empty_below, filled, empty_above]), ...]
+            voxel_data (list): 복셀 데이터 [(x, y, [empty_below, filled]), ...] (개선된 형식)
         """
         self.id = id
-        self.voxel_data = voxel_data  # [(x, y, [empty_below, filled, empty_above]), ...]
+        self.voxel_data = voxel_data  # [(x, y, [empty_below, filled]), ...] (개선된 형식)
         self.rotation = 0  # 0 또는 180
         self.position = None  # 배치된 위치 (x, y), 배치되지 않은 경우 None
 
@@ -33,12 +33,13 @@ class VoxelBlock:
         self._calculate_bounds()
 
     def _calculate_bounds(self):
-        """블록의 경계(width, height) 계산"""
+        """블록의 경계(width, height) 및 실제 복셀 기준 좌표 계산"""
         if not self.voxel_data:
             self.width = 0
             self.height = 0
             self.min_x = 0
             self.min_y = 0
+            self.actual_reference = (0, 0)
             return
 
         x_coords = [voxel[0] for voxel in self.voxel_data]
@@ -51,6 +52,34 @@ class VoxelBlock:
 
         self.width = self.max_x - self.min_x + 1
         self.height = self.max_y - self.min_y + 1
+        
+        # 실제 복셀이 존재하는 왼쪽 하단 기준점 계산
+        self.actual_reference = self._calculate_actual_reference_point()
+
+    def _calculate_actual_reference_point(self):
+        """실제 복셀이 존재하는 왼쪽 하단 기준점 계산"""
+        if not self.voxel_data:
+            return (0, 0)
+        
+        # Y 좌표가 가장 작은 복셀들 찾기 (가장 아래쪽)
+        min_y = min(voxel[1] for voxel in self.voxel_data)
+        bottom_voxels = [voxel for voxel in self.voxel_data if voxel[1] == min_y]
+        
+        # 그 중에서 X 좌표가 가장 작은 복셀 (가장 왼쪽)
+        leftmost_voxel = min(bottom_voxels, key=lambda v: v[0])
+        
+        return (leftmost_voxel[0], leftmost_voxel[1])
+
+    def has_voxel_at_reference(self):
+        """실제 기준점에 복셀이 존재하는지 확인"""
+        if not self.voxel_data:
+            return False
+        
+        ref_x, ref_y = self.actual_reference
+        for voxel in self.voxel_data:
+            if voxel[0] == ref_x and voxel[1] == ref_y:
+                return True
+        return False
 
     def rotate(self, angle=90):
         """
@@ -147,15 +176,14 @@ class VoxelBlock:
         
         self._boundary_cache = boundary
         
-        # 통계 출력 (디버깅용)
-        total_voxels = len(footprint)
-        boundary_voxels = len(boundary)
-        reduction_rate = (1 - boundary_voxels/total_voxels) * 100 if total_voxels > 0 else 0
-        
-        print(f"[DEBUG] {self.id} 경계선 최적화:")
-        print(f"        전체 복셀: {total_voxels}")
-        print(f"        경계선 복셀: {boundary_voxels}")
-        print(f"        계산량 감소: {reduction_rate:.1f}%")
+        # 통계 출력 (디버깅용) - 비활성화
+        # total_voxels = len(footprint)
+        # boundary_voxels = len(boundary)
+        # reduction_rate = (1 - boundary_voxels/total_voxels) * 100 if total_voxels > 0 else 0
+        # print(f"[DEBUG] {self.id} 경계선 최적화:")
+        # print(f"        전체 복셀: {total_voxels}")
+        # print(f"        경계선 복셀: {boundary_voxels}")
+        # print(f"        계산량 감소: {reduction_rate:.1f}%")
 
     def get_height_at(self, x, y):
         """
@@ -166,7 +194,7 @@ class VoxelBlock:
             y (int): y 좌표
 
         Returns:
-            list or None: [empty_below, filled, empty_above] 또는 해당 위치에 블록이 없는 경우 None
+            list or None: [empty_below, filled] 또는 해당 위치에 블록이 없는 경우 None
         """
         for vx, vy, heights in self.voxel_data:
             if vx == x and vy == y:
@@ -202,7 +230,8 @@ class VoxelBlock:
             return None
 
         pos_x, pos_y = self.position
-        return {(pos_x + voxel[0] - self.min_x, pos_y + voxel[1] - self.min_y)
+        ref_x, ref_y = self.actual_reference
+        return {(pos_x + voxel[0] - ref_x, pos_y + voxel[1] - ref_y)
                 for voxel in self.voxel_data}
 
     def get_positioned_voxels(self):
@@ -210,14 +239,15 @@ class VoxelBlock:
         배치된 위치를 고려한 블록의 복셀 데이터 반환
 
         Returns:
-            list: 배치된 위치에서의 [(x, y, [empty_below, filled, empty_above]), ...],
+            list: 배치된 위치에서의 [(x, y, [empty_below, filled]), ...],
                   배치되지 않은 경우 None
         """
         if self.position is None:
             return None
 
         pos_x, pos_y = self.position
-        return [(pos_x + voxel[0] - self.min_x, pos_y + voxel[1] - self.min_y, voxel[2])
+        ref_x, ref_y = self.actual_reference
+        return [(pos_x + voxel[0] - ref_x, pos_y + voxel[1] - ref_y, voxel[2])
                 for voxel in self.voxel_data]
 
     def clone(self):

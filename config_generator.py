@@ -23,13 +23,7 @@ from datetime import datetime
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
 
-try:
-    from Voxelizer import convert_mesh_to_25d_optimized
-    from models.voxel_block import VoxelBlock
-    print(f"[INFO] Required modules loaded successfully")
-except ImportError as e:
-    print(f"[ERROR] Cannot find required modules: {e}")
-    print(f"[INFO] Make sure Voxelizer.py and models/voxel_block.py exist")
+# 이전에 사용했던 모듈들은 삭제됨 (불필요)
 
 class ConfigGenerator:
     """Config.json 자동 생성기"""
@@ -77,8 +71,17 @@ class ConfigGenerator:
             print("  [WARNING] 잘못된 입력, 기본값 사용")
             min_clearance = 1.0
         
-        # 5. 배치할 블록들 선택
-        print(f"\n[INFO] 5. 배치할 블록 선택")
+        # 5. 크레인 블록 특별 여백 (ring bow clearance)
+        print(f"\n[INFO] 5. 크레인 블록 전용 선수 여백 (Ring Bow Clearance)")
+        print(f"  크레인 블록은 선수(bow)쪽에서 별도의 여백을 유지합니다")
+        try:
+            ring_bow_clearance = float(input("  크레인 선수 여백 (미터 단위, 기본값: 10.0m): ").strip() or "10.0")
+        except ValueError:
+            print("  [WARNING] 잘못된 입력, 기본값 사용")
+            ring_bow_clearance = 10.0
+        
+        # 6. 배치할 블록들 선택
+        print(f"\n[INFO] 6. 배치할 블록 선택")
         available_blocks = self.find_available_blocks()
         
         if not available_blocks:
@@ -92,6 +95,7 @@ class ConfigGenerator:
         print(f"\n  배치할 블록들을 선택하세요:")
         print(f"  - 숫자로 입력 (예: 1,3,5 또는 1-5)")
         print(f"  - 'all'로 모든 블록 선택")
+        print(f"  - 'random:N'로 랜덤 N개 블록 선택 (예: random:5)")
         print(f"  - 빈 입력으로 처음 3개 블록 선택")
         
         selection = input("  선택: ").strip()
@@ -112,6 +116,7 @@ class ConfigGenerator:
             'margin_bow': margin_bow,
             'margin_stern': margin_stern,
             'min_clearance': min_clearance,
+            'ring_bow_clearance': ring_bow_clearance,
             'selected_blocks': selected_blocks
         }
     
@@ -161,6 +166,27 @@ class ConfigGenerator:
         if selection.lower() == 'all':
             return available_blocks
         
+        # 랜덤 선택 처리 (예: random:5)
+        if selection.lower().startswith('random:'):
+            try:
+                import random
+                random_count = int(selection.split(':')[1])
+                max_available = len(available_blocks)
+                
+                if random_count > max_available:
+                    print(f"  [WARNING] 요청한 {random_count}개가 사용 가능한 {max_available}개보다 많습니다. 모든 블록을 사용합니다.")
+                    return available_blocks
+                
+                random_blocks = random.sample(available_blocks, random_count)
+                print(f"  [RANDOM] {random_count}개 블록을 랜덤으로 선택했습니다:")
+                for i, (block_name, _) in enumerate(random_blocks, 1):
+                    print(f"    {i}. {block_name}")
+                return random_blocks
+                
+            except (ValueError, IndexError):
+                print(f"  [ERROR] 잘못된 랜덤 선택 형식: {selection} (올바른 형식: random:5)")
+                return []
+        
         selected_indices = set()
         
         try:
@@ -193,14 +219,20 @@ class ConfigGenerator:
             return 'unknown'
     
     def load_from_voxel_cache(self, block_name):
-        """voxel_cache에서 기존 복셀화 데이터 로드"""
+        """voxel_cache에서 복셀화 데이터 및 블록 타입 로드"""
         cache_file = Path("voxel_cache") / f"{block_name}.json"
         
         if cache_file.exists():
             try:
                 with open(cache_file, 'r', encoding='utf-8') as f:
                     cache_data = json.load(f)
-                return cache_data['voxel_data']
+                
+                voxel_data = cache_data['voxel_data']
+                block_type = cache_data.get('block_type', 'unknown')
+                
+                print(f"  [CACHE] 캐시에서 로드됨 - 타입: {block_type}")
+                
+                return {'voxel_data': voxel_data, 'block_type': block_type}
             except Exception as e:
                 print(f"  [WARNING] Cache load failed: {e}")
                 return None
@@ -211,10 +243,18 @@ class ConfigGenerator:
         print(f"\n[INFO] 블록 정보 수집 중: {block_name}")
         
         # 먼저 voxel_cache에서 기존 JSON 데이터 확인
-        voxel_data = self.load_from_voxel_cache(block_name)
-        if voxel_data:
-            print(f"  [CACHE] 캐시된 복셀 데이터 사용: {voxel_data['dimensions']['width']}x{voxel_data['dimensions']['height']}")
-            return voxel_data
+        cache_result = self.load_from_voxel_cache(block_name)
+        if cache_result:
+            voxel_data = cache_result['voxel_data']
+            # voxel_positions에서 크기 계산
+            if 'voxel_positions' in voxel_data and voxel_data['voxel_positions']:
+                voxel_positions = voxel_data['voxel_positions']
+                max_x = max(pos[0] for pos in voxel_positions) + 1
+                max_y = max(pos[1] for pos in voxel_positions) + 1
+                print(f"  [CACHE] 캐시된 복셀 데이터 사용: {max_x}x{max_y}")
+            else:
+                print(f"  [CACHE] 캐시된 복셀 데이터 사용 (크기 미확인)")
+            return cache_result
         
         # 캐시가 없으면 에러 (모든 블록은 이미 캐시됨)
         print(f"  [ERROR] 캐시에 {block_name} 데이터가 없습니다")
@@ -233,6 +273,7 @@ class ConfigGenerator:
         margin_bow_grids = int(user_inputs['margin_bow'] / grid_unit)
         margin_stern_grids = int(user_inputs['margin_stern'] / grid_unit) 
         block_clearance_grids = int(user_inputs['min_clearance'] / grid_unit)
+        ring_bow_clearance_grids = int(user_inputs['ring_bow_clearance'] / grid_unit)
         
         config = {
             "ship_configuration": {
@@ -247,13 +288,14 @@ class ConfigGenerator:
                         "bow": margin_bow_grids,
                         "stern": margin_stern_grids
                     },
-                    "block_clearance": block_clearance_grids
+                    "block_clearance": block_clearance_grids,
+                    "ring_bow_clearance": ring_bow_clearance_grids
                 }
             },
             
             "voxelization_settings": {
                 "resolution": 0.5,
-                "conversion_method": "footprint"
+                "conversion_method": "raycast_2.5d"
             },
             
             "blocks_to_place": {
@@ -267,18 +309,21 @@ class ConfigGenerator:
         for i, (block_name, file_path) in enumerate(user_inputs['selected_blocks'], 1):
             print(f"\n진행률: {i}/{len(user_inputs['selected_blocks'])}")
             
-            # 블록 타입 결정
-            block_type = self.determine_block_type(block_name)
+            # 블록 복셀화 및 타입 정보 로드
+            cache_result = self.voxelize_block(block_name, file_path)
             
-            # 블록 복셀화
-            voxel_data = self.voxelize_block(block_name, file_path)
-            
-            if voxel_data is None:
+            if cache_result is None:
                 print(f"  [WARNING] {block_name} 복셀화 실패, 기본값으로 추가")
+                block_type = self.determine_block_type(block_name)  # fallback용
                 voxel_data = {
-                    "dimensions": {"width": 10, "height": 10},
-                    "footprint_positions": []
+                    "voxel_positions": [[0, 0, [0, 10]]],  # 기본 복셀
+                    "method": "fallback",
+                    "resolution": 0.5
                 }
+            else:
+                # 캐시에서 읽어온 정확한 블록 타입 사용
+                block_type = cache_result['block_type']
+                voxel_data = cache_result['voxel_data']
             
             block_info = {
                 "block_id": block_name,
@@ -291,7 +336,7 @@ class ConfigGenerator:
         return config
     
     def generate_config_from_blocks(self, ship_name, width, height, block_list, 
-                                   bow_margin=2, stern_margin=2, block_clearance=1):
+                                   bow_margin=2, stern_margin=2, block_clearance=1, ring_bow_clearance=10):
         """
         블록 이름 리스트로 직접 Config 생성 (API용)
         
@@ -303,6 +348,7 @@ class ConfigGenerator:
             bow_margin: 선수 여백 (격자)
             stern_margin: 선미 여백 (격자) 
             block_clearance: 블록 간격 (격자)
+            ring_bow_clearance: 크레인 블록 선수 여백 (미터)
         
         Returns:
             dict: Config 딕셔너리
@@ -314,6 +360,7 @@ class ConfigGenerator:
             'margin_bow': bow_margin,
             'margin_stern': stern_margin,
             'min_clearance': block_clearance,
+            'ring_bow_clearance': ring_bow_clearance,
             'selected_blocks': [(block_name, f"voxel_cache/{block_name}.json") for block_name in block_list]
         }
         
@@ -364,6 +411,7 @@ class ConfigGenerator:
         print(f"[INFO] 파일명: {config_filename}")
         print(f"[INFO] 자항선: {user_inputs['ship_name']} ({user_inputs['width']}m x {user_inputs['height']}m)")
         print(f"[INFO] 여백: 선수{user_inputs['margin_bow']}m 선미{user_inputs['margin_stern']}m (격자: {int(user_inputs['margin_bow']/0.5)}, {int(user_inputs['margin_stern']/0.5)})")
+        print(f"[INFO] 크레인 선수 여백: {user_inputs['ring_bow_clearance']}m (격자: {int(user_inputs['ring_bow_clearance']/0.5)})")
         print(f"[INFO] 블록 수: {len(user_inputs['selected_blocks'])}개")
         print(f"[SUCCESS] 이제 ship_placer에서 이 config 파일을 사용할 수 있습니다!")
 
