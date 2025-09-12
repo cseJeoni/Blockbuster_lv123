@@ -21,7 +21,8 @@ except ImportError as e:
     print(f"[INFO] Blockbuster_Test 폴더에서 실행해주세요")
 
 
-def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_margin=2, block_clearance=1, ring_bow_clearance=10):
+def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_margin=2, block_clearance=1, ring_bow_clearance=7):
+
     """
     Config 파일 생성 (ConfigGenerator 활용)
     
