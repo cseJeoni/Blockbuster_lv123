@@ -119,7 +119,7 @@ fbx_blocks/converted_obj/
 *.7z
 
 # Result images and cache
-placement_results/
+#placement_results/
 voxel_results/
 voxel_results_improved/
 temp_voxel/
