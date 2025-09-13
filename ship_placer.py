@@ -16,8 +16,37 @@ import warnings
 from datetime import datetime
 
 warnings.filterwarnings('ignore')
-plt.rcParams['font.family'] = ['DejaVu Sans']
-plt.rcParams['axes.unicode_minus'] = False
+
+# 한글 폰트 설정
+import platform
+import matplotlib.font_manager as fm
+
+def setup_korean_font():
+    """한글 폰트 설정"""
+    system = platform.system()
+    
+    if system == 'Windows':
+        # Windows에서 사용 가능한 한글 폰트들
+        korean_fonts = ['Malgun Gothic', 'Microsoft YaHei', 'SimHei', 'DejaVu Sans']
+    elif system == 'Darwin':  # macOS
+        korean_fonts = ['AppleGothic', 'Nanum Gothic', 'DejaVu Sans']
+    else:  # Linux
+        korean_fonts = ['Nanum Gothic', 'NanumGothic', 'DejaVu Sans']
+    
+    # 사용 가능한 폰트 찾기
+    available_fonts = [f.name for f in fm.fontManager.ttflist]
+    
+    for font in korean_fonts:
+        if font in available_fonts:
+            plt.rcParams['font.family'] = font
+            break
+    else:
+        # 한글 폰트를 찾지 못한 경우 기본 설정
+        plt.rcParams['font.family'] = 'DejaVu Sans'
+    
+    plt.rcParams['axes.unicode_minus'] = False
+
+setup_korean_font()
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, current_dir)
 
