@@ -109,7 +109,7 @@ venv.bak/
 *.swo
 
 # Project specific
-results/*.png
+# results/*.png
 
 # Large files and compressed data
 fbx_blocks/converted_obj.zip
