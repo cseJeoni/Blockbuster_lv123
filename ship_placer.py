@@ -375,7 +375,7 @@ class ShipPlacerConfig:
         
         return blocks
     
-    def place_blocks(self, blocks, max_time=15):
+    def place_blocks(self, blocks, max_time=60):
         if not ALGORITHM_AVAILABLE or not blocks:
             return None
         area = ShipPlacementAreaConfig(self.config)
@@ -602,7 +602,7 @@ def main():
         return
     
     config_path = sys.argv[1]
-    max_time = 15
+    max_time = 60
     enable_visualization = '-v' in sys.argv or '--visualize' in sys.argv
     export_unity = '-u' in sys.argv or '--unity' in sys.argv
     show_dead_space = '--deadspace' in sys.argv or '--dead-space' in sys.argv

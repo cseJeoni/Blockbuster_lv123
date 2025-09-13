@@ -70,8 +70,8 @@ def load_labeling(file_path: str) -> Dict:
 class IntegratedVoyageAssigner:
     MAX_STOWAGE_DAYS = 14
     PAGE_SIZE = 18
-    LV1_TIMEOUT = 8
-    LV1_TIMEOUT_SINGLE_WINDOW = 120
+    LV1_TIMEOUT = 60
+    LV1_TIMEOUT_SINGLE_WINDOW = 180
     CAPACITY_RATIO = 1.05
     TOPOFF_ROUNDS = 2
 

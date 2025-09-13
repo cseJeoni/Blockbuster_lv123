@@ -78,7 +78,7 @@ class PlacementImageGenerator:
             "end_date": end_date
         }
     
-    def generate_images(self, max_time_per_voyage: int = 15):
+    def generate_images(self, max_time_per_voyage: int = 60):
         """배치 이미지 생성"""
         # JSON 파일 로드
         if not os.path.exists(self.json_file_path):
@@ -193,7 +193,7 @@ def main():
                        help="LV3 결과 JSON 파일 경로")
     parser.add_argument("--output", default="placement_results", 
                        help="이미지 출력 디렉토리")
-    parser.add_argument("--timeout", type=int, default=15, 
+    parser.add_argument("--timeout", type=int, default=60, 
                        help="항차당 최대 처리 시간(초)")
     
     args = parser.parse_args()

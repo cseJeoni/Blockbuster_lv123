@@ -63,7 +63,7 @@ def generate_config(ship_name, width, height, block_list, bow_margin=2, stern_ma
     return config_filename
 
 
-def run_placement(config_path, max_time=10, enable_visualization=False):
+def run_placement(config_path, max_time=60, enable_visualization=False):
     """
     블록 배치 실행 (ShipPlacer 활용)
     
@@ -161,7 +161,7 @@ def run_placement(config_path, max_time=10, enable_visualization=False):
         }
 
 
-def get_unplaced_blocks(config_path, max_time=10):
+def get_unplaced_blocks(config_path, max_time=60):
     """
     배치 못한 블록 리스트만 반환
     
@@ -223,7 +223,7 @@ if __name__ == "__main__":
     
     # 3. 배치 실행 (시각화 활성화)
     print(f"\n배치 실행 중... (시각화 활성화)")
-    result = run_placement(config_path, max_time=5, enable_visualization=True)
+    result = run_placement(config_path, max_time=60, enable_visualization=True)
     
     # 4. 결과 출력
     print(f"\n=== 배치 결과 ===")
