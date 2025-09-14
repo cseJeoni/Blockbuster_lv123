@@ -63,10 +63,7 @@ def _to_date(s: str) -> datetime: return datetime.strptime(s, "%Y-%m-%d")
 def _to_str(d: datetime) -> str: return d.strftime("%Y-%m-%d")
 
 def save_voyage_debug_info(vessel_name: str, end_date: str, round_num: int, 
-                          eligible_blocks: Set[str], candidate_dates: List[str], 
-                          selected_dates: List[str], scores: List[float], 
-                          wins: Dict[str, Tuple[datetime, datetime]], 
-                          avail_vip: Set[str], avail_norm: Set[str],
+                          eligible_blocks: Set[str], candidate_blocks: Set[str], 
                           result: Dict = None):
     """각 항차별 디버깅 정보를 JSON 파일로 저장"""
     global DEBUG_OUTPUT_DIR, DEBUG_VOYAGE_COUNTER
@@ -76,30 +73,16 @@ def save_voyage_debug_info(vessel_name: str, end_date: str, round_num: int,
     
     DEBUG_VOYAGE_COUNTER += 1
     
+    start_date = _to_str(_to_date(end_date) - timedelta(days=cycle_len(int(vessel_name[-1])) - 1))
+    voyage_name = f"{vessel_name}_{start_date}_{end_date}"
+    
     debug_info = {
-        "voyage_id": DEBUG_VOYAGE_COUNTER,
-        "vessel_name": vessel_name,
-        "end_date": end_date,
-        "round": round_num,
-        "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S_%f"),
+        "name": voyage_name,
         "eligible_blocks": sorted(list(eligible_blocks)),
-        "eligible_blocks_count": len(eligible_blocks),
-        "candidate_dates": candidate_dates,
-        "candidate_dates_count": len(candidate_dates),
-        "selected_dates": selected_dates,
-        "selected_dates_count": len(selected_dates),
-        "scores": scores,
-        "windows": {b: [_to_str(s), _to_str(e)] for b, (s, e) in sorted(wins.items()) if b in eligible_blocks},
-        "available_vip_blocks": sorted(list(avail_vip)),
-        "available_normal_blocks": sorted(list(avail_norm)),
-        "total_available_blocks": len(avail_vip) + len(avail_norm),
-        "placed_blocks": result.get("placed_blocks", []) if result else [],
-        "placed_blocks_count": len(result.get("placed_blocks", [])) if result else 0,
-        "voyage_created": bool(result and result.get("placed_blocks")) if result else False
+        "candidate_blocks": sorted(list(candidate_blocks))
     }
     
-    start_date = _to_str(_to_date(end_date) - timedelta(days=cycle_len(int(vessel_name[-1])) - 1))
-    filename = f"voyage_{DEBUG_VOYAGE_COUNTER:04d}_{vessel_name}_{start_date}_{end_date}_{round_num}.json"
+    filename = f"{voyage_name}.json"
     filepath = os.path.join(DEBUG_OUTPUT_DIR, filename)
     
     with open(filepath, "w", encoding="utf-8") as f:
@@ -156,6 +139,36 @@ def build_candidate_dates_for_vessel(assigner: IntegratedVoyageAssigner, vessel_
             edges.add(_to_str(cur))
             cur += timedelta(days=GRID_STEP_DAYS)
     return sorted(edges)
+
+def get_candidate_blocks_for_date(assigner: IntegratedVoyageAssigner, vessel_id: int, date_str: str, wins: Dict[str, Tuple[datetime, datetime]], remaining: frozenset[str]) -> Set[str]:
+    """특정 날짜에 대해 105% 내 선발된 candidate 블록들을 반환"""
+    d = _to_date(date_str)
+    spec = assigner.vessel_specs[vessel_id]
+    target_area = (spec["width"] * spec["height"]) * assigner.CAPACITY_RATIO
+    cands = []
+    for b in remaining:
+        if b not in wins or not eligible_for_vessel(assigner, vessel_id, b): continue
+        s, e = wins[b]
+        if not (s <= d <= e): continue
+        area = assigner._area_of(b) or 1.0
+        comp = assigner._compatible_vessels(b)
+        ships = 1 if b in assigner.vip_blocks else (len(comp) if comp else 5)
+        scarcity = 1.0 / ships
+        vip_bonus = 1.6 if vessel_id == 1 and b in assigner.vip_blocks else 1.0
+        value = area * scarcity * vip_bonus
+        cands.append((b, area, value))
+    if not cands: return set()
+    cands.sort(key=lambda x: (x[2] / max(1e-6, x[1])), reverse=True)
+    
+    # 105% 내 선발된 블록들 추출
+    selected_blocks = set()
+    s_area = 0.0
+    for b, area, val in cands:
+        if s_area + area <= target_area * 1.05:  # 105% 허용
+            selected_blocks.add(b)
+            s_area += area
+        else: break
+    return selected_blocks
 
 @lru_cache(maxsize=1000)
 def score_date(assigner: IntegratedVoyageAssigner, vessel_id: int, date_str: str, wins: Tuple[Tuple[str, Tuple[datetime, datetime]], ...], remaining: frozenset[str]) -> float:
@@ -357,17 +370,13 @@ def lv3_schedule(deadline_csv: str = "data/block_deadline_7.csv", labeling_resul
 
                 # 디버깅 정보 저장
                 elig_blocks = eligible_blocks(assigner, vessel_id, wins, remaining_frozen)
+                candidate_blocks = get_candidate_blocks_for_date(assigner, vessel_id, end_date, wins, remaining_frozen)
                 save_voyage_debug_info(
                     vessel_name=vname,
                     end_date=end_date,
                     round_num=rounds,
                     eligible_blocks=elig_blocks,
-                    candidate_dates=cand_dates,
-                    selected_dates=selected,
-                    scores=scores,
-                    wins=wins,
-                    avail_vip=avail_vip,
-                    avail_norm=avail_norm,
+                    candidate_blocks=candidate_blocks,
                     result=result
                 )
 
