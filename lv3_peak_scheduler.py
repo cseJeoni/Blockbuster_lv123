@@ -16,6 +16,10 @@ from functools import lru_cache
 
 from integrated_vip_normal_assignment import IntegratedVoyageAssigner
 
+# 디버깅용 전역 변수
+DEBUG_OUTPUT_DIR = None
+DEBUG_VOYAGE_COUNTER = 0
+
 # ---- 정책 상수 (배치율 우선을 위해 원복) ----
 MAX_STOWAGE_DAYS = 14
 TOP_K_PEAKS = 30
@@ -58,6 +62,51 @@ def cycle_len(vessel_id: int) -> int:
 def _to_date(s: str) -> datetime: return datetime.strptime(s, "%Y-%m-%d")
 def _to_str(d: datetime) -> str: return d.strftime("%Y-%m-%d")
 
+def save_voyage_debug_info(vessel_name: str, end_date: str, round_num: int, 
+                          eligible_blocks: Set[str], candidate_dates: List[str], 
+                          selected_dates: List[str], scores: List[float], 
+                          wins: Dict[str, Tuple[datetime, datetime]], 
+                          avail_vip: Set[str], avail_norm: Set[str],
+                          result: Dict = None):
+    """각 항차별 디버깅 정보를 JSON 파일로 저장"""
+    global DEBUG_OUTPUT_DIR, DEBUG_VOYAGE_COUNTER
+    
+    if DEBUG_OUTPUT_DIR is None:
+        return
+    
+    DEBUG_VOYAGE_COUNTER += 1
+    
+    debug_info = {
+        "voyage_id": DEBUG_VOYAGE_COUNTER,
+        "vessel_name": vessel_name,
+        "end_date": end_date,
+        "round": round_num,
+        "timestamp": datetime.now().strftime("%Y%m%d_%H%M%S_%f"),
+        "eligible_blocks": sorted(list(eligible_blocks)),
+        "eligible_blocks_count": len(eligible_blocks),
+        "candidate_dates": candidate_dates,
+        "candidate_dates_count": len(candidate_dates),
+        "selected_dates": selected_dates,
+        "selected_dates_count": len(selected_dates),
+        "scores": scores,
+        "windows": {b: [_to_str(s), _to_str(e)] for b, (s, e) in sorted(wins.items()) if b in eligible_blocks},
+        "available_vip_blocks": sorted(list(avail_vip)),
+        "available_normal_blocks": sorted(list(avail_norm)),
+        "total_available_blocks": len(avail_vip) + len(avail_norm),
+        "placed_blocks": result.get("placed_blocks", []) if result else [],
+        "placed_blocks_count": len(result.get("placed_blocks", [])) if result else 0,
+        "voyage_created": bool(result and result.get("placed_blocks")) if result else False
+    }
+    
+    start_date = _to_str(_to_date(end_date) - timedelta(days=cycle_len(int(vessel_name[-1])) - 1))
+    filename = f"voyage_{DEBUG_VOYAGE_COUNTER:04d}_{vessel_name}_{start_date}_{end_date}_{round_num}.json"
+    filepath = os.path.join(DEBUG_OUTPUT_DIR, filename)
+    
+    with open(filepath, "w", encoding="utf-8") as f:
+        json.dump(debug_info, f, ensure_ascii=False, indent=2)
+    
+    print(f"[DEBUG] Saved voyage debug info: {filename}")
+
 def build_windows(deadlines: Dict[str, str], blocks: Set[str]) -> Dict[str, Tuple[datetime, datetime]]:
     win = {}
     for b in blocks:
@@ -78,7 +127,7 @@ def eligible_blocks(assigner: IntegratedVoyageAssigner, vessel_id: int, wins: Di
 
 def histogram_over_dates(wins: Dict[str, Tuple[datetime, datetime]], subset: Optional[Set[str]] = None) -> Dict[str, int]:
     counter = Counter()
-    for b, (s, e) in wins.items():
+    for b, (s, e) in sorted(wins.items()):
         if subset is not None and b not in subset: continue
         d = s
         while d <= e:
@@ -167,7 +216,7 @@ def select_dates_with_gap(dates: List[str], scores: List[float], gap_days: int) 
     return sel
 
 def rescue_pass(assigner: IntegratedVoyageAssigner, wins: Dict[str, Tuple[datetime, datetime]], avail_vip: Set[str], avail_norm: Set[str], last_end: Dict[str, Optional[str]], k_dates: int = 5) -> bool:
-    remaining = list(avail_vip | avail_norm)
+    remaining = sorted(list(avail_vip | avail_norm))
     if not remaining: return False
 
     def feasibility_score(b: str) -> int:
@@ -245,6 +294,15 @@ def summarize_unassigned(assigner: IntegratedVoyageAssigner, wins: Dict[str, Tup
     return reasons
 
 def lv3_schedule(deadline_csv: str = "data/block_deadline_7.csv", labeling_results_file: str = "block_labeling_results.json", out_json: str = "lv3_integrated_voyage_assignments.json", vis_out_dir: str = "placement_results") -> IntegratedVoyageAssigner:
+    global DEBUG_OUTPUT_DIR, DEBUG_VOYAGE_COUNTER
+    
+    # 디버깅 폴더 생성
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    DEBUG_OUTPUT_DIR = f"lv3_debug_{timestamp}"
+    os.makedirs(DEBUG_OUTPUT_DIR, exist_ok=True)
+    DEBUG_VOYAGE_COUNTER = 0
+    print(f"[DEBUG] Created debug output directory: {DEBUG_OUTPUT_DIR}")
+    
     assigner = IntegratedVoyageAssigner(deadline_csv=deadline_csv, labeling_results_file=labeling_results_file, out_json=out_json, vis_out_dir=vis_out_dir)
     # 결정적 순서를 위해 정렬된 set 생성
     avail_vip, avail_norm = set(sorted(assigner.vip_blocks)), set(sorted(assigner.normal_blocks))
@@ -257,10 +315,11 @@ def lv3_schedule(deadline_csv: str = "data/block_deadline_7.csv", labeling_resul
     while rounds < MAX_ROUNDS and (avail_vip or avail_norm):
         rounds += 1
         print(f"\n[LV3] Starting Main Scheduling Round {rounds}/{MAX_ROUNDS}...")
-        remaining = avail_vip | avail_norm
+        remaining = set(sorted(avail_vip | avail_norm))
+        remaining_frozen = frozenset(sorted(avail_vip | avail_norm))
         
         # [최적화] 윈도우 캐싱 사용
-        remaining_key = frozenset(remaining)
+        remaining_key = remaining_frozen
         if remaining_key in windows_cache:
             wins = windows_cache[remaining_key]
         else:
@@ -294,6 +353,22 @@ def lv3_schedule(deadline_csv: str = "data/block_deadline_7.csv", labeling_resul
                     start_date=_to_str(start_move),
                     cooldown_last_end=last_end[vname],
                     cooldown_gap_days=gap
+                )
+
+                # 디버깅 정보 저장
+                elig_blocks = eligible_blocks(assigner, vessel_id, wins, remaining_frozen)
+                save_voyage_debug_info(
+                    vessel_name=vname,
+                    end_date=end_date,
+                    round_num=rounds,
+                    eligible_blocks=elig_blocks,
+                    candidate_dates=cand_dates,
+                    selected_dates=selected,
+                    scores=scores,
+                    wins=wins,
+                    avail_vip=avail_vip,
+                    avail_norm=avail_norm,
+                    result=result
                 )
 
                 # 항차 생성이 성공한 경우(배치된 블록이 있는 경우)에만 last_end를 즉시 업데이트
