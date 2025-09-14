@@ -73,7 +73,8 @@ def eligible_for_vessel(assigner: IntegratedVoyageAssigner, vessel_id: int, b: s
     return comp is None or (vessel_id in comp)
 
 def eligible_blocks(assigner: IntegratedVoyageAssigner, vessel_id: int, wins: Dict[str, Tuple[datetime, datetime]], remaining: Set[str]) -> Set[str]:
-    return {b for b in remaining if eligible_for_vessel(assigner, vessel_id, b) and (b in wins)}
+    # 결정적 순서를 위해 정렬된 리스트로 처리
+    return {b for b in sorted(remaining) if eligible_for_vessel(assigner, vessel_id, b) and (b in wins)}
 
 def histogram_over_dates(wins: Dict[str, Tuple[datetime, datetime]], subset: Optional[Set[str]] = None) -> Dict[str, int]:
     counter = Counter()
@@ -88,7 +89,13 @@ def histogram_over_dates(wins: Dict[str, Tuple[datetime, datetime]], subset: Opt
 def build_candidate_dates_for_vessel(assigner: IntegratedVoyageAssigner, vessel_id: int, wins: Dict[str, Tuple[datetime, datetime]], remaining: Set[str]) -> List[str]:
     elig = eligible_blocks(assigner, vessel_id, wins, remaining)
     if not elig: return []
-    edges: Set[str] = {d for b in elig for d in (_to_str(wins[b][0]), _to_str(wins[b][1]))}
+    
+    # 결정적 순서를 위해 정렬된 블록 순서로 처리
+    edges_list = []
+    for b in sorted(elig):  # 정렬로 순서 고정
+        edges_list.extend([_to_str(wins[b][0]), _to_str(wins[b][1])])
+    edges = set(edges_list)  # 중복 제거
+    
     hist = histogram_over_dates(wins, elig)
     if hist:
         top = sorted(hist.items(), key=lambda kv: (-kv[1], kv[0]))[:TOP_K_PEAKS]
@@ -189,10 +196,12 @@ def rescue_pass(assigner: IntegratedVoyageAssigner, wins: Dict[str, Tuple[dateti
             if last_end[vname]: min_end = max(min_end, _to_date(last_end[vname]) + timedelta(days=gap))
             
             deltas = [0, 2, 4, 7, 10, gap, gap + 3]
-            candidates = {min_end + timedelta(days=dt) for dt in deltas if min_end + timedelta(days=dt) <= we}
-            if we >= min_end: candidates.add(we)
+            # 결정적 순서를 위해 리스트로 처리 후 정렬
+            candidates_list = [min_end + timedelta(days=dt) for dt in deltas if min_end + timedelta(days=dt) <= we]
+            if we >= min_end: candidates_list.append(we)
+            candidates = sorted(list(set(candidates_list)))  # 중복 제거 후 정렬
             
-            for end_dt in sorted(list(candidates))[:k_dates]:
+            for end_dt in candidates[:k_dates]:
                 start_dt = end_dt - timedelta(days=gap - 1)
                 result = assigner.run_for_single_voyage(vessel_name=vname, end_date=_to_str(end_dt), avail_vip=avail_vip, avail_norm=avail_norm, start_date=_to_str(start_dt), cooldown_last_end=last_end[vname], cooldown_gap_days=gap)
                 if result["placed_blocks"]:
@@ -237,7 +246,8 @@ def summarize_unassigned(assigner: IntegratedVoyageAssigner, wins: Dict[str, Tup
 
 def lv3_schedule(deadline_csv: str = "data/block_deadline_7.csv", labeling_results_file: str = "block_labeling_results.json", out_json: str = "lv3_integrated_voyage_assignments.json", vis_out_dir: str = "placement_results") -> IntegratedVoyageAssigner:
     assigner = IntegratedVoyageAssigner(deadline_csv=deadline_csv, labeling_results_file=labeling_results_file, out_json=out_json, vis_out_dir=vis_out_dir)
-    avail_vip, avail_norm = set(assigner.vip_blocks), set(assigner.normal_blocks)
+    # 결정적 순서를 위해 정렬된 set 생성
+    avail_vip, avail_norm = set(sorted(assigner.vip_blocks)), set(sorted(assigner.normal_blocks))
     last_end: Dict[str, Optional[str]] = {f"자항선{i}": None for i in range(1, 6)}
 
     # [최적화] 윈도우 캐싱
