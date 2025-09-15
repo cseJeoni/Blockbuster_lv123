@@ -6,7 +6,7 @@
     "method": "footprint_trimesh",
     "resolution": 0.5,
     "orientation_optimized": true,
-    "selected_orientation": "XZ_rotated",
+    "selected_orientation": "X_rotated",
     "optimization_method": "area_maximization_with_flatness",
     "total_volume": 31020,
     "footprint_area": 3102,
@@ -24830,8 +24830,8 @@
     ]
   },
   "metadata": {
-    "created_date": "2025-09-10 13:10:02",
-    "processing_time": 57.766634464263916,
+    "created_date": "2025-09-15 17:32:14",
+    "processing_time": 71.87292432785034,
     "voxelizer_version": "trimesh_v3.0"
   }
 }

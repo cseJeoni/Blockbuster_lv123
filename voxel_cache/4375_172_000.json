@@ -4942,8 +4942,8 @@
     ]
   },
   "metadata": {
-    "created_date": "2025-09-10 13:06:43",
-    "processing_time": 2.26582407951355,
+    "created_date": "2025-09-15 17:28:09",
+    "processing_time": 4.380345821380615,
     "voxelizer_version": "trimesh_v3.0"
   }
 }
