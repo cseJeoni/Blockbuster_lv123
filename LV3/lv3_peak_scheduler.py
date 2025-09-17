@@ -235,53 +235,6 @@ def select_dates_with_gap(dates: List[str], scores: List[float], gap_days: int) 
     sel.reverse()
     return sel
 
-def rescue_pass(assigner: IntegratedVoyageAssigner, wins: Dict[str, Tuple[datetime, datetime]], avail_vip: Set[str], avail_norm: Set[str], last_end: Dict[str, Optional[str]], k_dates: int = 5) -> bool:
-    remaining = sorted(list(avail_vip | avail_norm))
-    if not remaining: return False
-
-    def feasibility_score(b: str) -> int:
-        w = wins.get(b)
-        if not w: return 0
-        days = (w[1] - w[0]).days + 1
-        ships = 0
-        for vid in range(1, 6):
-            if b in assigner.vip_blocks and vid != 1: continue
-            comp = assigner._compatible_vessels(b)
-            if comp and vid not in comp: continue
-            ships += 1
-        return ships * max(0, days)
-
-    remaining.sort(key=feasibility_score)
-    progressed = False
-    for b in sorted(remaining):
-        if b not in (avail_vip | avail_norm): continue
-        order = [1] if b in assigner.vip_blocks else [1, 2, 3, 4, 5]
-        ws, we = wins.get(b, (_to_date("2099-01-01"), _to_date("2099-12-31")))
-        for vid in order:
-            vname = f"자항선{vid}"
-            if not eligible_for_vessel(assigner, vid, b): continue
-            gap = cycle_len(vid)
-            min_end = ws
-            if last_end[vname]: min_end = max(min_end, _to_date(last_end[vname]) + timedelta(days=gap))
-            
-            deltas = [0, 2, 4, 7, 10, gap, gap + 3]
-            # 결정적 순서를 위해 리스트로 처리 후 정렬
-            candidates_list = [min_end + timedelta(days=dt) for dt in deltas if min_end + timedelta(days=dt) <= we]
-            if we >= min_end: candidates_list.append(we)
-            candidates = sorted(list(set(candidates_list)))  # 중복 제거 후 정렬
-            
-            for end_dt in candidates[:k_dates]:
-                start_dt = end_dt - timedelta(days=gap - 1)
-                result = assigner.run_for_single_voyage(vessel_name=vname, end_date=_to_str(end_dt), avail_vip=avail_vip, avail_norm=avail_norm, start_date=_to_str(start_dt), cooldown_last_end=last_end[vname], cooldown_gap_days=gap)
-                if result["placed_blocks"]:
-                    last_end[vname] = _to_str(end_dt)
-                    progressed = True
-                    print(f"[LV3-RESCUE] {vname} on {last_end[vname]}: placed {len(result['placed_blocks'])} blocks (seed: {b})")
-                    break
-            if progressed: break
-        if progressed: break
-    return progressed
-
 def summarize_unassigned(assigner: IntegratedVoyageAssigner, wins: Dict[str, Tuple[datetime, datetime]], last_end: Dict[str, Optional[str]]) -> Dict:
     remain = (assigner.vip_blocks | assigner.normal_blocks) - set(assigner.block_assignments.keys())
     reasons = { "total_unassigned": len(remain), "no_deadline": 0, "window_blocked_by_cooldown": 0, "vip_only_waiting_ship1": 0, "eligible_but_unscheduled": 0, "examples": { "no_deadline": [], "window_blocked_by_cooldown": [], "vip_only_waiting_ship1": [], "eligible_but_unscheduled": [] } }
@@ -406,8 +359,7 @@ def lv3_schedule(deadline_csv: str = None, labeling_results_file: str = None, ou
                 if result and result.get("placed_blocks"):
                     last_end[vname] = end_date
         
-        print(f"[LV3] Round {rounds} Main scheduling finished. Attempting rescue pass...")
-        rescue_pass(assigner, wins, avail_vip, avail_norm, last_end)
+        print(f"[LV3] Round {rounds} Main scheduling finished.")
 
     assigner.save()
     _audit_cooldown(assigner)

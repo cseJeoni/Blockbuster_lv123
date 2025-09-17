@@ -76,7 +76,6 @@ class IntegratedVoyageAssigner:
     LV1_TIMEOUT = 60
     LV1_TIMEOUT_SINGLE_WINDOW = 180
     CAPACITY_RATIO = 1.05
-    TOPOFF_ROUNDS = 2
 
     def __init__(self,
                  schedule_csv: Optional[str] = None,
@@ -245,34 +244,6 @@ class IntegratedVoyageAssigner:
         else: acc = blocks[:page_limit]
         return acc
 
-    def _topoff(self, voyage_id: str, placed_seed: List[str], avail_vip: Set[str], avail_norm: Set[str], target_area: float, page_limit: int, rounds: int = None) -> Tuple[List[str], str]:
-        rounds = rounds or self.TOPOFF_ROUNDS
-        current = list(placed_seed)
-        vinfo = self.schedule.info(voyage_id)
-        vessel_id = int(vinfo["vessel_name"].replace("자항선", ""))
-        has_vip_lock = any(b in self.vip_blocks for b in current)
-        def _vip_ok(placed: List[str]) -> bool:
-            if not has_vip_lock: return True
-            vip_in_current = [b for b in current if b in self.vip_blocks]
-            return set(vip_in_current).issubset(set(placed))
-        for r in range(rounds):
-            norm_pool_all = [b for b in sorted(avail_norm) if self._eligible_for_voyage(b, voyage_id)]
-            norm_pool_all.sort(key=lambda bid: (self.deadlines.get(bid, "2099-12-31"), -(self._area_of(bid) or 0.0)))
-            norm_pool = [b for b in norm_pool_all if b not in current]
-            cur_area = self._sum_area(current)
-            rem_area = max(0.0, target_area - cur_area) if cur_area is not None else None
-            page = self._page_limit_for_vessel(vessel_id)
-            extra = self._cap_by_area_or_page(norm_pool, rem_area if rem_area is not None else target_area, page)
-            if not extra: break
-            trial = current + extra
-            placed_new, _ = self._run_lv1(trial, voyage_id, timeout=self.LV1_TIMEOUT)
-            if _vip_ok(placed_new) and len(placed_new) > len(current):
-                current = placed_new
-                vinfo = self.schedule.info(voyage_id)
-                log_id = f"{vinfo['vessel_name']} {vinfo['start_date']}_{vinfo['end_date']}"
-                self.logs.append(f"[{log_id}] PATH=TOPOFF_R{r+1} gain=+{len(current)-len(placed_seed)}")
-            else: break
-        return current, ("TOPOFF" if len(current) > len(placed_seed) else "NO_TOPOFF")
 
     def _assign_for_voyage(self, voyage_id: str, avail_vip: Set[str], avail_norm: Set[str]) -> int:
         vinfo = self.schedule.info(voyage_id)
@@ -314,15 +285,6 @@ class IntegratedVoyageAssigner:
             else: return 0
         else: return 0
         
-        current_rate = len(placed_final) / len(union) if union else 0
-        if current_rate < 0.85:  # 배치율 85% 미만일 때만 Top-off
-            placed_topped, tag = self._topoff(voyage_id, placed_final, avail_vip, avail_norm, target_area, page_limit, rounds=self.TOPOFF_ROUNDS)
-            if tag == "TOPOFF": path += "_TOPOFF"
-            placed_final = placed_topped
-        else:
-            vinfo = self.schedule.info(voyage_id)
-            log_id = f"{vinfo['vessel_name']} {vinfo['start_date']}_{vinfo['end_date']}"
-            self.logs.append(f"[{log_id}] SKIP_TOPOFF rate={current_rate:.2f}")
         
         def confirm(blocks: List[str]) -> int:
             count = 0

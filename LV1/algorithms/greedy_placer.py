@@ -27,8 +27,8 @@ class GreedyPlacer:
                 if time.time() - self.start_time > self.max_time:
                     break
                 
-                # 후보 위치 생성
-                max_cands = min(25, len(self.placement_area.placed_blocks) * 6 + 15)
+                # 후보 위치 생성 (충분한 후보 수 확보)
+                max_cands = min(100, len(self.placement_area.placed_blocks) * 8 + 50)
                 candidates = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands)
                 
                 if not candidates:
@@ -70,10 +70,10 @@ class GreedyPlacer:
                         original_rotation = block.rotation
                         try:
                             block.rotate(90)
-                            print(f"[INFO] 크레인 블록 {block.id} 90도 회전 후 재시도")
+                            # print(f"[INFO] 크레인 블록 {block.id} 90도 회전 후 재시도")
 
-                            # 회전된 상태로 다시 후보 위치 생성
-                            candidates_rotated = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands)
+                            # 회전된 상태로 다시 후보 위치 생성 (재시도이므로 왼쪽 확장 포함)
+                            candidates_rotated = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands, is_retry=True)
 
                             if candidates_rotated:
                                 for pos_x, pos_y in candidates_rotated:
@@ -93,7 +93,7 @@ class GreedyPlacer:
                                             pass
 
                                         placed = True
-                                        print(f"[SUCCESS] 크레인 블록 {block.id} 회전 후 배치 성공")
+                                        # print(f"[SUCCESS] 크레인 블록 {block.id} 회전 후 배치 성공")
                                         break
 
                             # 회전 후에도 배치 실패하면 원래 회전 상태로 복구
@@ -118,7 +118,7 @@ class GreedyPlacer:
             
             # 두 번째 패스: 배치 못한 블록들 재시도
             if unplaced_blocks and time.time() - self.start_time < self.max_time:
-                print(f"[INFO] 재시도: {len(unplaced_blocks)}개 블록")
+                # print(f"[INFO] 재시도: {len(unplaced_blocks)}개 블록")
                 retry_count = 0
                 successfully_placed = []  # 재시도에서 성공한 블록들 추적
                 
@@ -128,10 +128,10 @@ class GreedyPlacer:
                 for block in unplaced_blocks:
                     if time.time() - self.start_time > self.max_time:
                         break
-                    
-                    # 더 많은 후보로 재시도
-                    max_cands = min(50, len(self.placement_area.placed_blocks) * 10 + 30)
-                    candidates = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands)
+
+                    # 더 많은 후보로 재시도 (왼쪽 확장 포함)
+                    max_cands = min(150, len(self.placement_area.placed_blocks) * 12 + 75)
+                    candidates = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands, is_retry=True)
 
                     placed_in_retry = False
                     for pos_x, pos_y in candidates:
@@ -157,10 +157,10 @@ class GreedyPlacer:
                         original_rotation = block.rotation
                         try:
                             block.rotate(90)
-                            print(f"[INFO] 재시도에서 크레인 블록 {block.id} 90도 회전 후 재시도")
+                            # print(f"[INFO] 재시도에서 크레인 블록 {block.id} 90도 회전 후 재시도")
 
-                            # 회전된 상태로 다시 후보 위치 생성
-                            candidates_rotated = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands)
+                            # 회전된 상태로 다시 후보 위치 생성 (재시도이므로 왼쪽 확장 포함)
+                            candidates_rotated = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands, is_retry=True)
 
                             for pos_x, pos_y in candidates_rotated:
                                 if self.placement_area.can_place_block(block, pos_x, pos_y):
@@ -179,7 +179,7 @@ class GreedyPlacer:
                                         pass
 
                                     placed_in_retry = True
-                                    print(f"[SUCCESS] 재시도에서 크레인 블록 {block.id} 회전 후 배치 성공")
+                                    # print(f"[SUCCESS] 재시도에서 크레인 블록 {block.id} 회전 후 배치 성공")
                                     break
 
                             # 회전 후에도 배치 실패하면 원래 회전 상태로 복구
@@ -203,7 +203,7 @@ class GreedyPlacer:
                         unplaced_blocks.remove(block)
                 
                 if retry_count > 0:
-                    print(f"[SUCCESS] 재시도로 {retry_count}개 블록 추가 배치")
+                    # print(f"[SUCCESS] 재시도로 {retry_count}개 블록 추가 배치")
                     placed_count += retry_count
         
         except Exception as e:
@@ -221,13 +221,13 @@ class GreedyPlacer:
         
         return self.placement_area
     
-    def _get_tight_candidates(self, area, block, max_candidates=20):
-        """컬럼별 수직 채우기 + 오른쪽 압축 전략"""
+    def _get_tight_candidates(self, area, block, max_candidates=20, is_retry=False):
+        """올바른 컬럼별 수직 채우기 전략"""
         candidates = []
         bow_clearance = getattr(area, 'bow_clearance', 0)
         stern_clearance = getattr(area, 'stern_clearance', 0)
         spacing = getattr(area, 'block_spacing', 4)
-        
+
         if len(area.placed_blocks) == 0:
             # 첫 번째 블록: 오른쪽 아래 모서리 (실제 복셀 기준)
             ref_x, ref_y = block.actual_reference
@@ -235,7 +235,7 @@ class GreedyPlacer:
             if footprint_coords:
                 max_vx = max(vx for vx, vy in footprint_coords)
                 actual_width = max_vx - ref_x + 1
-                
+
                 # 크레인 블록은 ring bow clearance만 사용, 트레슬/기타는 일반 bow clearance 사용 (성능 최적화)
                 if getattr(block, 'block_type', None) == 'crane':
                     # 크레인 블록: 일반 bow를 되돌리고 ring bow clearance만 사용
@@ -251,18 +251,23 @@ class GreedyPlacer:
                     if area.can_place_block(block, first_x, first_y):
                         candidates.append((first_x, first_y, False))
         else:
-            # 컬럼별 수직 채우기 전략
+            # 기존 컬럼별 수직 채우기 전략 (원래 방식 복원)
             column_tops = self._get_column_tops(area, bow_clearance, stern_clearance)
-            
+
             for x in sorted(column_tops.keys(), reverse=True):  # 오른쪽부터
                 top_y = column_tops[x]
-                
+
                 # 해당 컬럼에서 위쪽에 쌓기
                 candidate_y = top_y + spacing
                 if candidate_y + block.height <= area.height:
                     if area.can_place_block(block, x, candidate_y):
                         candidates.append((x, candidate_y, False))
-            
+
+            # 재시도 블록의 경우 후보가 없으면 기존 컬럼에서 왼쪽으로 확장 시도
+            if is_retry and not candidates:
+                left_expanded_candidates = self._get_left_expanded_candidates(area, block, column_tops, spacing)
+                candidates.extend(left_expanded_candidates)
+
             # 새로운 컬럼 시작 (기존 컬럼들의 왼쪽) - 실제 복셀 기준
             if column_tops:
                 leftmost_x = min(column_tops.keys())
@@ -275,36 +280,36 @@ class GreedyPlacer:
                 if new_x >= stern_clearance:
                     if area.can_place_block(block, new_x, 0):
                         candidates.append((new_x, 0, False))
-        
+
         # 단순 위치 기준 정렬: 오른쪽 우선, 아래쪽 우선
         candidates.sort(key=lambda c: (-c[0], c[1]))  # -x (오른쪽 우선), y (아래쪽 우선)
-        
+
         final_candidates = [(x, y) for x, y, _ in candidates[:max_candidates]]
-        
+
         return final_candidates
     
     def _get_column_tops(self, area, bow_clearance, stern_clearance):
         """각 컬럼(X축)별 최상단 Y 위치 계산"""
         column_tops = {}
-        
+
         for placed_block in area.placed_blocks.values():
             if not placed_block.position:
                 continue
-            
+
             px, py = placed_block.position
             # 블록이 차지하는 X 범위의 모든 컬럼 업데이트 (실제 복셀 기준)
             p_ref_x, p_ref_y = placed_block.actual_reference
             p_footprint = list(placed_block.get_footprint())
-            
+
             if p_footprint:
                 min_vx = min(vx for vx, vy in p_footprint)
                 max_vx = max(vx for vx, vy in p_footprint)
                 min_vy = min(vy for vx, vy in p_footprint)
                 max_vy = max(vy for vx, vy in p_footprint)
-                
+
                 p_actual_width = max_vx - min_vx + 1
                 p_actual_height = max_vy - min_vy + 1
-                
+
                 # 실제 블록이 시작하는 X 위치 (actual_reference 기준)
                 block_start_x = px + min_vx - p_ref_x
                 for x in range(block_start_x, block_start_x + p_actual_width):
@@ -312,9 +317,71 @@ class GreedyPlacer:
                         block_top = py + max_vy - p_ref_y + 1
                         if x not in column_tops or block_top > column_tops[x]:
                             column_tops[x] = block_top
-        
+
         return column_tops
-    
+
+    def _get_left_expanded_candidates(self, area, block, column_tops, spacing):
+        """
+        기존 컬럼에서 왼쪽으로 확장한 후보 생성
+        Args:
+            area: 배치 영역
+            block: 배치할 블록
+            column_tops: 컬럼별 최상단 높이
+            spacing: 이격거리
+        Returns:
+            list: 확장된 후보 위치들
+        """
+        candidates = []
+
+        # 새 블록의 복셀 정보
+        new_footprint = list(block.get_footprint())
+        if not new_footprint:
+            return candidates
+
+        new_ref_x, new_ref_y = block.actual_reference
+        new_min_vx = min(vx for vx, vy in new_footprint)
+        new_max_vx = max(vx for vx, vy in new_footprint)
+        new_width = new_max_vx - new_min_vx + 1
+
+        # 기존 컬럼들을 우선순위대로 처리 (오른쪽부터)
+        for base_x in sorted(column_tops.keys(), reverse=True):
+            base_top_y = column_tops[base_x]
+            candidate_y = base_top_y + spacing
+
+            if candidate_y + block.height > area.height:
+                continue
+
+            # 기존 컬럼에서 왼쪽으로 확장하여 새 블록 배치
+            # 1~3칸 정도 왼쪽으로 확장 시도
+            for left_offset in range(1, min(4, new_width + 1)):
+                # 새 블록의 우측 끝이 base_x에 오도록 배치
+                target_end_x = base_x
+                target_start_x = target_end_x - new_width + 1 - left_offset
+
+                # stern clearance 체크
+                stern_clearance = getattr(area, 'stern_clearance', 0)
+                if target_start_x < stern_clearance:
+                    continue
+
+                # reference point 계산
+                new_ref_pos_x = target_start_x - new_min_vx + new_ref_x
+                if new_ref_pos_x < 0:
+                    continue
+
+                # 해당 위치가 비어있는지 간단 체크 (can_place_block으로 정확한 검증은 나중에)
+                valid_position = True
+                for check_x in range(target_start_x, target_end_x + 1):
+                    if 0 <= check_x < area.width and check_x in column_tops:
+                        # 이미 블록이 있는 컬럼과 겹치면 높이 체크
+                        if column_tops[check_x] > candidate_y - spacing:
+                            valid_position = False
+                            break
+
+                if valid_position:
+                    candidates.append((new_ref_pos_x, candidate_y, False))
+
+        return candidates
+
     def _compact_block_right(self, area, block, spacing, bow_clearance):
         """배치된 블록을 오른쪽으로 최대한 이동 (오른쪽 테두리 복셀별 정밀 계산)"""
         if not block.position:
@@ -413,7 +480,7 @@ class GreedyPlacer:
             rightmost_voxel_grid_x = current_x + max_vx - ref_x
             # 배치 영역 경계까지 이동 가능한 거리
             boundary_limit_move = (area.width - 1) - rightmost_voxel_grid_x
-            
+
             if boundary_limit_move >= 0:
                 min_move_distance = min(min_move_distance, boundary_limit_move)
             else:
@@ -427,15 +494,17 @@ class GreedyPlacer:
         # 이동 가능한 거리가 있으면 점진적으로 이동 시도
         if min_move_distance > 0:
             if debug_target:
-                print(f"  최대 이동 가능 거리: {min_move_distance}칸")
-            
+                # print(f"  최대 이동 가능 거리: {min_move_distance}칸")
+                pass
+
             # 최대 거리부터 1칸씩 줄여가며 시도
             for distance in range(min_move_distance, 0, -1):
                 target_x = current_x + distance
                 
                 if debug_target:
-                    print(f"  {distance}칸 이동 시도 → 목표 위치: ({target_x}, {current_y})")
-                
+                    # print(f"  {distance}칸 이동 시도 → 목표 위치: ({target_x}, {current_y})")
+                    pass
+
                 # 목표 위치가 배치 영역을 벗어나지 않는지 확인
                 if target_x >= 0 and target_x < area.width:
                     try:
@@ -450,8 +519,10 @@ class GreedyPlacer:
                             # 새 위치에 성공적으로 배치
                             placed_successfully = area.place_block(block, target_x, current_y)
                             if placed_successfully:
+                                # print(f"[RIGHT_MOVE] 블록 {block.id}: ({current_x}, {current_y}) → ({target_x}, {current_y}) ({distance}칸 우측 이동)")
                                 if debug_target:
-                                    print(f"    [SUCCESS] {distance}칸 우측 이동 성공!")
+                                    # print(f"    [SUCCESS] {distance}칸 우측 이동 성공!")
+                                    pass
                                 return True
                         else:
                             if debug_target:
@@ -501,38 +572,40 @@ class GreedyPlacer:
             
             # 모든 거리에서 이동 실패
             if debug_target:
-                print(f"  [FAIL] 모든 거리에서 우측 이동 실패")
+                # print(f"  [FAIL] 모든 거리에서 우측 이동 실패")
+                pass
             return False
         else:
             # 이동할 공간이 없는 경우
             if debug_target:
-                print(f"  [FAIL] 이동 가능한 거리 없음 (min_move_distance: {min_move_distance})")
+                # print(f"  [FAIL] 이동 가능한 거리 없음 (min_move_distance: {min_move_distance})")
+                pass
             return False
     
     def _compact_block_down(self, area, block, spacing):
         """배치된 블록을 아래쪽으로 최대한 이동"""
         if not block.position:
             return False
-        
+
         current_x, current_y = block.position
-        
+
         # 4391_643_000, 4391_653_000 블록에 대한 디버깅 로그
         debug_target = False  # 디버그 로그 비활성화
         if debug_target:
             print(f"\n[DEBUG] {block.id} 하단 이동 시도 시작")
             print(f"  현재 위치: ({current_x}, {current_y})")
             print(f"  spacing: {spacing}")
-        
+
         # 블록의 아래쪽 테두리 복셀들 찾기 (X 좌표별 가장 아래쪽만)
         block_footprint = block.get_footprint()
         bottom_edge_voxels = []
-        
+
         # X 좌표별 가장 아래쪽 복셀 찾기
         x_to_min_y = {}
         for vx, vy in block_footprint:
             if vx not in x_to_min_y or vy < x_to_min_y[vx]:
                 x_to_min_y[vx] = vy
-        
+
         # 각 X의 아래쪽 테두리 복셀들 수집
         ref_x, ref_y = block.actual_reference
         for vx, min_vy in x_to_min_y.items():
@@ -540,23 +613,23 @@ class GreedyPlacer:
             grid_x = current_x + vx - ref_x
             grid_y = current_y + min_vy - ref_y
             bottom_edge_voxels.append((grid_x, grid_y))
-        
+
         # 유효한 테두리 복셀 확인
         valid_edge_voxels = []
         for grid_x, grid_y in bottom_edge_voxels:
             if 0 <= grid_x < area.width and 0 <= grid_y < area.height:
                 valid_edge_voxels.append((grid_x, grid_y))
-        
+
         if not valid_edge_voxels:
             return False
-        
+
         # 각 아래쪽 테두리 복셀별로 이동 가능한 최대 거리 계산
         min_move_distance = float('inf')
-        
+
         for edge_x, edge_y in valid_edge_voxels:
             # 이 테두리 복셀에서 아래쪽으로 1칸씩 체크
             nearest_obstacle_y = 0  # 기본값: 바닥
-            
+
             for test_y in range(edge_y - 1, -1, -1):  # 아래쪽으로
                 try:
                     if area.grid[test_y, edge_x] is not None and area.grid[test_y, edge_x] != block.id:  # 자기 자신이 아닌 장애물만
@@ -564,29 +637,31 @@ class GreedyPlacer:
                         break
                 except (IndexError, KeyError):
                     break
-            
+
             # 이 테두리 복셀이 이동할 수 있는 최대 거리 계산
             possible_move = edge_y - nearest_obstacle_y - spacing
-            
+
             if possible_move > 0:  # 양수인 경우만 고려
                 min_move_distance = min(min_move_distance, possible_move)
-        
+
         # 영역 경계 제한
         if min_move_distance == float('inf'):
             min_move_distance = 0
-        
+
         # 이동 가능한 거리가 있으면 점진적으로 이동 시도
         if min_move_distance > 0:
             if debug_target:
-                print(f"  최대 하단 이동 가능 거리: {min_move_distance}칸")
-            
+                # print(f"  최대 하단 이동 가능 거리: {min_move_distance}칸")
+                pass
+
             # 최대 거리부터 1칸씩 줄여가며 시도
             for distance in range(min_move_distance, 0, -1):
                 target_y = current_y - distance  # 아래쪽으로 이동
-                
+
                 if debug_target:
-                    print(f"  {distance}칸 하단 이동 시도 → 목표 위치: ({current_x}, {target_y})")
-                
+                    # print(f"  {distance}칸 하단 이동 시도 → 목표 위치: ({current_x}, {target_y})")
+                    pass
+
                 if target_y >= 0:
                     try:
                         # 블록 제거 후 새 위치에 배치 시도
@@ -595,35 +670,40 @@ class GreedyPlacer:
                             if debug_target:
                                 print(f"    블록 제거 실패")
                             continue
-                        
+
                         if area.can_place_block(block, current_x, target_y):
                             # 새 위치에 성공적으로 배치
                             placed_successfully = area.place_block(block, current_x, target_y)
                             if placed_successfully:
+                                # print(f"[DOWN_MOVE] 블록 {block.id}: ({current_x}, {current_y}) → ({current_x}, {target_y}) ({distance}칸 하단 이동)")
                                 if debug_target:
-                                    print(f"    [SUCCESS] {distance}칸 하단 이동 성공!")
+                                    # print(f"    [SUCCESS] {distance}칸 하단 이동 성공!")
+                                    pass
                                 return True
                         else:
                             if debug_target:
                                 print(f"    can_place_block 실패 - 배치 조건 위반")
-                        
+
                         # 새 위치 배치 실패시 원위치 복구
                         area.place_block(block, current_x, current_y)
-                        
+
                     except Exception as e:
                         # 안전을 위해 원위치 복구 시도
                         try:
                             area.place_block(block, current_x, current_y)
                         except:
                             pass
-            
+
             # 모든 거리에서 이동 실패
             if debug_target:
-                print(f"  [FAIL] 모든 거리에서 하단 이동 실패")
+                # print(f"  [FAIL] 모든 거리에서 하단 이동 실패")
+                pass
             return False
         else:
             # 이동할 공간이 없는 경우
             if debug_target:
-                print(f"  [FAIL] 하단 이동 가능한 거리 없음 (min_move_distance: {min_move_distance})")
+                # print(f"  [FAIL] 하단 이동 가능한 거리 없음 (min_move_distance: {min_move_distance})")
+                pass
             return False
+
     

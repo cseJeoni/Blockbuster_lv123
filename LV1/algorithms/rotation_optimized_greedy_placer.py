@@ -43,8 +43,8 @@ class RotationOptimizedGreedyPlacer(GreedyPlacer):
                 if time.time() - self.start_time > self.max_time:
                     break
                 
-                # 후보 위치 생성
-                max_cands = min(25, len(self.placement_area.placed_blocks) * 6 + 15)
+                # 후보 위치 생성 (충분한 후보 수 확보)
+                max_cands = min(100, len(self.placement_area.placed_blocks) * 8 + 50)
                 candidates = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands)
                 
                 if not candidates:
@@ -87,8 +87,9 @@ class RotationOptimizedGreedyPlacer(GreedyPlacer):
                     if time.time() - self.start_time > self.max_time:
                         break
                     
-                    max_cands = min(50, len(self.placement_area.placed_blocks) * 10 + 30)
-                    candidates = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands)
+                    # 더 많은 후보로 재시도 (왼쪽 확장 포함)
+                    max_cands = min(150, len(self.placement_area.placed_blocks) * 12 + 75)
+                    candidates = self._get_tight_candidates(self.placement_area, block, max_candidates=max_cands, is_retry=True)
                     
                     # 재시도에서도 회전 최적화 적용
                     placed = self._place_with_rotation_check(block, candidates)

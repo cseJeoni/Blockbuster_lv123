@@ -195,7 +195,12 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="LV3 결과에서 배치 이미지 생성")
-    parser.add_argument("--json", default="lv3_integrated_voyage_assignments.json", 
+    
+    # 스크립트의 현재 위치를 기준으로 기본 JSON 파일 경로 설정
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    default_json_path = os.path.join(script_dir, "lv3_integrated_voyage_assignments.json")
+
+    parser.add_argument("--json", default=default_json_path, 
                        help="LV3 결과 JSON 파일 경로")
     parser.add_argument("--output", default="placement_results", 
                        help="이미지 출력 디렉토리")

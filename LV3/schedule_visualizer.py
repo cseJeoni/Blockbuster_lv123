@@ -884,7 +884,11 @@ class VoyageScheduleVisualizer:
 
 # --- 스크립트 실행 ---
 if __name__ == "__main__":
-    visualizer = VoyageScheduleVisualizer(json_file_path="lv3_integrated_voyage_assignments.json")
+    # 스크립트의 현재 위치를 기준으로 파일 경로 설정
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(script_dir, "lv3_integrated_voyage_assignments.json")
+    
+    visualizer = VoyageScheduleVisualizer(json_file_path=json_path)
     visualizer.generate_html_dashboard()
 
 
