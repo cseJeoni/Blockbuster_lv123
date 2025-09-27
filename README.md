@@ -294,7 +294,17 @@ cd Blockbuster_lv123
 
 **1단계: LV1 복셀화 및 배치 테스트**
 ```bash
-채워넣을 예정 !!!!!!!!!!!!
+# 기본 실행 (Greedy 알고리즘)
+python ship_placer.py config_20250911_143022.json
+
+# 시각화 포함
+python ship_placer.py config_20250911_143022.json -v
+
+# Dead Space 분석 포함
+python ship_placer.py config_20250911_143022.json -v --deadspace
+
+# 타임아웃 설정
+python ship_placer.py config_20250911_143022.json 30 -v
 ```
 
 **2단계: LV2 블록 배정 시스템**
