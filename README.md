@@ -474,7 +474,7 @@ python schedule_visualizer.py
 
 #### 6.2. 시연 영상
 
-https://drive.google.com/file/d/1a-pBQewV7Spl5VdhTA067g3thz9Sr1XU/view?usp=sharing
+https://youtu.be/_u5BN7r9BKI?si=nibp1Sko43pYt1Ae
 
 ### 7. 팀 구성
 
